@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Platform Administration &amp; Governance &mdash; Interactive Guide</title>
+<script>
+(()=>{
+const param=new URLSearchParams(window.location.search).get("clawpilotTheme");
+const theme=param||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+document.documentElement.setAttribute("data-theme",theme);
+})();
+</script>
+<style>
+:root{color-scheme:light;--cp-bg:#f7f4ef;--cp-bg-elevated:#fcfbf8;--cp-surface:#ffffff;--cp-surface-soft:#f5f5f5;--cp-border:#dedede;--cp-border-strong:#919191;--cp-text:#242424;--cp-text-muted:#5c5c5c;--cp-text-soft:#6f6f6f;--cp-accent:#b11f4b;--cp-accent-hover:#9a1a41;--cp-accent-soft:rgba(177,31,75,0.08);--cp-accent-fg:#ffffff;--cp-success:#16a34a;--cp-danger:#dc2626;--cp-warning:#f59e0b;--cp-link:#0078d4;--cp-shadow:0 18px 48px rgba(0,0,0,0.12);--cp-overlay:rgba(255,255,255,0.8);--cp-panel:rgba(255,255,255,0.86);--cp-panel-strong:rgba(255,255,255,0.96);--cp-sheen:rgba(255,255,255,0.55);--cp-highlight:rgba(177,31,75,0.12);--zone1:#22c55e;--zone2:#eab308;--zone3:#ef4444;--purple:#7c3aed;--blue:#3b82f6;--teal:#14b8a6}
+html[data-theme="dark"]{color-scheme:dark;--cp-bg:#3d3b3a;--cp-bg-elevated:#343231;--cp-surface:#292929;--cp-surface-soft:#2e2e2e;--cp-border:#474747;--cp-border-strong:#5f5f5f;--cp-text:#dedede;--cp-text-muted:#919191;--cp-text-soft:#b0b0b0;--cp-accent:#fd8ea1;--cp-accent-hover:#fb7b91;--cp-accent-soft:rgba(253,142,161,0.14);--cp-accent-fg:#1a1a1a;--cp-success:#4ade80;--cp-danger:#f87171;--cp-warning:#fbbf24;--cp-link:#4da6ff;--cp-shadow:0 18px 48px rgba(0,0,0,0.32);--cp-overlay:rgba(41,41,41,0.88);--cp-panel:rgba(41,41,41,0.72);--cp-panel-strong:rgba(41,41,41,0.96);--cp-sheen:rgba(255,255,255,0.04);--cp-highlight:rgba(253,142,161,0.12)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--cp-bg);color:var(--cp-text);line-height:1.6;overflow-x:hidden}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;background:var(--cp-surface);border-right:1px solid var(--cp-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column;transition:transform .3s ease}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--cp-border);display:flex;align-items:center;gap:12px;background:var(--cp-accent-soft)}
+.sidebar-logo{width:40px;height:40px;border-radius:10px;background:var(--cp-accent);display:flex;align-items:center;justify-content:center;color:var(--cp-accent-fg);font-weight:700;font-size:18px}
+.sidebar-title{font-size:14px;font-weight:600;line-height:1.3}.sidebar-subtitle{font-size:11px;color:var(--cp-text-muted)}
+.sidebar-search{padding:12px 16px;border-bottom:1px solid var(--cp-border)}
+.sidebar-search input{width:100%;padding:8px 12px;border-radius:.625rem;border:1px solid var(--cp-border);background:var(--cp-surface-soft);color:var(--cp-text);font-size:13px;outline:none}
+.sidebar-search input:focus{border-color:var(--cp-accent)}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0}
+.nav-chapter-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;border:none;background:none;color:var(--cp-text);font-size:13px;font-weight:600;cursor:pointer;text-align:left;transition:background .15s}
+.nav-chapter-btn:hover{background:var(--cp-accent-soft)}.nav-chapter-btn.active{color:var(--cp-accent);background:var(--cp-accent-soft)}
+.nav-chapter-btn .ch-num{width:24px;height:24px;border-radius:6px;background:var(--cp-accent-soft);color:var(--cp-accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.nav-chapter-btn.active .ch-num{background:var(--cp-accent);color:var(--cp-accent-fg)}
+.nav-subs{max-height:0;overflow:hidden;transition:max-height .3s ease}.nav-chapter.open .nav-subs{max-height:800px}
+.nav-sub{display:block;width:100%;padding:6px 16px 6px 50px;border:none;background:none;color:var(--cp-text-muted);font-size:12px;cursor:pointer;text-align:left;transition:all .15s}
+.nav-sub:hover{color:var(--cp-accent);background:var(--cp-accent-soft)}.nav-sub.active{color:var(--cp-accent);font-weight:600}
+.main{margin-left:280px;min-height:100vh}
+.mobile-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;width:40px;height:40px;border-radius:10px;border:1px solid var(--cp-border);background:var(--cp-surface);cursor:pointer;font-size:20px;color:var(--cp-text);align-items:center;justify-content:center}
+.hero{position:relative;padding:80px 40px 60px;background:linear-gradient(135deg,var(--cp-accent-soft) 0%,var(--cp-bg) 50%,var(--cp-surface-soft) 100%);border-bottom:1px solid var(--cp-border);overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:var(--cp-accent-soft);filter:blur(80px);opacity:.5}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:var(--cp-accent);color:var(--cp-accent-fg);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:20px}
+.hero h1{font-size:36px;font-weight:700;line-height:1.2;max-width:700px;margin-bottom:16px;position:relative}
+.hero p{font-size:16px;color:var(--cp-text-muted);max-width:600px;line-height:1.7;position:relative}
+.hero-stats{display:flex;gap:32px;margin-top:32px;position:relative;flex-wrap:wrap}
+.hero-stat{text-align:center}.hero-stat .num{font-size:28px;font-weight:700;color:var(--cp-accent)}
+.hero-stat .lbl{font-size:11px;color:var(--cp-text-muted);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.content{max-width:960px;margin:0 auto;padding:40px 40px 80px}
+.section{margin-bottom:48px;scroll-margin-top:24px;animation:fadeInUp .4s ease}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:12px;border-bottom:2px solid var(--cp-accent-soft)}
+.section-num{width:36px;height:36px;border-radius:10px;background:var(--cp-accent);color:var(--cp-accent-fg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0}
+.section-header h2{font-size:24px;font-weight:700}
+.subsection{margin-bottom:32px;scroll-margin-top:24px}
+.subsection h3{font-size:18px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.subsection h4{font-size:15px;font-weight:600;margin:16px 0 8px}
+.subsection p,.subsection li{font-size:14px;color:var(--cp-text-soft);line-height:1.8;margin-bottom:10px}
+.subsection ul{padding-left:20px}.subsection li{margin-bottom:6px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:20px 0}
+.card{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:16px;padding:20px;box-shadow:0 0 2px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.14);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.card h4{font-size:15px;font-weight:600;margin-bottom:8px}.card p{font-size:13px;color:var(--cp-text-muted);line-height:1.6}
+.expandable{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:.625rem;margin-bottom:8px;overflow:hidden}
+.expandable-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;transition:background .15s}
+.expandable-header:hover{background:var(--cp-accent-soft)}
+.expandable-header h4{font-size:14px;font-weight:600;margin:0;display:flex;align-items:center;gap:8px}
+.expandable-arrow{transition:transform .3s;font-size:12px;color:var(--cp-text-muted)}
+.expandable.open .expandable-arrow{transform:rotate(180deg)}
+.expandable-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.expandable.open .expandable-body{max-height:2000px}
+.expandable-content{padding:0 18px 18px;font-size:13px;color:var(--cp-text-soft);line-height:1.7}
+.expandable-content p{margin-bottom:10px}.expandable-content ul{padding-left:18px}.expandable-content li{margin-bottom:4px}
+.zones-visual{display:flex;gap:16px;margin:24px 0;flex-wrap:wrap}
+.zone-card{flex:1;min-width:260px;border-radius:16px;padding:24px;border:2px solid;position:relative;overflow:hidden;background:var(--cp-surface);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.zone-card:hover{transform:translateY(-4px);box-shadow:var(--cp-shadow)}
+.zone-card.z1{border-color:var(--zone1)}.zone-card.z2{border-color:var(--zone2)}.zone-card.z3{border-color:var(--zone3)}
+.zone-badge{display:inline-flex;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;color:#fff}
+.z1 .zone-badge{background:var(--zone1)}.z2 .zone-badge{background:var(--zone2)}.z3 .zone-badge{background:var(--zone3)}
+.zone-card h4{font-size:16px;font-weight:700;margin-bottom:8px}.zone-card p{font-size:13px;color:var(--cp-text-muted);line-height:1.6}
+.zone-features{margin-top:16px;display:flex;flex-direction:column;gap:6px}
+.zone-feat{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--cp-text-soft)}
+.zone-feat .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.z1 .dot{background:var(--zone1)}.z2 .dot{background:var(--zone2)}.z3 .dot{background:var(--zone3)}
+.zone-modal-overlay{display:none;position:fixed;inset:0;background:var(--cp-overlay);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.zone-modal-overlay.show{display:flex}
+.zone-modal{background:var(--cp-surface);border-radius:16px;max-width:700px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:var(--cp-shadow);padding:32px;position:relative}
+.zone-modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;border:1px solid var(--cp-border);background:var(--cp-surface-soft);cursor:pointer;font-size:16px;color:var(--cp-text-muted);display:flex;align-items:center;justify-content:center}
+.zone-modal h3{font-size:22px;font-weight:700;margin-bottom:8px}
+.zone-modal h4{font-size:15px;font-weight:600;margin:20px 0 8px}
+.zone-modal p{font-size:14px;color:var(--cp-text-soft);line-height:1.7;margin-bottom:10px}
+.zone-modal ul{padding-left:20px;margin-bottom:12px}.zone-modal li{font-size:13px;color:var(--cp-text-soft);margin-bottom:4px;line-height:1.6}
+.pyramid-container{display:flex;flex-direction:column;align-items:center;margin:24px 0;gap:4px}
+.pyramid-level{display:flex;align-items:center;justify-content:center;border-radius:8px;padding:14px 24px;font-weight:600;font-size:14px;color:#fff;cursor:pointer;transition:transform .2s;text-align:center}
+.pyramid-level:hover{transform:scale(1.03)}
+.pyr-1{width:200px;background:var(--cp-accent)}.pyr-2{width:320px;background:var(--purple)}.pyr-3{width:440px;background:var(--blue)}
+.pipeline-flow{display:flex;align-items:center;gap:0;margin:24px 0;overflow-x:auto;padding:16px 0}
+.pipeline-stage{display:flex;flex-direction:column;align-items:center;min-width:100px;gap:8px}
+.pipeline-node{width:64px;height:64px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid;transition:transform .2s}
+.pipeline-node:hover{transform:scale(1.1)}
+.pipeline-label{font-size:12px;font-weight:600;text-align:center}
+.pipeline-arrow{font-size:20px;color:var(--cp-text-muted);margin:0 8px;display:flex;align-items:center}
+.comp-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+.comp-table th{background:var(--cp-accent-soft);color:var(--cp-text);padding:12px 16px;text-align:left;font-weight:600;border-bottom:2px solid var(--cp-accent)}
+.comp-table td{padding:10px 16px;border-bottom:1px solid var(--cp-border);color:var(--cp-text-soft)}
+.comp-table tr:hover td{background:var(--cp-accent-soft)}
+.callout{background:var(--cp-accent-soft);border-left:4px solid var(--cp-accent);border-radius:0 .625rem .625rem 0;padding:16px 20px;margin:16px 0}
+.callout p{font-size:13px;color:var(--cp-text);margin:0}.callout strong{color:var(--cp-accent)}
+.info-callout{background:rgba(59,130,246,.08);border-left:4px solid var(--blue);border-radius:0 .625rem .625rem 0;padding:16px 20px;margin:16px 0}
+.info-callout p{font-size:13px;color:var(--cp-text);margin:0}
+.journey-map{display:flex;flex-direction:column;gap:0;margin:24px 0}
+.journey-step{display:flex;gap:16px;position:relative}
+.journey-track{display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0}
+.journey-dot{width:16px;height:16px;border-radius:50%;background:var(--cp-accent);border:3px solid var(--cp-bg);box-shadow:0 0 0 2px var(--cp-accent);z-index:2}
+.journey-line{width:2px;flex:1;background:var(--cp-border);min-height:40px}
+.journey-content{flex:1;padding-bottom:24px}
+.journey-content h4{font-size:14px;font-weight:600;margin-bottom:4px}
+.journey-content p{font-size:13px;color:var(--cp-text-muted);line-height:1.6}
+.tabs{margin:20px 0}.tab-buttons{display:flex;gap:4px;border-bottom:2px solid var(--cp-border);flex-wrap:wrap}
+.tab-btn{padding:10px 20px;border:none;background:none;color:var(--cp-text-muted);font-size:13px;font-weight:600;cursor:pointer;position:relative;transition:color .2s}
+.tab-btn.active{color:var(--cp-accent)}
+.tab-btn.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--cp-accent)}
+.tab-panel{display:none;padding:20px 0}.tab-panel.active{display:block}
+.rings-vis{display:flex;justify-content:center;margin:24px 0}
+.rings-wrapper{position:relative;width:340px;height:340px}
+.ring{border-radius:50%;display:flex;align-items:center;justify-content:center;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:2px dashed}
+.ring-0{width:120px;height:120px;border-color:var(--cp-accent);background:var(--cp-accent-soft);z-index:3}
+.ring-1{width:220px;height:220px;border-color:var(--zone2);background:rgba(234,179,8,.06);z-index:2}
+.ring-2{width:320px;height:320px;border-color:var(--zone1);background:rgba(34,197,94,.04);z-index:1}
+.ring-label{font-size:12px;font-weight:700;text-align:center}.ring-label small{display:block;font-weight:400;font-size:10px;color:var(--cp-text-muted)}
+.ring-tag{position:absolute;background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;white-space:nowrap}
+.back-to-top{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;background:var(--cp-accent);color:var(--cp-accent-fg);border:none;cursor:pointer;font-size:20px;box-shadow:var(--cp-shadow);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(10px);display:flex;align-items:center;justify-content:center}
+.back-to-top.visible{opacity:1;transform:translateY(0)}
+@media(max-width:768px){.sidebar{transform:translateX(-280px)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.mobile-toggle{display:flex}.hero{padding:60px 20px 40px}.hero h1{font-size:24px}.content{padding:20px}.zones-visual{flex-direction:column}.card-grid{grid-template-columns:1fr}}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--cp-bg)}::-webkit-scrollbar-thumb{background:var(--cp-border-strong);border-radius:3px}
+@media print{.sidebar,.mobile-toggle,.back-to-top{display:none!important}.main{margin-left:0!important}}
+
+.narrative-figure{margin:28px 0;text-align:center}
+.narrative-figure img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--cp-border);box-shadow:0 2px 16px rgba(0,0,0,0.07);transition:box-shadow .3s}
+.narrative-figure img:hover{box-shadow:0 4px 24px rgba(0,0,0,0.12)}
+.narrative-figure figcaption{font-size:12px;color:var(--cp-text-muted);margin-top:10px;font-style:italic;line-height:1.5}
+</style>
+</head>
+<body>
+<button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header"><div class="sidebar-logo">&#9889;</div><div><div class="sidebar-title">Power Platform</div><div class="sidebar-subtitle">Admin &amp; Governance Guide</div></div></div>
+<div class="sidebar-search"><input type="text" id="searchInput" placeholder="Search topics..." oninput="handleSearch(this.value)"></div>
+<nav class="sidebar-nav" id="sidebarNav"></nav>
+</aside>
+<div class="main" id="mainContent">
+<div class="hero" id="hero">
+<div class="hero-badge">&#128216; Official Whitepaper &mdash; April 2026</div>
+<h1>Power Platform Administration &amp; Governance</h1>
+<p>A comprehensive interactive guide to planning, governing, securing, and deploying Microsoft Power Platform at enterprise scale. Navigate every concept, framework, and best practice in one place.</p>
+</div>
+<div class="content" id="contentArea">
+
+<!-- CH1: INTRODUCTION -->
+<div class="section" id="sec-intro" data-search="introduction purpose scope whats new power platform productivity">
+<div class="section-header"><div class="section-num">1</div><h2>Introduction</h2></div>
+
+<div class="callout" style="border-left-color:var(--cp-accent);background:var(--cp-accent-soft);margin-bottom:24px;font-size:13.5px;line-height:1.6">
+<p style="margin:0"><strong>Attribution &amp; Original Source</strong></p>
+<p style="margin:8px 0 0">This guide is an interactive adaptation of the <em>Microsoft Power Platform Governance Whitepaper</em>, authored and maintained by Joe Unwin, Katie Liu, and Marek Lutz. All core content, frameworks, and recommendations are theirs. Full credit belongs to the original authors. The official PDF is available at:<br>
+<a href="https://lnkd.in/gg4BDqKG" style="color:var(--cp-link);word-break:break-all" target="_blank" rel="noopener">https://lnkd.in/gg4BDqKG</a></p>
+<p style="margin:12px 0 0"><a href="power_platform_governance_guide.zip" download style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:var(--cp-accent);color:var(--cp-accent-fg);border-radius:.625rem;text-decoration:none;font-size:13px;font-weight:600">&#11015;&#65039; Download ZIP Version</a></p>
+</div>
+
+<div class="subsection" id="sec-intro-opening" data-search="power platform productivity application development platform power apps automate pages copilot studio dataverse connectors dynamics 365">
+<p>Microsoft Power Platform is a productivity application development platform that delivers innovative business solutions across one integrated platform. Power Apps, Power Automate, Power Pages, Microsoft Copilot Studio, Dataverse and Connectors allow organizations to more quickly and easily build custom apps, workflows, websites, and agents driven by generative AI. Power BI allows any business to analyze and visualize real-time business performance.</p>
+<p>Microsoft uses the platform to build their own first-party applications &mdash; Dynamics 365 Sales, Service, Field Service and more. These applications are built natively on the Power Platform. Enterprise customers can also build custom line of business applications using this same technology. Additionally, individual users and teams within your organization can build personal or team productivity applications with no or low code.</p>
+<p>This whitepaper is targeted towards people responsible for planning, securing, deploying, and supporting environments and applications built on the Power Platform.</p>
+</div>
+
+<div class="subsection" id="sec-intro-purpose" data-search="purpose administering governing visibility lifecycle">
+<h3>&#128204; Purpose</h3>
+<p>This whitepaper is designed for those responsible for administering and governing Power Platform environments at scale. It provides practical guidance on gaining visibility into the platform, structuring environments intentionally, and embedding governance into the full lifecycle of apps, flows, and agents.</p>
+<p>The document covers the core concepts, capabilities, and decisions required to operate Power Platform securely and efficiently, with an emphasis on managed platform features, proactive planning, and consistent day-to-day operations that support enterprise adoption.</p>
+</div>
+
+<div class="subsection" id="sec-intro-scope" data-search="scope features april 2026 out of scope ISV power BI dynamics">
+<h3>&#128269; Scope</h3>
+<p>Unless specifically noted, all features mentioned in this whitepaper are available as of April 2026.</p>
+<div class="callout"><p><strong>Out of scope:</strong></p>
+<ul>
+<li>Power BI and other parts of the broader Power Platform</li>
+<li>Power Apps fundamentals for building applications</li>
+<li>ISV deployment scenarios, which are handled differently from enterprise deployment scenarios</li>
+<li>Performance tuning of applications</li>
+<li>Full deployment and management of first-party Dynamics 365 applications</li>
+<li>While many of the concepts presented in this paper apply to Dynamics 365 Finance, Dynamics 365 Supply Chain Management, and Dynamics 365 Retail, they are not directly covered</li>
+<li>Third party solutions which integrate with Power Apps</li>
+</ul>
+<p>Please visit <a href="https://docs.microsoft.com/en-us/power-platform/" style="color:var(--cp-link)">https://docs.microsoft.com/en-us/power-platform/</a> to learn more about these topics.</p>
+</div>
+</div>
+
+<div class="subsection" id="sec-intro-new" data-search="whats new changes 2024 zoned model managed platform inventory connector governance deployment onboarding usage insights">
+<h3>&#10024; What's New</h3>
+<p>Since this whitepaper was last published in 2024, the Power Platform has undergone major changes that include a variety of new offerings that organizations will want to take advantage of in administering their platform. This version of the whitepaper has major additions and modifications in the following key areas:</p>
+<div class="card-grid">
+<div class="card"><div class="card-icon" style="background:var(--cp-accent-soft);color:var(--cp-accent)">&#127959;</div><h4>Zoned Governance Model</h4><p>Shifted from loosely structured environment management toward a clear, enforced zoned model built on Environment Groups, rules, and automated routing. The new approach emphasizes predictability and standardization rather than guidance alone. Zones have evolved into operational entities rather than conceptual maturity levels, with each zone defined by specific connector access, data boundaries, sharing constraints, and lifecycle expectations enforced through environment-group rules rather than manual configuration.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(124,58,237,.1);color:var(--purple)">&#128740;</div><h4>Maker Routing</h4><p>Governance now begins the moment a maker first interacts with the platform, with routing automatically placing them into the correct environment based on identity and role, helping apply governance controls early in the agent creation lifecycle.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(59,130,246,.1);color:var(--blue)">&#128295;</div><h4>Managed Platform</h4><p>A unified, standardized set of capabilities that strengthen governance, simplify operations, and provide visibility across the tenant. The managed platform shifts administration from manual oversight to an integrated platform experience where discovery, configuration, deployment, and monitoring all occurs in one place. It ensures that every environment, asset, and agent operates within consistent boundaries and that governance is embedded directly into the operational fabric rather than applied after the fact. It creates a predictable lifecycle for agents by providing clear ownership, visibility, and guardrails from the moment an agent is created through to its deployment and ongoing use.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(20,184,166,.1);color:var(--teal)">&#128230;</div><h4>Inventory</h4><p>A single, tenant-wide view of all apps, flows, agents, connectors, and environments, giving administrators complete visibility into what exists, where it sits, and who owns it. This consolidates what used to require multiple tools and manual discovery into a single governance experience.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(234,179,8,.1);color:var(--zone2)">&#128279;</div><h4>Advanced Connector Governance</h4><p>Centrally define which connectors are allowed or blocked and enforce these decisions consistently across zones. This replaces fragmented decision-making with predictable, rule-driven connector behavior aligned to security and compliance expectations.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(34,197,94,.1);color:var(--zone1)">&#128640;</div><h4>Simplified Deployment</h4><p>Standardized pipelines and solution-based ALM give teams a repeatable way to package, validate, and promote agents between zones safely and predictably. Approvals, configuration consistency, and environment-specific policies are automatically woven into the deployment process, ensuring that promotion from personal to team to enterprise spaces happens safely and predictably.</p></div>
+<div class="card"><div class="card-icon" style="background:var(--cp-accent-soft);color:var(--cp-accent)">&#128075;</div><h4>Onboarding Experiences</h4><p>Welcome content and guided environment messaging now appear as part of the maker experience, helping creators understand rules, responsibilities, and boundaries before they begin building, which reinforces governance at the earliest possible stage.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(59,130,246,.1);color:var(--blue)">&#128202;</div><h4>Usage Insights &amp; Analytics</h4><p>Surfacing visibility into adoption, performance, consumption, and operational health. Administrators and business owners can quickly identify high-value agents, detect drift or anomalies, and track which parts of the organization are benefiting most. Integrated monitoring and reporting complement this by consolidating health signals, dependency issues, performance trends, and operational risks into a unified view that spans every environment and zone.</p></div>
+</div></div></div>
+
+<!-- CH2: OVERVIEW -->
+<div class="section" id="sec-overview" data-search="overview power platform products family integrated low code pro developer azure microsoft 365 dynamics 365">
+<div class="section-header"><div class="section-num">2</div><h2>Overview</h2></div>
+
+<div class="subsection" id="sec-overview-intro" data-search="overview product family integrated platform digital transformation agility layer">
+<p>Power Platform is a product family that delivers innovative business solutions across one seamlessly integrated platform. Power BI, Power Apps, Power Automate, Power Pages and Microsoft Copilot Studio allow any business to analyze and visualize real-time business performance, quickly and easily build custom apps, automate workflows, deliver business websites, create agents and integrate AI capabilities.</p>
+<p>Power Platform supplies a low code interface for any user to quickly create custom apps while simultaneously providing robust tools for pro developers. This makes it possible to develop integrated and innovative solutions across Azure, Microsoft 365, Dynamics 365, and standalone applications. For enterprises, the platform serves as a core &ldquo;agility layer&rdquo; that allows organizations to quickly build new applications and experiences while leveraging the data and services provided by core business systems like SAP or Salesforce. At the intersection of these products lies digital transformation &mdash; giving the customer the power to innovate anywhere, while enabling organizations to realize value across teams and departments.</p>
+</div>
+<figure class="narrative-figure">
+<img src="images/img03.png" alt="Deployment pipeline with approval gates flowing from Development through Test to Production" loading="lazy">
+ 
+</figure>
+
+
+<div class="subsection" id="sec-overview-why" data-search="why organizations use power platform agility layer shadow IT ease of use integration scale reliably classic software">
+<h3>&#129300; Why Do Organizations Use the Power Platform?</h3>
+<p>The Power Platform supplies a level of capability, security and supportability that allows organizations to quickly build, test and deploy applications and solutions, leveraging their existing data and systems. In this way, it provides a layer of capability that is agile, adaptable, and cost effective for developing and testing new ideas and services for an organization. The Power Platform functions as an &ldquo;agility layer&rdquo; that allows organizations to quickly build apps and deliver them out to their intended audience.</p>
+<div class="card-grid">
+<div class="card"><div class="card-icon" style="background:rgba(34,197,94,.1);color:var(--zone1)">&#9889;</div><h4>Ease of Use</h4><p>One of the key features of the Power Platform is its ease of use. The tools are low-code to no-code, meaning that makers do not need to write code to create working solutions. With appropriate governance in place, this means that solutions are produced quickly and in standard, supportable ways. They are likely to have less bugs with the testing tools provided and can be quickly deployed to end-users to test ideas and assumptions.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(59,130,246,.1);color:var(--blue)">&#128268;</div><h4>Enterprise Integration</h4><p>Built to integrate with enterprise data safely and seamlessly &mdash; wherever it is. From building an order tracking app for front line staff that leverages data in SAP, or an employee feedback app that leverages your employees HR file sitting in Workday, the Power Platform is built to integrate with your enterprise data safely and seamlessly.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(124,58,237,.1);color:var(--purple)">&#128737;</div><h4>Shadow IT Solution</h4><p>Many organizations face the challenge of business units or individual users creating unofficial, often unsanctioned, IT solutions to address their specific needs. This phenomenon, known as shadow IT, can introduce risks related to data security, compliance, and system integration. The Power Platform offers a compelling solution to this challenge. By empowering users to develop their own solutions within a controlled and governed environment through onboarding and playgrounds, organizations can harness the innovation and agility of shadow IT while helping mitigate common risks related to security, compliance, and visibility. This balance between user empowerment and IT governance ensures that innovation can occur anywhere within the organization, enabling organizations to realize value across teams and departments.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(234,179,8,.1);color:var(--zone2)">&#128200;</div><h4>Scale Reliably</h4><p>Classic software development and operation typically involve many highly technical areas resulting in higher cost to operate and higher risk to maintain and update as business changes. By virtue of Power Platform being a standardized, robust, reliable offering, organizations no longer must worry about the undifferentiated heavy lifting of building, deploying, and operating coded applications. Power Platform makes it simple for an individual maker to create and deploy solutions to an audience.</p></div>
+</div></div>
+
+<div class="subsection" id="sec-overview-products" data-search="dataverse power apps power automate power pages copilot studio connectors managed environments AI components">
+<h3>&#129513; Platform Components</h3>
+<div class="tabs">
+<div class="tab-buttons">
+<button class="tab-btn active" onclick="switchTab(event,'tab-dataverse')">Dataverse</button>
+<button class="tab-btn" onclick="switchTab(event,'tab-powerapps')">Power Apps</button>
+<button class="tab-btn" onclick="switchTab(event,'tab-automate')">Power Automate</button>
+<button class="tab-btn" onclick="switchTab(event,'tab-pages')">Power Pages</button>
+<button class="tab-btn" onclick="switchTab(event,'tab-copilot')">Copilot Studio</button>
+<button class="tab-btn" onclick="switchTab(event,'tab-connectors')">Connectors</button>
+</div>
+<div class="tab-panel active" id="tab-dataverse">
+<h4>Dataverse &mdash; Secure &amp; Scalable Data Platform</h4>
+<p>Dataverse is a fundamental component of Power Platform that provides a secure and scalable storage solution for data. Power Platform applications, such as Power Apps, Power Automate, and Power BI, can seamlessly utilize Dataverse to store and manage data, making it a pivotal part of the unified ecosystem for business application development.</p>
+<ul><li><strong>Relational Data Storage:</strong> A significant feature of Dataverse is its ability to store data in a relational manner, allowing for complex relationships, hierarchies, and structures that are crucial for complex business applications. The data within Dataverse is stored in tables, which are analogous to tables in other relational databases such as SQL. Each table can contain multiple columns and can have relationships with other tables. Additionally, the platform allows for the definition of business rules and logic at the data layer, ensuring that data operations maintain business-specific constraints and conditions.</li>
+<li><strong>Security Model:</strong> Data integrity and protection are vital for business applications. Dataverse facilitates this through its robust security model supporting fine-grained permissions, role-based access control, and field-level security, ensuring that only authorized users can access or modify specific sets of data. Moreover, it is integrated with Entra, which further bolsters its security capabilities by aligning with a widely accepted identity service.</li>
+<li><strong>Extensibility:</strong> Dataverse provides a set of APIs that developers can use to interact with data, allowing for the creation of custom applications or integration with other systems. This feature is bolstered by a rich set of connectors that facilitates integration with hundreds of applications and services, ranging from other Microsoft products like Dynamics 365, to SharePoint Online and Azure services, to third-party solutions.</li></ul>
+<p>In essence, Dataverse&rsquo;s core features of relational data storage, security, and extensibility make it an invaluable asset within the Power Platform&rsquo;s ecosystem.</p>
+<p><a href="https://learn.microsoft.com/en-us/training/paths/get-started-cds/" style="color:var(--cp-link)">&#128218; Get started with Dataverse training</a></p>
+</div>
+<div class="tab-panel" id="tab-powerapps">
+<h4>Power Apps &mdash; Rapid Application Development</h4>
+<p>Power Apps is a pivotal component of the Power Platform, providing a tool for rapid application development tailored for both business users and professional developers. With a focus on creating business applications quickly, Power Apps aims to bridge the gap between IT departments and other business units, reducing the time and complexity traditionally associated with app development.</p>
+<ul><li><strong>Low-Code Development:</strong> Users can build fully functional apps with minimal coding, utilizing a user-friendly, drag-and-drop interface. This low-code environment empowers not just professional developers but also business users (often termed as &ldquo;makers&rdquo;) to create bespoke applications tailored to their specific needs without waiting for extended development cycles.</li>
+<li><strong>Deep Integration:</strong> Power Apps integrates with other components of the Power Platform, especially Dataverse. This integration enables apps to store, retrieve, and interact with data effortlessly, ensuring consistency and reliability in the underlying data. Moreover, Power Apps can connect with a vast array of external data sources, from SharePoint Online and SQL Server to various third-party services, thanks to the myriad connectors available within the Power Platform ecosystem.</li>
+<li><strong>Mobile-First:</strong> Power Apps is built with mobility in mind. In an era where business operations are increasingly shifting towards mobile platforms, Power Apps allows for the creation of responsive apps that work seamlessly across devices &mdash; be it a desktop, tablet, or smartphone. This ensures that business processes can continue uninterrupted regardless of the device or location, promoting flexibility and efficiency.</li>
+<li><strong>Vibe Coding:</strong> Copilot-assisted development where you describe what you want and the platform builds it.</li></ul>
+<p>In summary, Power Apps stands as a transformation tool in the Power Platform, offering rapid, low-code and vibe coding application development that integrates with diverse data sources while ensuring mobility and responsiveness.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-apps/" style="color:var(--cp-link)">&#128218; Learn more about Power Apps</a></p>
+</div>
+<div class="tab-panel" id="tab-automate">
+<h4>Power Automate &mdash; Workflow Automation</h4>
+<p>Power Automate is a service designed to automate workflows and tasks across a multitude of applications and services. Its primary objective is to facilitate automation in business processes, enhancing efficiency and ensuring that repetitive tasks are handled automatically, reducing the manual overhead and potential for human error.</p>
+<ul><li><strong>Pre-built Connectors:</strong> A core feature of Power Automate is its vast collection of pre-built connectors. These connectors allow users to establish automated workflows between different services, be it within Microsoft&rsquo;s ecosystem &mdash; like SharePoint, Dynamics 365, and Microsoft 365 &mdash; or third-party applications such as Twitter, Dropbox, and Google Workspace. This extensive range of connectors ensures that Power Automate can be a central hub for automating workflows, irrespective of the disparate technologies a business might be using.</li>
+<li><strong>Simple to Complex:</strong> For straightforward tasks, users can leverage templates, which are predefined workflows tailored for common use cases. For instance, a user can quickly set up a flow that saves email attachments from Outlook to OneDrive. However, for more intricate workflows, Power Automate provides advanced logic capabilities, like conditions, loops, and switches, enabling the crafting of nuanced automations tailored to specific business needs.</li>
+<li><strong>Security &amp; Compliance:</strong> Given the potential sensitivity of data being processed and transferred across services, Power Automate emphasizes secure and compliant data handling. It integrates seamlessly with Microsoft&rsquo;s security infrastructure, ensuring that data remains protected throughout its journey. Moreover, the platform provides detailed audit logs, allowing administrators to monitor and review all automation activities.</li></ul>
+<p><a href="https://learn.microsoft.com/en-us/power-automate/" style="color:var(--cp-link)">&#128218; Learn more about Power Automate</a></p>
+</div>
+<div class="tab-panel" id="tab-pages">
+<h4>Power Pages &mdash; External Business Websites</h4>
+<p>Power Pages provides organizations with a way to build externally facing business websites. Power Pages websites are highly secure and ready to scale with any enterprise. Creating sites through easy-to-use low-code interfaces that will accelerate the design, build, and publishing workflow for both low-code makers and professional developers alike.</p>
+<ul><li><strong>Shared Dataverse Data:</strong> Power Pages, like other products in the Power Platform, can take advantage of shared business data stored in Dataverse. This allows makers to build everything from apps, workflows, intelligent virtual agents, and analytics visualizations that are exposed through Power Pages.</li>
+<li><strong>Enhanced Security:</strong> Power Pages provides enhanced security and governance at its core, allowing authors to ensure that business data is secure. Power Pages can take advantage of site authentication with a variety of providers which can, in turn, provide authorization scopes to business data. Power Pages supports modern Transport Layer Security (TLS) standards and is facilitated through the Azure App Service platform. The underlying services align with a variety of compliance accreditations, including International Organization for Standardization (ISO), System and Organization Controls (SOC), and Payment Card Industry Data Security Standard (PCI DSS).</li>
+<li><strong>Global Scale:</strong> For organizations servicing international, high-traffic sites, Power Pages can be set up to use content delivery networks, web application firewalls, and edge caching. By using Azure Front Door with Power Pages, organizations can offer global, low-latency business websites, taking advantage of the SaaS (software-as-a-service) platform.</li></ul>
+<div class="info-callout"><p><strong>Former Names:</strong> Power Pages was formerly known as Power Apps Portals and Dynamics 365 Portals. The portals features previously available on those platforms are now incorporated into Power Pages. Compatible tools include the Power Pages Design Studio, Portals Management App, and the Power Platform Command-Line Interface (CLI).</p></div>
+<p><a href="https://learn.microsoft.com/en-us/power-pages/" style="color:var(--cp-link)">&#128218; Learn more about Power Pages</a></p>
+</div>
+<div class="tab-panel" id="tab-copilot">
+<h4>Microsoft Copilot Studio &mdash; Enterprise AI Agent Platform</h4>
+<p>Microsoft Copilot Studio is the enterprise AI agent platform from Microsoft, designed to help organizations build, connect, and govern intelligent agents across their business. It provides a centralized environment for architecting agents that can act and operate over enterprise data, applications, and workflows, while remaining secure, observable, and compliant at scale.</p>
+<p>As organizations enter the enterprise agent era, Microsoft Copilot Studio enables a shift from simple conversational experiences to agents designed to assist with and automate defined business tasks. These agents can support the automation and orchestration of multi-step processes through streamlined workflows that improve velocity, reduce costs, and increase productivity. Microsoft Copilot Studio is built to support this transformation by providing the tooling enterprises need to move from experimentation to production with confidence.</p>
+<ul><li><strong>Natural-Language Development:</strong> Copilot Studio offers an intuitive, natural-language-driven development experience that supports a wide spectrum of agent scenarios, from simple task assistance to sophisticated, multi-agent orchestration. Organizations can select from a broad range of models, ground agents in structured and unstructured enterprise knowledge regardless of where it resides, and extend agent capabilities using built-in tools, connectors, and automation flows.</li>
+<li><strong>Governance &amp; Security:</strong> A defining strength of Copilot Studio is its governance and security capabilities designed for enterprise environments. The platform provides visibility and administrative controls across key stages of the agent lifecycle, including access management, data protection, capabilities that support compliance requirements and policy enforcement, and risk mitigation enabled by the Power Platform admin center (PPAC). Centralized controls help organizations manage and reduce the risk of uncontrolled agent sprawl, ensure sensitive data is handled appropriately, and confidently scale agent deployments across teams and departments.</li>
+<li><strong>Measurability:</strong> Measurement and reporting capabilities enable organizations to track usage, adoption, and impact, supporting continuous optimization and clear ROI justification.</li>
+<li><strong>Broad Ecosystem Connectivity:</strong> By combining powerful agent orchestration, broad ecosystem connectivity, and robust governance, Microsoft Copilot Studio enables organizations to unlock the full potential of AI agents, transforming how work gets done while staying firmly in control.</li></ul>
+<p><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/" style="color:var(--cp-link)">&#128218; Learn more about Microsoft Copilot Studio</a></p>
+</div>
+<div class="tab-panel" id="tab-connectors">
+<h4>Connectors &mdash; Data Bridges</h4>
+<p>Connectors function as bridges between different services, enabling data to flow seamlessly across a diverse range of applications, databases, and other services. Whether you are looking to integrate data from cloud-based solutions, on-premises systems, or third-party platforms, connectors ensure that the Power Platform remains flexible and extensive in its data integration capabilities.</p>
+<ul><li><strong>Pre-built:</strong> Microsoft offers hundreds of ready-made connectors for the Power Platform, catering to popular services such as SharePoint, Dynamics 365, Azure SQL, Salesforce, Google Workspace, and many more. These connectors drastically simplify the process of data integration, allowing users to establish connections between the Power Platform and external systems with just a few clicks, without needing to dive deep into API intricacies.</li>
+<li><strong>Custom Connectors:</strong> Power Platform provides the capability to create custom connectors. Recognizing that businesses may have unique or niche systems not covered by pre-built connectors, the platform provides tools for users to design their own connectors. This ensures that even proprietary or less common systems can integrate with the Power Platform, offering businesses unparalleled flexibility.</li>
+<li><strong>Robust:</strong> Connectors are not just simple data pipes but come with capabilities to handle authentication, error handling, and even data transformation in some cases. This ensures that data integration is not just possible, but efficient and reliable, reducing potential friction points when bridging multiple systems.</li></ul>
+<p>Connectors are the unsung heroes of the Power Platform, ensuring that data and actions can move effortlessly between a vast array of services. They encapsulate the platform&rsquo;s philosophy of accessibility, flexibility, and integration, providing users with tools to make the most of their data, irrespective of where it exists.</p>
+<p><a href="https://learn.microsoft.com/en-us/connectors/" style="color:var(--cp-link)">&#128218; Learn more about Connectors</a></p>
+</div>
+</div></div>
+
+<div class="subsection" id="sec-overview-managed" data-search="managed environments native capabilities governance operations inventory usage controlled sharing deployment lifecycle">
+<h3>&#9881; Managed Environments</h3>
+<p>Managed environments provide native capabilities for inventory, usage insight, controlled sharing, advanced connector governance, and standardized deployment and lifecycle management. By making governance and operations part of the platform experience &mdash; not an external process &mdash; managed environments enable organizations to scale confidently while keeping risk and complexity in check.</p>
+<div class="callout"><p><strong>Enabling a Managed Environment</strong> is a simple admin action &mdash; for example, in the admin experience you can navigate to environments and use the Managed Environment toggle. It unlocks controls that reduce deployment risk such as consistent policy application across environments and stronger governance posture.</p></div>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-overview" style="color:var(--cp-link)">&#128218; Learn more about Managed Environments</a></p>
+
+<h4 style="margin-top:24px;margin-bottom:12px;color:var(--cp-text)">&#128268; Managed Environment Feature Overview</h4>
+<p style="font-size:13.5px;color:var(--cp-text-soft);margin-bottom:16px">A Managed Environment unlocks the following premium capabilities. Each feature is summarized below with a link to the official documentation.</p>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128194; Environment Groups</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Managing the Power Platform on a large scale across numerous environments, ranging from hundreds to tens of thousands, poses a significant challenge for both startup and enterprise IT teams. Environment groups offer a premium governance solution designed to streamline management tasks by organizing environments into logical collections and enforcing uniform policies and configurations. Think of an environment group as a &ldquo;folder&rdquo; for your environments &mdash; administrators can cluster environments into structured groups and manage multiple environments simultaneously through centrally managed rules.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/environment-groups" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128279; Limit Sharing</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>In Managed Environments, admins can limit how broadly users can share canvas apps, flows, and agents. Controls include excluding sharing with security groups, capping the number of individuals an app can be shared with, and managing editor vs. viewer permissions for agents &mdash; giving organizations fine-grained control over how solutions are distributed.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-sharing-limits" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128202; Weekly Usage Insights</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Stay informed about what&rsquo;s happening in your managed environments with Power Platform&rsquo;s weekly admin digest. Analytics about your top apps, your most impactful makers, and inactive resources you can safely clean up are distilled and delivered to your mailbox once a week.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-usage-insights" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128737; Data Policies</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>With Managed Environments, admins can easily identify all the data policies that are applied to an environment. Data policies define the consumer connectors that data can be shared with, making sure that data is managed in a uniform manner across your organization and preventing important business data from being accidentally published to connectors like social media sites.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-data-policies" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128640; Pipelines in Power Platform</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Create and run pipelines to easily deploy solutions to environments. There are two ways to set up pipelines: the default tenant-wide <strong>platform host</strong>, which can be configured by makers, and a <strong>custom host</strong> where admins configure centrally governed citizen-led and pro-dev-led projects. Pipelines provide a repeatable and auditable deployment mechanism across environments.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/alm/set-up-pipelines" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128075; Maker Welcome Content</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>In Managed Environments, admins can provide customized welcome content to help their makers get started with Power Apps, Power Automate, and Copilot Studio. When you add your own help content, it replaces the default first-time help experience &mdash; greeting makers with customized getting started information, training links, and organizational guidance upon sign-in.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/welcome-content" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#9989; Solution Checker Enforcement</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>The solution checker is a powerful tool that performs a comprehensive static analysis of your solution objects against a set of best practice rules. Administrators can use solution checker to enforce checks during solution import in a Managed Environment &mdash; with options to <strong>Warn</strong> (allow import but notify) or <strong>Block</strong> (cancel import) when highly-critical issues are detected, providing a quality gate before solutions reach production.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-solution-checker" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128737; IP Firewall</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>The IP firewall protects your organizational data by ensuring users can only access Microsoft Dataverse from allowed IP locations. The IP firewall analyzes the IP address of each request in real time &mdash; if a user tries to access organizational resources from a disallowed location, Dataverse denies access immediately, mitigating insider threats like data exfiltration and token replay attacks.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/ip-firewall" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128274; IP Cookie Binding</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Prevent session hijacking exploits in Dataverse with IP address-based cookie binding. If a malicious user copies a valid session cookie from an authorized computer, Dataverse compares the IP address of the cookie&rsquo;s origin against the requesting computer in real time &mdash; if they differ, the attempt is blocked, preventing unauthorized access via stolen session tokens.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/block-cookie-replay-attack" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128273; Customer Managed Key (CMK)</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>All customer data stored in Power Platform is encrypted at-rest with strong Microsoft-managed encryption keys by default. Customer-managed encryption key (CMK) provides added data protection control &mdash; you can self-manage the database encryption key associated with your Dataverse environment, rotate or swap the key on demand, and prevent Microsoft&rsquo;s access to your customer data by revoking key access at any time.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/customer-managed-key" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128274; Customer Lockbox</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Most operations, support, and troubleshooting performed by Microsoft personnel don&rsquo;t require access to customer data. With Customer Lockbox, customers can review and approve (or reject) data access requests in the rare occasion when Microsoft needs access to customer data &mdash; whether in response to a support ticket or a problem identified by Microsoft. All updates are recorded and available as audit logs.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/about-lockbox" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128190; Extended Backup</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>System backups are automatically created for environments that have a database. For managed production environments without Dynamics 365 applications, the retention period can be extended up to 28 days using PowerShell &mdash; matching the retention available for production environments with Dynamics 365 apps and ensuring business continuity for critical workloads.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/backup-restore-environments" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128736; Data Policies for Desktop Flows</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Power Automate allows you to create and enforce DLP policies that classify desktop flow modules and individual module actions as <strong>Business</strong>, <strong>Non-business</strong>, or <strong>Blocked</strong>. This categorization prevents makers from combining modules and actions from different categories into a desktop flow, or between a cloud flow and the desktop flows it uses.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-automate/prevent-data-loss" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128200; Export to Azure Application Insights</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Application Insights, a feature of Azure Monitor, is widely used for monitoring and diagnostics. Data collected from a specific tenant or environment is pushed to your own Application Insights environment, where it is stored in Azure Monitor logs and visualized in Performance and Failures panels &mdash; enabling support, developer, and admin personas to triage and resolve issues using dashboards, smart detection, and custom queries.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/overview-integration-application-insights" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128230; Catalog</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>The catalog in Power Platform enables developers and makers to crowd-source and find templates and components within their environment, find and install the latest authoritative version of a component, and get started with templates that provide immediate value. A Managed Environment is required to submit items to the catalog, with role-based access controls for submitters, readers, approvers, and administrators.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/administer-catalog" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128740; Default Environment Routing</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Environment routing is a premium governance feature that allows Power Platform admins to automatically direct new or existing makers into their own personal developer environments when they visit Copilot Studio, Power Apps, Power Automate, or Power Automate for desktop. It offers makers a personal, safe space to build with Microsoft Dataverse without the fear of others accessing their apps or data &mdash; like OneDrive, but for app development.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/default-environment-routing" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#127760; Virtual Network Support</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>By using Azure Virtual Network support for Power Platform, you can integrate Power Platform with resources inside your virtual network without exposing them over the public internet. Virtual Network support uses Azure subnet delegation to manage outbound traffic from Power Platform at runtime &mdash; protected resources don&rsquo;t need to be available over the internet to integrate with Power Platform, providing data protection and eliminating unauthorized access.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/vnet-support-overview" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128272; Conditional Access on Individual Apps</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Protect against data exfiltration by controlling which apps can run in your Dataverse environment. App access control is performed at the Dataverse authentication layer &mdash; validating the client app ID in the user&rsquo;s token against a list of allowed and blocked apps configured for the environment, granting or denying access in real time.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/control-app-access-environment" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128065; Data Masking Rules</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Data masking helps protect sensitive information during customer interactions and prevents data leaks. It replaces sensitive data with masked strings using regular expressions to identify patterns like credit card numbers, social security numbers, or personal data &mdash; ensuring the original unmasked values remain hidden from unauthorized users. Only authorized users can read unmasked values, one record at a time.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/admin/create-manage-masking-rules" style="color:var(--cp-link)">&#128218; Learn more</a></p>
+</div></div></div>
+
+</div>
+
+<div class="subsection" id="sec-overview-ai" data-search="AI copilot AI builder generative natural language machine learning democratizes">
+<h3>&#129302; AI Features of the Power Platform</h3>
+<p>The Power Platform can also take advantage of recent advancements in Generative AI and machine learning. With Copilot, organizations can describe what they want their app, flow, or agent to do, in natural language, and Copilot will build it for them. This capability allows makers to be incredibly effective in generating even complex apps quickly and safely.</p>
+<p>In addition to Copilot, AI Builder empowers users to integrate artificial intelligence capabilities into their apps and workflows without needing deep AI expertise. Through a user-friendly interface, AI Builder offers pre-built models for common scenarios, like form processing, object detection, and prediction, while also allowing customization based on specific data. This tool democratizes AI, bridging the gap between complex AI processes and everyday business applications, enabling organizations to harness the power of AI-driven insights and automation seamlessly.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-platform/copilot" style="color:var(--cp-link)">&#128218; Learn more about AI features across the platform</a></p>
+</div></div>
+
+<!-- CH3: PLANNING -->
+<div class="section" id="sec-planning" data-search="planning environments strategy dataverse scaling">
+<div class="section-header"><div class="section-num">3</div><h2>Planning</h2></div>
+
+<div class="subsection" id="sec-planning-envs" data-search="understanding environments containers isolation security boundary DLP geographic data residency environment admin managed environment groups routing">
+<h3>&#127963; Understanding Environments</h3>
+<p>In Power Platform, scaling safely isn&rsquo;t just about where solutions live &mdash; it&rsquo;s about ensuring every app, flow, and agent is created inside the right boundaries from day one. Just like traditional software development and deployment, the organization, management, and segregation of resources are pivotal to ensuring efficient workflows, security, and scalability. Power Platform addresses this need through the concept of &ldquo;environments&rdquo;. These environments act as isolated containers, each hosting its own set of apps, data, and other components, ensuring that the different stages of the application lifecycle, from development to production, can be cleanly separated and managed.</p>
+<p>Environments are the <strong>security boundary and the unit of management</strong> in the Power Platform. By delineating boundaries between different solution instances, environments prevent inadvertent overlaps, reduce the risk of errors, facilitate security management, and improve deployment efficiency. For instance, developers can work in an environment tailored for experimentation, such as their own personal playground environment, without the fear of disrupting live applications. At the same time, administrators can control access, allocate resources, and enforce policies differently for each environment, catering to its specific purpose and the needs of its users.</p>
+<p>Each environment is tied to a single geographic location that is configured at the time the environment is created. By leveraging multiple environments in different regions, Power Platform supports multiple geographic deployments out of the box. Within each environment, the customer data for an environment does not leave the geography in which that environment is provisioned.</p>
+<p>Environments can be used for individual users or user groups, for intended purposes, for stages in the lifecycle of a solution or app, or for different audiences. Each environment can have different Data Loss Prevention (DLP) policies applied to it, defining which connectors can or cannot be used in combination within the environment. Each environment has at the highest level a set of users that have the environment admin role. These users serve as the administrators of the environment.</p>
+<div class="info-callout"><p>Environments are no longer managed one-by-one as independent containers. Instead, organizations increasingly use <strong>Managed Environments</strong> and centralized governance to apply consistent standards at scale. Managed Environments unlock a suite of capabilities for operating Power Platform across the enterprise with more control, less effort, and better visibility, including environment routing, environment groups, and standardized deployment controls.</p></div>
+<p>To reduce sprawl and enforce governance from the start, <strong>environment routing</strong> can automatically direct makers away from the shared default environment and into personal developer environments based on organizational rules. When used with <strong>environment groups</strong>, newly created environments can be automatically added to the appropriate group so that governance rules apply immediately, without manual setup.</p>
+<p><strong>Environment groups</strong> let tenant administrators cluster Managed Environments into logical zones and publish rules that lock key settings across every environment in the group. This prevents configuration drift and ensures that policies, such as ALM defaults and other governance settings, stay consistent over time, even as new environments are created or moved between zones.</p>
+<p>The default environment still exists and is required for certain Microsoft 365-integrated experiences, but it should be treated as a tightly controlled productivity space rather than a landing zone for scalable solutions.</p>
+</div>
+
+<div class="subsection" id="sec-planning-strategy" data-search="environment strategy default environment routing groups use cases footprint future state workloads ALM risk">
+<h3>&#128203; Developing an Environment Strategy</h3>
+<p>A modern environment strategy focuses on minimizing long-lived solution development in the default environment, and instead using routing, groups, and managed controls to place makers into the right governed zone by design.</p>
+<p>As an early step in establishing a well-governed Power Platform, organizations should formally define an environment strategy that reflects both today&rsquo;s footprint and the intended future state. At a high level, the strategy defines what environments you deploy, which workloads belong where, and how each environment is governed based on its role, business risk, and ALM path, so solutions can move from experimentation to production predictably and safely.</p>
+<figure class="narrative-figure">
+<img src="images/img09.png" alt="Environment strategy with concentric deployment rings from inner dev through validation to full production" loading="lazy">
+ 
+</figure>
+
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#127968; Manage the Default Environment</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>The first step in an enterprise environment strategy is to reposition the default environment. It must exist and it will continue to be used by Microsoft 365 integrated experiences, but it should <strong>not</strong> be the primary place where makers build long-lived apps, flows, or agents. Instead, treat it as a constrained personal productivity space, especially now individuals have their own personal development environments with environment routing, and use platform capabilities to move creation into governed developer workspaces by design.</p>
+<p>For example, Power Apps created from SharePoint lists will be automatically provisioned in the default environment. In some instances, you can change the default environment routing for Power Platform solutions created via a Microsoft 365 interface. For example, it is possible to set a custom default environment for SharePoint Online Power App forms. By using the Managed Environments environment routing &mdash; a <strong>premium</strong> feature &mdash; you can route new makers to their own personal developer environment. Thereby simplifying solution practices and enforcing more control over user routing. Environment routing helps to limit sprawl and helps share best practices through onboarding content and experiences.</p>
+<p>To limit the risk of data loss from the default environment, a policy should be invoked that limits the connectors available in the default environment to business-approved connectors such as SharePoint, Teams, and Outlook. New connectors should be blocked by default in this environment as well as custom connectors. A default environment administrator should be assigned to regularly maintain and monitor this environment and ensure it is being used sensibly.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#127919; Major Environment Use Cases</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>As a first step in building an environment strategy, define the major use cases (zones) your organization needs and the default path makers should follow. The goal isn&rsquo;t to only catalog environment &ldquo;types&rdquo; &mdash; it&rsquo;s to standardize a small set of governed spaces and ensure makers land in the right one automatically. The recommendation is to now use environment routing so new makers are directed into their own personal developer environment (instead of building in the default environment) and pairing that with environment groups so governance rules are applied consistently across every environment created for that use case.</p>
+<p>Most organizations can cover many of their needs with four core use cases:</p>
+<ul>
+<li><strong>Personal Developer (Individual Build/Iteration):</strong> A private, auto-provisioned workspace for a single maker to iterate on small productivity solutions without impacting others. This should be the &ldquo;default landing zone&rdquo; for makers via environment routing, and it should be governed through an environment group so policies (for example, sharing limits, onboarding content, and connector constraints) are enforced without one-by-one configuration.</li>
+<li><strong>Advanced Maker / Departmental Collaboration (Power User):</strong> A governed team environment for advanced makers who need broader connector access, shared collaboration, or department-level solutions. Define how users are evaluated, trained, and granted entry, then enforce the right controls consistently via environment-group rules rather than relying on manual setup.</li>
+<li><strong>Shared (Multi-solution, Medium Complexity):</strong> A shared environment that intentionally hosts multiple solutions with common guardrails. This is often appropriate when solutions share components, data, or administrative overhead, and when teams need a faster path than full app-by-app dedicated isolation. The key is to treat &ldquo;shared&rdquo; as an explicit operating model: clear ownership, consistent policy enforcement, and a defined threshold for when a solution must graduate out of shared into a dedicated lifecycle.</li>
+<li><strong>Dedicated (Business-critical with Full Lifecycle):</strong> A dedicated environment set (typically Dev/Test/Prod, and sometimes additional stages if needed) for a core solution used broadly or exposed to external users. This is where you standardize ALM expectations and governance, aligning environments to release stages, applying stricter controls in production, and using managed capabilities to keep lifecycle consistent at scale.</li>
+</ul>
+<p>Most organizations will have these core use cases and should design an explicit process for how environments are created, grouped, governed, and administered.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#129514; Trial Environments</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Trial environments are designed for short-term evaluation and proof-of-concept work. Power Platform supports two trial models &mdash; <strong>standard</strong> and <strong>subscription-based</strong> &mdash; and they&rsquo;re governed differently depending on whether trials are user self-serve or admin-controlled in your tenant.</p>
+<p>If your tenant allows standard trials for users, anyone with a suitable license can create a 30-day trial environment (typically one at a time, per the per-user trial entitlement). When the trial period ends, the environment is disabled and deleted, and its resources, including data, are removed unless it&rsquo;s converted to production before expiration (extensions can be available depending on the trial type and tenant policy).</p>
+<p>For subscription-based trials, provisioning is admin-led: tenant admins can add a trial (subscription-based) environment to the tenant for broader, multiuser proof-of-concept scenarios.</p>
+<p>To prevent sprawl, it is recommended to restrict trial environment creation using tenant environment creation controls (for example, limiting to Microsoft 365 Global Admins, Dynamics 365 Admins, and Power Platform Admins) and manage these settings from the Power Platform admin center.</p>
+<p>For more details:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/power-platform/admin/create-environment" style="color:var(--cp-link)">Create environments</a></li>
+<li><a href="https://learn.microsoft.com/en-us/power-platform/admin/trial-environments" style="color:var(--cp-link)">Trial environments</a></li>
+<li><a href="https://learn.microsoft.com/en-us/power-platform/admin/control-environment-creation" style="color:var(--cp-link)">Control environment creation</a></li>
+</ul>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#127981; Production Environments</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>By default, production environments can be created by an administrator or by users with an appropriate Power Apps license, provided your tenant allows environment creation and at least 1 GB of Dataverse database capacity is available.</p>
+<p><strong>Recommendation:</strong> Restrict production environment creation to only Microsoft 365 global admins, Dynamics 365 admins, and Power Platform admins from the Power Platform admin center.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128295; How Environments Are Managed</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Once environments are created, they require ongoing operational management. Adding and removing users, adjusting access, enabling or restricting connectors, and updating environment configuration are common day-to-day tasks that directly impact security and reliability.</p>
+<p>Define a clear operating process for how these requests are submitted, evaluated, approved, and executed so environment administrators can respond quickly without introducing inconsistent governance. At enterprise scale, the objective is to reduce case-by-case &ldquo;exceptions&rdquo; by standardizing what changes are allowed, who can approve them, and how approved changes are applied consistently across environments.</p>
+<p>Use <strong>Environment Groups</strong> to organize environments by operating zones and apply rules that enforce standardized settings across every environment in the group. When rules are published, the corresponding settings become locked at the environment level, keeping settings consistent and reducing administrative overhead. Using this with <strong>Environment routing</strong>, which can direct makers into personal managed developer environments by default, ensuring governance is applied before resources are created.</p>
+</div></div></div>
+</div>
+
+<div class="subsection" id="sec-planning-dataverse" data-search="dataverse data planning capacity schema naming publisher shared environments scaling data model">
+<h3>&#128190; Planning Your Data with Dataverse</h3>
+<p>Dataverse planning is less about &ldquo;where data lives&rdquo; and more about ensuring your data model, naming standards, and storage posture scale as apps, flows, and agents multiply across environments. Each environment that uses Dataverse has its own Dataverse database, and solutions are deployed into that environment boundary.</p>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128256; Treat Shared Environments as Shared Schemas</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Shared environments (for example, team or departmental environments where multiple solutions coexist) accelerate collaboration, but they also introduce a predictable risk: <strong>schema collision</strong>. When multiple solutions are deployed into the same Dataverse database, table and column names must remain unique across all installed solutions. Without discipline, makers can unintentionally create duplicate or conflicting tables, fields, or relationships that are difficult to unwind later.</p>
+<p>A scalable approach is to standardize publisher-based naming for all customizations:</p>
+<ul>
+<li>Use a <strong>distinct solution publisher prefix</strong> for each product team, department, or solution family so custom tables and columns remain clearly attributable and collision resistant.</li>
+<li>Require <strong>descriptive display names</strong> and <strong>consistent logical naming conventions</strong> so your table inventory remains supportable as adoption grows.</li>
+</ul>
+<p>This becomes even more important as Copilot-assisted experiences reduce the friction of creating tables. If makers can generate tables quickly from prompts, governance must ensure the resulting schema still aligns to organizational naming and ownership standards.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128202; Capacity Is Tenant-Wide</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Dataverse storage is governed through a tenant-level entitlement model that tracks capacity across three storage categories:</p>
+<ul>
+<li><strong>Database</strong> (relational table data and metadata)</li>
+<li><strong>File</strong> (attachments and files stored with records)</li>
+<li><strong>Log</strong> (logging/audit-related storage)</li>
+</ul>
+<p>Because these categories are tracked independently, capacity planning should not take the &ldquo;How big is my Dataverse?&rdquo; approach but focus on which storage type will your solution primarily grow in, and do you have the right headroom for it.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128276; Notification Thresholds</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>If you are familiar with how notification thresholds previously worked, the earlier 85% and 95% alert model should be updated. Notifications are now triggered based on how much capacity remains in any of the three storage types:</p>
+<ul>
+<li>When any storage category has <strong>less than 15% available</strong>, admins receive a &ldquo;nearing limit&rdquo; notification.</li>
+<li>When any storage category has <strong>less than 5% available</strong>, admins receive a stronger warning that administrative operations may be impacted.</li>
+</ul>
+<p>These notifications are delivered on a recurring basis to tenant admins and Power Platform admins, and are tied to the capacity posture of the tenant.</p>
+</div></div></div>
+</div></div>
+
+<!-- CH4: GOVERNANCE -->
+<div class="section" id="sec-governance" data-search="governance pillars security management reporting zones structured enforceable operational fabric">
+<div class="section-header"><div class="section-num">4</div><h2>Governance</h2></div>
+<p style="font-size:14px;color:var(--cp-text-soft);margin-bottom:24px">Effective governance of the Power Platform requires more than isolated policies or after-the-fact controls. As organizations scale their use of apps, flows, and agents across teams and business units, governance must be structured, enforceable, and embedded into the platform&rsquo;s operational fabric. Microsoft recommends organizing governance around five core pillars that work together to provide security, consistency, visibility, and scalability across the full lifecycle of Power Platform solutions. These pillars align to how the platform is now administered &mdash; through Managed Environments, environment groups, automated routing, and centralized reporting &mdash; so that governance is applied by design rather than through manual oversight.</p>
+<figure class="narrative-figure">
+<img src="images/img04.png" alt="Governance journey timeline from first sign-in through discover, build, test, deploy, and monitor stages" loading="lazy">
+ 
+</figure>
+
+
+<div class="subsection" id="sec-governance-fundamentals" data-search="fundamentals policy process people pyramid non-system factors environment groups rules routing pilot agents cost review aspirational operational">
+<h3>&#127963; Governance Fundamentals</h3>
+<p>To ensure success, it is recommended that fundamental governance principles are established. Conceptually, these principles can be summarized into three pillars that support the governance system:</p>
+<div class="pyramid-container">
+<div class="pyramid-level pyr-1">&#128101; People</div>
+<div class="pyramid-level pyr-2">&#9881; Process</div>
+<div class="pyramid-level pyr-3">&#128220; Policy</div>
+</div>
+<div class="card-grid" style="margin-top:16px">
+<div class="card"><h4>&#128220; Policy</h4><p>There should be a comprehensive strategy outlining the system&rsquo;s objectives, accompanied by policies to provide high-level structure. For example, the overarching strategy may involve pilot agents to evaluate business benefits. To achieve this, policies may be required for data loss prevention, citizen development, and Application Lifecycle Management (ALM).</p></div>
+<div class="card"><h4>&#9881; Process</h4><p>The methodology for implementing this strategy is defined by processes. For instance, there should be a process for regular review and reporting of costs, as well as a process for ALM. Clearly defined issue escalation paths should also be established.</p></div>
+<div class="card"><h4>&#128101; People</h4><p>Governance is inherently complex, and requires management by individuals who are authorized, capable, and accountable.</p></div>
+</div>
+<p style="margin-top:16px;font-size:14px;color:var(--cp-text-soft)">No matter how many governance tools are available, true governance only happens when organizations define a clear strategy and actively implement supporting processes. Tools can help automate and enforce, but without strategic intent and disciplined execution, governance remains aspirational rather than operational. This is also why change management is important.</p>
+<div class="callout" style="margin-top:16px"><p><strong>Key insight:</strong> At a conceptual level, the pillars of governance can be presented as a pyramid. This pyramid emphasizes the importance of non-system factors in achieving a robust governance system. While no set of tools can replace the need for a clear governance strategy and disciplined processes, the right tools can make it much easier to operationalize and sustain those practices at scale. Within the Microsoft governance ecosystem, these governance pillars are enforced with Environment Groups, Group Rules, and Environment Routing.</p></div>
+<figure class="narrative-figure">
+<img src="images/img12.png" alt="Four-quadrant governance dashboard showing Inventory, Monitoring, Security, and AI Insights around a central Platform Visibility hub" loading="lazy">
+ 
+</figure>
+
+</div>
+
+<div class="subsection" id="sec-governance-security" data-search="security controls DLP connector data loss prevention AI protections purview identity access environments primary security boundary data residency four categories drift prevention">
+<h3>&#128274; Security Controls</h3>
+<p>Security controls define the boundaries within which apps, flows, and agents are allowed to operate. These controls protect organizational data, enforce compliance requirements, and reduce the risk introduced by uncontrolled integration or exposure.</p>
+<p>In the Power Platform, security controls span identity and access management, data protection, connector governance, and runtime enforcement. At a foundational level, <strong>environments act as the primary security boundary</strong>, allowing tenant administrators to isolate workloads, control data residency, and apply tailored policies based on risk and business purpose.</p>
+<p>Key security capabilities include:</p>
+<ul>
+<li><strong>Data Loss Prevention (DLP)</strong> &mdash; policies that govern which connectors can be used together and restrict data movement across trust boundaries</li>
+<li><strong>Connector Access &amp; Advanced Policies</strong> &mdash; determine which services (including premium or custom connectors) are available in each environment</li>
+<li><strong>Role-based Access &amp; Dataverse Security</strong> &mdash; control who can build, run, and share apps, flows, and agents, as well as what data they can access</li>
+<li><strong>AI-specific Protections</strong> &mdash; including model selection, grounding boundaries, and integration with Microsoft Purview for sensitive data detection and compliance reporting</li>
+</ul>
+<p>Security controls are most effective when applied consistently at scale. Environment Groups and rules allow organizations to define these security baselines once and enforce them automatically across every environment in a given governance zone, preventing drift and reducing reliance on manual configuration.</p>
+<figure class="narrative-figure">
+<img src="images/img06.png" alt="Stacked security layers from Tenant Isolation down through Conditional Access, DLP, Security Roles, Business Units, Row-Level, and Column-Level Security" loading="lazy">
+ 
+</figure>
+
+</div>
+
+<div class="subsection" id="sec-governance-management" data-search="management controls lifecycle ownership accountability sharing publishing retirement ad-hoc standardized managed environments cannot be altered fragmentation unclear ownership one-off exceptions">
+<h3>&#128203; Management Controls</h3>
+<p>Management controls govern how Power Platform resources are created, operated, promoted, and <strong>retired</strong> over time. While security controls define what is permitted, management controls define ownership, accountability, and operational discipline.</p>
+<p>These controls span the full lifecycle of apps, flows, and agents, including:</p>
+<ul>
+<li>Who is allowed to create environments and solutions</li>
+<li>How environments are configured and administered</li>
+<li>How sharing, publishing, and promotion between environments is handled</li>
+<li>How changes are reviewed, approved, and deployed</li>
+</ul>
+<p>Modern Power Platform governance shifts management away from ad-hoc processes toward standardized, rule-driven operations. Managed Environments provide native capabilities for enforcing sharing constraints, onboarding experiences, solution deployment expectations, and environment-level settings that <strong>cannot be altered independently</strong>.</p>
+<p>By combining environment groups, rules, and standardized pipelines, administrators can ensure:</p>
+<ul>
+<li>Consistent configuration across environments serving the same purpose</li>
+<li>Predictable promotion paths from development to production</li>
+<li>Clear separation between personal, team, and enterprise-critical workloads</li>
+<li>Reduced operational overhead by eliminating one-off exceptions</li>
+</ul>
+<p>Management controls ensure that growth in apps, flows, and agents does not result in fragmentation, unclear ownership, or unsupported solutions.</p>
+</div>
+
+<div class="subsection" id="sec-governance-reporting" data-search="reporting visibility inventory monitoring security copilot PPAC purview analytics unsustainable operational data assumptions MAC Microsoft 365 Admin Center business-impacting incidents diagnostic overhead">
+<h3>&#128202; Platform Reporting &amp; Visibility</h3>
+<p>At scale, governance is unsustainable without comprehensive visibility. Platform reporting provides the insight administrators need to understand what exists, how it is used, and where risk or opportunity is emerging across the tenant.</p>
+<p>Power Platform reporting is no longer limited to isolated usage metrics. The new reporting architecture delivers unified visibility across apps, flows, connectors, environments, and agents, enabling governance decisions to be based on real operational data rather than assumptions.</p>
+<p>This visibility is delivered primarily through four experiences in the Power Platform admin center (PPAC): Inventory, Monitoring, Security, and Copilot, with Microsoft Purview providing cross-tenant data security and compliance reporting.</p>
+<figure class="narrative-figure">
+<img src="images/img11.png" alt="Power Platform Admin Center dashboard showing Copilot Studio metrics, capacity trends, and governance recommendations" loading="lazy">
+ 
+</figure>
+
+<div class="card-grid">
+<div class="card"><div class="card-icon" style="background:rgba(59,130,246,.1);color:var(--blue)">&#128230;</div><h4>Inventory &mdash; Tenant-Wide Discovery</h4><p>Inventory provides a comprehensive, cross-environment view of all Power Platform assets, including apps, flows, agents, and more. It establishes the authoritative catalog for governance by showing what exists, who owns it, where it lives, and how it is being used. This inventory serves as the starting point for identifying sprawl, unmanaged solutions, and candidates for optimization or retirement.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(34,197,94,.1);color:var(--zone1)">&#128147;</div><h4>Monitoring &mdash; Health &amp; Operational Insight</h4><p>The Monitoring experience surfaces health, reliability, and performance signals across Power Platform workloads. It enables administrators to identify failures, degradation trends, and abnormal behavior in apps, flows, and agents before they become business-impacting incidents. Operational monitoring supports proactive governance by shifting administrators away from reactive troubleshooting toward continuous improvement.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(239,68,68,.1);color:var(--zone3)">&#128737;</div><h4>Security &mdash; Centralized Posture Management</h4><p>The Security experience consolidates security insights and recommendations across the Power Platform, including data access patterns, connector usage, and configuration risks. It highlights misconfigurations and risky combinations that may increase exposure and provides guidance to remediate issues consistently across environments. By consolidating security signals and recommendations in one place, the Security experience reduces diagnostic overhead for IT teams, making it faster to identify misconfigurations, prioritize risk, and take corrective action across the platform.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(124,58,237,.1);color:var(--purple)">&#129302;</div><h4>Copilot &mdash; Adoption &amp; Value Oversight</h4><p>The Copilot experience consolidates governance, analytics, and business value metrics for Copilot and agent usage across Power Platform. It provides usage, adoption, and value metrics that help organizations understand where AI-driven solutions are delivering impact, where governance controls are being applied, and how usage aligns with business outcomes. For many organizations, this becomes the executive-facing view that ties technical governance to return on investment. However, when Copilot Studio agents are published to Microsoft Teams or Microsoft 365 Copilot, administration and visibility are surfaced through the Microsoft 365 Admin Center (MAC), making MAC the control point for these deployment surfaces.</p></div>
+</div></div>
+
+<div class="subsection" id="sec-governance-routing" data-search="maker routing auto provisioning environment routing personal developer team enterprise identity role group membership connector policies sharing defaults security baselines">
+<h3>&#128740; Maker Routing &amp; Auto-Provisioning</h3>
+<p><strong>One of the most important governance shifts in the Power Platform is that governance now begins before a maker creates their first app, flow, or agent.</strong></p>
+<p>Environment routing and environment groups ensure that makers are automatically placed into the correct governed space based on identity, role, or group membership. When a user first accesses Power Apps, Power Automate, or Copilot Studio, routing evaluates organizational rules and provisions them into an appropriate environment aligned to governance intent.</p>
+<figure class="narrative-figure">
+<img src="images/img02.png" alt="Maker routing flow directing new builders through identity and group-based rules to the right governed environment" loading="lazy">
+ 
+</figure>
+
+<p>Typical routing patterns include:</p>
+<ul>
+<li>Personal developer environments for individual experimentation and iteration</li>
+<li>Team or departmental environments for shared collaboration</li>
+<li>Enterprise managed environments for high-risk or organization-wide solutions</li>
+</ul>
+<p>Routing prevents accidental creation in the Default Environment and ensures that appropriate connector policies, sharing defaults, security baselines, and support expectations are enforced from the moment development begins.</p>
+<p>By combining routing with environment group rules, organizations ensure that governance is applied automatically and consistently, reducing shadow IT and simplifying day-to-day administration.</p>
+</div>
+
+<div class="subsection" id="sec-governance-zones" data-search="zones zone 1 zone 2 zone 3 green yellow red personal team enterprise maturity structured roadmap tiered adaptability environment groups PPAC">
+<h3>&#127959; Governance Zones</h3>
+<p>Zones represent distinct levels or stages of governance maturity within the Microsoft ecosystem. Each zone is designed to address specific security, management, and operational needs while ensuring a scalable and adaptable framework for apps, workflows and agents. By conceptualizing governance through zones, organizations gain a clearer pathway to evolve their strategies, from foundational controls to advanced, fully integrated solutions.</p>
+<p>The zones serve as a structured roadmap for IT practitioners and decision-makers to implement and manage agents effectively, aligning security and operational measures with their organization&rsquo;s maturity level. Each zone emphasizes key elements such as access management, capabilities that support compliance requirements and policy enforcement, resource optimization, and system integration. Organizations can progress through these zones by enhancing governance practices, expanding security measures, and refining management strategies. This tiered approach ensures adaptability to meet growing organizational demands while maintaining a robust governance structure.</p>
+<p>At a practical level, organizations implement zones through <strong>Environment Groups</strong> in the Power Platform Admin Center (PPAC). Environment rules prevent drift and apply consistently across grouped environments.</p>
+<figure class="narrative-figure">
+<img src="images/img07.png" alt="DLP policy screen classifying connectors as Business Allowed or Blocked with tenant-to-environment policy hierarchy" loading="lazy">
+ 
+</figure>
+
+<div class="zones-visual">
+<div class="zone-card z1" onclick="openZoneModal('z1')"><div class="zone-badge">Zone 1 &mdash; Green</div><h4>Personal Productivity</h4><p>Zone 1 represents the entry point for Power Platform governance and is designed to enable safe, individual innovation while maintaining clear security and operational guardrails.</p>
+<div class="zone-features"><div class="zone-feat"><div class="dot"></div>Low business risk, limited data exposure</div><div class="zone-feat"><div class="dot"></div>Individual ownership, no sharing</div><div class="zone-feat"><div class="dot"></div>Restricted connectors only</div><div class="zone-feat"><div class="dot"></div>Welcome content &amp; onboarding</div><div class="zone-feat"><div class="dot"></div>Auto-provisioned personal developer environments</div></div></div>
+<div class="zone-card z2" onclick="openZoneModal('z2')"><div class="zone-badge">Zone 2 &mdash; Yellow</div><h4>Team Collaboration</h4><p>Zone 2 builds on Zone 1 and introduces shared, governed collaboration across teams and departments with stronger enforcement and lifecycle discipline.</p>
+<div class="zone-features"><div class="zone-feat"><div class="dot"></div>Multi-user shared processes</div><div class="zone-feat"><div class="dot"></div>Solution-based lifecycle</div><div class="zone-feat"><div class="dot"></div>Curated connector access</div><div class="zone-feat"><div class="dot"></div>Dev/Test/Prod alignment</div><div class="zone-feat"><div class="dot"></div>Intentional, reusable, supportable assets</div></div></div>
+<div class="zone-card z3" onclick="openZoneModal('z3')"><div class="zone-badge">Zone 3 &mdash; Red</div><h4>Enterprise Managed</h4><p>Zone 3 represents the highest level of governance maturity for business-critical, organization-wide solutions with full enterprise assurance.</p>
+<div class="zone-features"><div class="zone-feat"><div class="dot"></div>Line-of-business applications</div><div class="zone-feat"><div class="dot"></div>Full ALM with pipelines</div><div class="zone-feat"><div class="dot"></div>Strict connector policies</div><div class="zone-feat"><div class="dot"></div>Microsoft Purview integration</div><div class="zone-feat"><div class="dot"></div>Products, not projects</div></div></div>
+</div>
+<h4 style="margin-top:24px">Zone Comparison Matrix</h4>
+<div style="overflow-x:auto"><table class="comp-table">
+<thead><tr><th>Attribute</th><th style="color:var(--zone1)">Zone 1 (Green)</th><th style="color:var(--zone2)">Zone 2 (Yellow)</th><th style="color:var(--zone3)">Zone 3 (Red)</th></tr></thead>
+<tbody>
+<tr><td><strong>Purpose</strong></td><td>Personal productivity</td><td>Team collaboration</td><td>Enterprise managed</td></tr>
+<tr><td><strong>Ownership</strong></td><td>Individual maker</td><td>Solution-level / team</td><td>IT + CoE / platform team</td></tr>
+<tr><td><strong>Sharing</strong></td><td>Limited/disabled</td><td>Controlled, within team</td><td>Organization-wide</td></tr>
+<tr><td><strong>Connectors</strong></td><td>Restricted, low-risk only</td><td>Curated, broader set</td><td>Explicitly approved only</td></tr>
+<tr><td><strong>ALM</strong></td><td>Not required</td><td>Lightweight solutions</td><td>Full ALM + pipelines</td></tr>
+<tr><td><strong>Environment Type</strong></td><td>Personal developer</td><td>Team/departmental</td><td>Dedicated Dev/Test/Prod</td></tr>
+<tr><td><strong>Security</strong></td><td>Baseline protections</td><td>Enhanced, Entra groups</td><td>Strict, Purview aligned</td></tr>
+<tr><td><strong>Monitoring</strong></td><td>Inventory only</td><td>Inventory + Security + Monitoring</td><td>Full PPAC reporting</td></tr>
+<tr><td><strong>Asset Lifecycle</strong></td><td>Short-lived, transitional</td><td>Intentional, reusable</td><td>Products, not projects</td></tr>
+</tbody></table></div>
+
+<div class="info-callout" style="margin-top:16px"><p><strong>Zone Example:</strong> Organizations implement zones through Environment Groups in PPAC. A typical deployment might include one environment group per zone, with rules that enforce connector policies, sharing limits, ALM requirements, and deployment standards appropriate to each zone&rsquo;s risk level.</p></div>
+</div></div>
+
+
+<!-- CH5: SECURITY -->
+<div class="section" id="sec-security" data-search="security PPAC data policies managed environments dataverse roles business units column-level DLP IP firewall lockbox CMK">
+<div class="section-header"><div class="section-num">5</div><h2>Security</h2></div>
+<p style="font-size:14px;color:var(--cp-text-soft);margin-bottom:24px">Security in Power Platform is implemented through layered controls that span tenant governance, environment boundaries, connector and data controls, and Dataverse&rsquo;s authorization model. As adoption scales across apps, flows, and agents, security considerations should be focused on continuously assessing risk, enforcing guardrails at scale, and ensuring access aligns to business intent.</p>
+
+<div class="subsection" id="sec-security-ppac" data-search="security PPAC admin center posture data policies managed environments DLP IP firewall lockbox CMK auditing masking consumer connectors">
+<h3>&#127970; Security in the Power Platform Admin Center</h3>
+<p>The Power Platform admin center (PPAC) is the central place to manage security posture, apply baseline protections, and operationalize security recommendations across environments. The Security posture management experience provides a comprehensive view of your security position, includes preconfigured security defaults, and guides administrators through a focused action center for completing required security tasks. It also supports proactive governance by enabling admins to customize security settings at scale to fit business needs.</p>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128203; 5.1.1 Data Policies (DLP)</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>For most organizations, the most common security risk is accidental data movement across trust boundaries. Data policies (Data Loss Prevention / DLP) address this by governing which connectors can be used together, and which connectors are blocked entirely.</p>
+<p>Data policies define the <strong>consumer connectors</strong> that business data can be shared with and help prevent business data from being inadvertently published to consumer services.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#9881; 5.1.2 Managed Environments Security Capabilities</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>When an environment is enabled as a Managed Environment, additional security capabilities become available to help reduce risk and support enterprise controls. Managed Environments include (among other capabilities):</p>
+<ul>
+<li>Data policies</li>
+<li>IP firewall</li>
+<li>IP cookie binding</li>
+<li>Customer-managed key (CMK)</li>
+<li>Lockbox</li>
+<li>Auditing configuration</li>
+<li>Masking rules</li>
+</ul>
+</div></div></div>
+</div>
+
+<div class="subsection" id="sec-security-dataverse" data-search="dataverse security roles business units column-level privileges cumulative RBAC child business units profiles teams">
+<h3>&#128272; Dataverse Security</h3>
+<p>Dataverse provides a security model designed for enterprise applications and is only in effect when an environment includes a Dataverse database. IT &amp; Administrators are typically responsible for establishing the security model foundations, ensuring users have the correct configuration, and troubleshooting access issues as solutions scale.</p>
+<figure class="narrative-figure">
+<img src="images/img05.png" alt="Four change vectors — Platform, Tenant, Solution, and User — converging on central security posture" loading="lazy">
+ 
+</figure>
+
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128101; 5.2.1 Role-Based Security &amp; Business Units</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Dataverse uses role-based security to group privileges into security roles, which can be assigned directly to users or associated with Dataverse teams and business units. A critical concept is that <strong>privilege grants are cumulative</strong> &mdash; the broadest access granted across a user&rsquo;s roles prevails.</p>
+<p>Business units are a core security modeling building block that defines a security boundary. Every Dataverse database includes a single root business unit, and organizations can create <strong>child business units</strong> to further segment users and data access.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128273; 5.2.2 Security Roles &amp; Privileges</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Security roles define how different users access different types of records, and users can have multiple roles where privileges accumulate. PPAC provides a direct path to view and manage security roles for a given environment.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128274; 5.2.3 Column-Level Security</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Many enterprise solutions require protecting specific sensitive fields (for example, identifiers or regulated attributes) even when a user can access the record. Dataverse supports column-level security, allowing administrators to control who can view or update specific columns.</p>
+<p>This is configured by enabling column security on a column and granting access through column security profiles (assigned to users or teams).</p>
+</div></div></div>
+</div></div>
+
+<!-- CH6: CHANGE MANAGEMENT -->
+<div class="section" id="sec-change" data-search="change management platform tenant solution user skilling release rings operating model agents communication">
+<div class="section-header"><div class="section-num">6</div><h2>Change Management</h2></div>
+<p style="font-size:14px;color:var(--cp-text-soft);margin-bottom:24px">Power Platform enables rapid creation of apps, automations, and agents across teams, but that speed also increases the likelihood of inconsistent practices, unmanaged sprawl, and fragile solutions unless change is intentionally managed.</p>
+<p style="font-size:14px;color:var(--cp-text-soft);margin-bottom:12px">Change management in Power Platform must account for two factors:</p>
+<ul style="font-size:14px;color:var(--cp-text-soft);margin-bottom:24px;padding-left:20px">
+<li>The platform itself brings continuous updates as Microsoft delivers new capabilities, security improvements, and admin experiences through cloud updates.</li>
+<li>Your organization&rsquo;s assets change continuously as makers and teams iterate on apps, flows, sites, and agents, often daily, based on business needs and user feedback.</li>
+</ul>
+<p style="font-size:14px;color:var(--cp-text-soft);margin-bottom:24px">A modern change management approach therefore combines not just process and platform controls but people too, so that innovation can move quickly while remaining safe, supportable, and aligned to business risk.</p>
+
+<div class="subsection" id="sec-change-types" data-search="what change means platform tenant solution user driven refresh cadence rollback planning experimentation">
+<h3>&#128260; 6.1 What &quot;Change&quot; Means in Power Platform</h3>
+<p>For most enterprises, Power Platform change management includes the following categories of change:</p>
+<div class="card-grid">
+<div class="card"><div class="card-icon" style="background:rgba(59,130,246,.1);color:var(--blue)">&#9729;</div><h4>6.1.1 Platform Change (Microsoft-driven)</h4><p>These are changes that arrive through service updates, new features, deprecations, admin center experiences, security enhancements, and behavior changes. In Power Platform, some updates can be influenced through environment-level settings such as refresh cadence (for example, choosing how frequently an environment receives updates and features for certain services).</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(124,58,237,.1);color:var(--purple)">&#128295;</div><h4>6.1.2 Tenant Change (Admin-driven)</h4><p>These are changes your admins intentionally make to govern the platform: environment strategy updates, new environment groups and rules, routing changes, connector governance decisions, advanced connector policy updates, onboarding messaging, or standardizing deployment processes. The shift toward managed governance means these decisions are increasingly expressed as rules applied at scale, not one-off configuration.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(34,197,94,.1);color:var(--zone1)">&#129513;</div><h4>6.1.3 Solution Change (Maker/Team-driven)</h4><p>These are changes to the business assets built on the platform: new apps, updated flows, revised agents, connector additions, schema changes, or new integrations. Solution change must be managed through lifecycle practices (solutions, pipelines, approvals, testing, and rollback planning) that match the business criticality of the workload.</p></div>
+<div class="card"><div class="card-icon" style="background:rgba(234,179,8,.1);color:var(--zone2)">&#128100;</div><h4>6.1.4 User Change (People-driven)</h4><p>These are user experience changes. Power Platform can move quickly and that speed is a feature, but it also means small changes in behavior (where makers build, what they connect to, how they share, and how they deploy) can create outsized operational and risk impact if the organization is not brought along intentionally. This is especially true as apps, flows, and agents expand beyond experimentation into real business processes.</p></div>
+</div></div>
+
+<div class="subsection" id="sec-change-skilling" data-search="skilling role-based admins makers advanced end users 90 day community moments that matter zones graduation collaboration operational rigor">
+<h3>&#127891; 6.1.4.1 Skilling is Role-Based</h3>
+<p>&quot;Users&quot; in Power Platform is not one audience. Your change plan should explicitly skill the groups that introduce and experience change differently:</p>
+<ul>
+<li><strong>Admins / Platform Operators:</strong> Manage tenant and environment governance (environment strategy, routing, environment groups/rules, connector governance, monitoring and lifecycle controls)</li>
+<li><strong>Makers (new &amp; occasional):</strong> Need safe defaults, clear guardrails, and quick-start guidance so they don&rsquo;t accidentally create sprawl or fragile solutions</li>
+<li><strong>Advanced Makers / Solution Owners:</strong> Move solutions across environments and need lightweight ALM discipline (solutions, pipelines, validation) that matches business risk</li>
+<li><strong>End Users:</strong> Consume apps, flows, and agents and need trust, clarity, and feedback loops so adoption is intentional and measurable</li>
+</ul>
+<div class="callout"><p><strong>Zone Alignment:</strong> This aligns directly to the governance zones described earlier: Zone 1 requires skilling focused on safe personal productivity and &quot;graduation&quot; expectations; Zone 2 requires collaboration patterns and solution ownership; Zone 3 requires operational rigor, support readiness, and controlled release practices.</p></div>
+
+<h4>6.1.4.2 Skilling Pattern</h4>
+<p>A practical way to structure this is to follow a pattern that focuses on a tailored, role-based skilling plan backed by expert-led training and scalable delivery. In practice, that pattern typically looks like:</p>
+<ul>
+<li>Building a tailored organizational skilling plan aligned to roles and business goals</li>
+<li>Delivering live, instructor-led training with real-time Q&amp;A</li>
+<li>Scaling enablement through high-impact webinars (and smaller on-demand content) for broad audiences</li>
+</ul>
+
+<h4>6.1.4.3 Anchor Skilling to the &quot;Moments That Matter&quot;</h4>
+<p>Instead of treating training as a one-time event, design skilling around the points where users make decisions that create risk or operational cost:</p>
+<ul>
+<li><strong>Building:</strong> Where should I build? What&rsquo;s allowed in this environment/zone?</li>
+<li><strong>Connecting:</strong> Which connectors/data sources are appropriate? What is restricted by policy?</li>
+<li><strong>Sharing:</strong> Who can I share with, and what ownership/support expectations change when I do?</li>
+<li><strong>Promotions:</strong> How do I move from dev/test to production safely (solutions, pipelines, validation)?</li>
+<li><strong>Incidents:</strong> How do I troubleshoot responsibly and escalate when something fails?</li>
+</ul>
+
+<h4>6.1.4.4 Build a Community Within Your Organization Using a 90 Day Plan</h4>
+<p>Building champions within your organization helps scale up skilling initiatives and helps unblock employees as they become makers and help to become more productive. Because platform, tenant, and solution change are continuous, skilling must be continuous too, refreshed as policies evolve and as solutions mature from personal productivity to shared and enterprise-managed use.</p>
+<div class="info-callout"><p>&#128279; Visit <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/community-framework-overview/" style="color:var(--cp-link)">https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/community-framework-overview/</a> to learn more about making a plan.</p></div>
+</div>
+
+<div class="subsection" id="sec-change-decision" data-search="decision rights operating model platform owners zone owners solution owners change review lightweight bottleneck">
+<h3>&#128208; 6.2 Decision Rights &amp; Change Operating Model</h3>
+<p>Before implementing tooling, organizations should define who is allowed to introduce which types of change, and what approvals are required. This is most successful when structured as a <strong>lightweight operating model</strong> rather than an overly centralized bottleneck.</p>
+<p>An example of an enterprise model includes:</p>
+<ul>
+<li><strong>Platform Owners</strong> (Power Platform admins) &mdash; own tenant-level configuration, environment strategy &amp; governance enforcement</li>
+<li><strong>Zone Owners</strong> (or environment group owners) &mdash; own the standards for a governed zone and manage drift prevention through environment group rules</li>
+<li><strong>Solution Owners</strong> &mdash; accountable for business outcomes, supportability, and lifecycle decisions for apps, flows, and agents</li>
+<li><strong>A Change Review Cadence</strong> (weekly or biweekly) &mdash; reviews upcoming platform changes, high-impact solution releases, policy changes, and operational issues</li>
+</ul>
+<p>This model should stay risk-based &mdash; not every change requires heavy review, but high-impact changes should be visible and handled efficiently.</p>
+</div>
+
+<div class="subsection" id="sec-change-rings" data-search="release rings ring 0 ring 1 ring 2 pilot validate rollout refresh cadence risk-based decisions">
+<h3>&#127919; 6.3 Release Rings</h3>
+<p>One of the most effective patterns for cloud services is a &quot;release ring&quot; approach: validate change in smaller scopes first, then broaden rollout as confidence increases. Microsoft guidance for cloud change emphasizes making risk-based decisions rather than disabling everything by default &mdash; this is the same approach that should be used for Power Platform.</p>
+<p>In Power Platform, release rings can align to your environment strategy and zones:</p>
+<figure class="narrative-figure">
+<img src="images/img08.png" alt="Three governance zones — Default open experimentation, Standard team apps with guardrails, Premium mission-critical with full ALM" loading="lazy">
+ 
+</figure>
+
+
+<ul>
+<li><strong>Ring 0 (Pilot / Platform Team):</strong> Validate new features, governance settings, and admin workflows in a controlled internal environment group</li>
+<li><strong>Ring 1 (Advanced Makers / Departmental):</strong> Expanded to selected teams and governed collaborative environments where feedback is fast and impact is bounded</li>
+<li><strong>Ring 2 (Enterprise):</strong> Roll out broadly to managed environments that host business-critical apps, flows, and agents with standard deployment and monitoring expectations</li>
+</ul>
+<p>Where applicable, a <strong>refresh cadence</strong> can be implemented to be part of your ring strategy, giving you a controlled way to manage how quickly updates are introduced for certain experiences.</p>
+
+<h4>Release Rings vs. Governance Zones</h4>
+<table class="comp-table">
+<thead><tr><th></th><th>Release Rings (CM)</th><th>Zones (Governance)</th></tr></thead>
+<tbody>
+<tr><td><strong>Core purpose</strong></td><td>Manage change over time</td><td>Manage risk at rest</td></tr>
+<tr><td><strong>Primary question</strong></td><td>&quot;When and to whom do we roll this out?&quot;</td><td>&quot;Where is this allowed to run?&quot;</td></tr>
+<tr><td><strong>Control type</strong></td><td>Social and process control</td><td>Technical and policy control</td></tr>
+<tr><td><strong>Success signal</strong></td><td>Confidence, readiness, adoption</td><td>Compliance, isolation, safety</td></tr>
+</tbody></table>
+</div>
+
+<div class="subsection" id="sec-change-operationalize" data-search="operationalize managed controls environment groups inventory monitoring pipelines drift configuration">
+<h3>&#9881; 6.4 Operationalize Change with Managed Platform Controls</h3>
+<p>The most sustainable way to manage change is to convert change management from a manual process into a platform-enforced process. The following controls achieve this:</p>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128736; Environment Groups &amp; Rules</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Environment groups allow administrators to apply standardized settings across many environments, and published rules lock those settings so they can&rsquo;t be overridden locally. This is one of the strongest mechanisms for preventing &quot;configuration drift&quot; over time as environments multiply.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128202; Inventory</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Tenant-wide visibility is the starting point for reliable change. Inventory provides a cross-environment view of assets (apps, flows, agents) so administrators can identify what exists, who owns it, and where risk may be emerging &mdash; especially before making tenant-wide changes.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128200; Monitoring &amp; Health Signals</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Operational monitoring reduces the time between change introduction and issue detection. It enables proactive response to failures, degradation trends and anomalies across platform workloads.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128640; Pipelines</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>Pipelines provide a repeatable mechanism for promoting solutions across environments and are designed to support safe, governed change processes at scale. They bring ALM automation into the service and help admins implement secure, custom-tailored change processes.</p>
+</div></div></div>
+</div>
+
+<div class="subsection" id="sec-change-communication" data-search="communication enablement documentation training office hours zone expectations personal development environments">
+<h3>&#128226; 6.5 Communication &amp; Enablement</h3>
+<p>Even the best admin controls fail if makers and teams don&rsquo;t understand what has changed, why it has changed, and what is expected of them. Successful Power Platform adoption requires both technology and culture &mdash; users need an environment where they can thrive with guardrails (<strong>Personal Development Environments</strong>).</p>
+<p>Some example best practices may include:</p>
+<ul>
+<li>Maintain a clear &quot;what&rsquo;s changing&quot; channel (internal site or Teams channel) that summarizes tenant policy changes, new standards, and rollout timelines</li>
+<li>Publish zone-specific expectations (what makers can build, share, and connect to in each zone) and reinforce them through onboarding experiences and admin communications</li>
+<li>Use training and office hours to reduce friction when introducing new lifecycle requirements (solutions, pipelines, approvals, or connector governance etc)</li>
+</ul>
+<p>The goal is that the documentation makes governed behavior easy to understand by having access to documentation describing what&rsquo;s happening and changing as well as having training to ensure everyone is on the same page.</p>
+</div>
+
+<div class="subsection" id="sec-change-agents" data-search="agents accelerate change management AI governance documentation backlog consistency coordination">
+<h3>&#129302; 6.6 Using Agents to Accelerate Change Management</h3>
+<p>As organizations adopt AI agents, they can also use agents to support the change management process itself &mdash; not as a replacement for governance, but as a way to reduce manual coordination and increase consistency.</p>
+<p>What type of agents can help with this?</p>
+<ul>
+<li>An agent that answers &quot;what changed?&quot; using approved governance documentation and internal standards</li>
+<li>An agent that guides makers through release steps (solutions, pipelines, environment variables) and routes exceptions to the right admin queue</li>
+<li>An agent that summarizes tenant recommendations and governance actions surfaced through admin experiences, then turns them into a prioritized change backlog</li>
+</ul>
+<div class="callout"><p><strong>Key Governance Principle:</strong> When using agents for change management, agents should help execute your process, not redefine it. They must operate within the same boundaries you enforce across environments, data, and connectors.</p></div>
+</div></div>
+
+<!-- CH7: DEPLOYMENT -->
+<div class="section" id="sec-deployment" data-search="deployment ALM pipelines lifecycle validation agent evaluations environment variables connection references CI/CD">
+<div class="section-header"><div class="section-num">7</div><h2>Deployment</h2></div>
+<p style="font-size:14px;color:var(--cp-text-soft);margin-bottom:24px">Deployment is where change management becomes operational: turning planned, reviewed change into a controlled, repeatable release motion that can scale across teams without introducing unmanaged drift or production risk. A modern deployment approach for Power Platform focuses on repeatability, environment consistency, and traceability, so apps, flows, and agents can move through the lifecycle with the same enterprise guardrails applied.</p>
+
+<div class="subsection" id="sec-deploy-planning" data-search="deployment planning environment discovery SSO administrative roles developer trial sandbox production">
+<h3>&#128203; 7.1 Deployment Planning</h3>
+<p>Deployment depends on decisions made earlier in platform planning. There&rsquo;s foundational considerations such as environment discovery, single sign-on, security policies, and administrative roles to plan for.</p>
+<p>As part of this planning, organizations typically define:</p>
+<ul>
+<li>An environment strategy for adopting Power Platform at scale (including routing and the use of managed environments)</li>
+<li>The environments used across the lifecycle such as dev, test and production, and the types of environments such as <strong>developer</strong>, <strong>trial</strong>, <strong>sandbox</strong>, or <strong>production</strong>, aligned to intended use and risk tolerance</li>
+</ul>
+<p>These decisions create the structure that deployment relies on, so releases consistently land in the right place, under the right policies, with clear operational ownership.</p>
+</div>
+
+<div class="subsection" id="sec-deploy-alm" data-search="ALM application lifecycle management solutions environment variables connection references tables connections keys endpoints site list parameters">
+<h3>&#128260; 7.2 ALM Fundamentals</h3>
+<p>Application lifecycle management (ALM) is a set of practices, tools, and processes that help teams build, test, release, and maintain solutions reliably as they evolve. In Power Platform, ALM is implemented by treating environments and solutions as the core building blocks for controlled change.</p>
+<p>Environments serve as containers to store, manage, and share business data, apps, and processes, and they help separate work based on security requirements or target audiences.</p>
+<p>A healthy ALM approach also depends on separating &quot;what the solution is&quot; from &quot;how it&rsquo;s configured&quot; in each environment. Power Platform supports this by using:</p>
+<ul>
+<li><strong>Environment Variables:</strong> Store parameter keys and values separately from the sections that use them, which makes it straightforward to keep the solution consistent while changing only what must differ</li>
+<li><strong>Connection References:</strong> Handle environment-specific settings (such as tables, connections, keys, endpoints, or site/list parameters) without hard-coding those values directly into apps, flows and agents</li>
+</ul>
+<p>This reduces deployment friction, improves consistency across teams, and creates the preconditions for automated promotion patterns through pipelines.</p>
+</div>
+
+<div class="subsection" id="sec-deploy-pipelines" data-search="pipelines CI/CD continuous integration deployment custom host platform host personal pipelines stages roles CLI PPAC managed solution configuration app">
+<h3>&#128640; 7.3 Pipelines</h3>
+<p>Power Platform Pipelines provide a Continuous Integration and Continuous Deployment (CI/CD) mechanism that automates solution deployments across environments, streamlining ALM for makers, admins, and developers. Admins can set up governed deployment pipelines in minutes, makers can deploy solutions with just a few clicks, no manual exports/imports, and pro developers can extend or run pipelines through the Power Platform Command-Line Interface (CLI) for more advanced scenarios.</p>
+<figure class="narrative-figure">
+<img src="images/img01.png" alt="Full pipeline architecture with host environment, three-stage deployment flow, approval gates, and audit trail" loading="lazy">
+ 
+</figure>
+
+<div class="pipeline-flow">
+<div class="pipeline-stage"><div class="pipeline-node" style="border-color:var(--blue);background:rgba(59,130,246,.1)">&#128736;</div><div class="pipeline-label">Dev</div></div>
+<div class="pipeline-arrow">&#8594;</div>
+<div class="pipeline-stage"><div class="pipeline-node" style="border-color:var(--zone2);background:rgba(234,179,8,.1)">&#129514;</div><div class="pipeline-label">Test / UAT</div></div>
+<div class="pipeline-arrow">&#8594;</div>
+<div class="pipeline-stage"><div class="pipeline-node" style="border-color:var(--zone1);background:rgba(34,197,94,.1)">&#9989;</div><div class="pipeline-label">Production</div></div>
+<div class="pipeline-arrow" style="margin-left:24px">|</div>
+<div class="pipeline-stage" style="margin-left:16px"><div class="pipeline-node" style="border-color:var(--purple);background:rgba(124,58,237,.1)">&#9881;</div><div class="pipeline-label">Pipeline Host</div></div>
+</div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#128295; 7.3.1 Core Setup Requirements</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<p>To use pipelines, each participating environment must have a Dataverse database, and all target environments must be enabled as Managed Environments. It&rsquo;s recommended to designate a dedicated &quot;pipeline host&quot; environment (a production Dataverse environment) to store pipeline configurations, run history, and security roles. This host serves as the central management plane for your pipelines.</p>
+<p>You should plan at least 3&ndash;4 environments for a healthy ALM process (e.g. Dev, Test/UAT, and Prod, plus a host environment).</p>
+<p>The pipeline feature itself is delivered via a <strong>Power Platform Pipelines managed solution</strong> that an admin installs in the host environment using the Power Platform Admin Center (PPAC).</p>
+<p>Once installed, an admin configures the pipeline using the <strong>Deployment Pipeline Configuration app</strong> by registering each environment (Dev or Target) and defining the stages (deployment steps) of the pipeline (e.g. Dev &rarr; Test &rarr; Prod). All <strong>run history</strong> is stored in the host.</p>
+<p>Security is controlled with two roles provided by the pipeline&rsquo;s solution:</p>
+<ul>
+<li><strong>Deployment Pipeline Administrator</strong> &mdash; full control to configure pipelines</li>
+<li><strong>Deployment Pipeline User</strong> &mdash; to run shared pipelines</li>
+</ul>
+<p>These are assigned in the host environment to the appropriate users or groups. Makers who receive the Deployment Pipeline User role (and have sufficient rights in the source and target environments) can then run pipeline deployments for solutions.</p>
+</div></div></div>
+
+<div class="expandable" onclick="this.classList.toggle('open')"><div class="expandable-header"><h4>&#127968; 7.3.2 Platform Host vs. Custom Host</h4><span class="expandable-arrow">&#9660;</span></div>
+<div class="expandable-body"><div class="expandable-content">
+<h4 style="margin-top:0">Platform Host (Personal Pipelines)</h4>
+<p>A default, tenant-wide pipeline host that makers can use to create personal pipelines directly, without upfront admin configuration. This allows an individual maker to deploy from a dev environment to up to two target environments (for example, Dev &rarr; Test &rarr; Prod) on their own.</p>
+<p>The platform host is <strong>provisioned automatically the first time a user opens the Pipelines page</strong> in an environment that isn&rsquo;t already linked to a custom host. Personal pipelines are quick to set up and require no code or DevOps tools &mdash; makers simply click &quot;Create pipeline&quot; in their solution and follow the prompts.</p>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>Support at most <strong>3 environments</strong> (one dev &amp; two stages)</li>
+<li><strong>Cannot be shared</strong> with other users (the pipeline is only visible to its creator)</li>
+<li><strong>Cannot be extended</strong> with custom automation or connectors</li>
+</ul>
+<p>The platform host is ideal for simple, individual ALM needs but is not suited for multi-team scenarios or complex workflows.</p>
+<div class="info-callout"><p><strong>Admin Tip:</strong> Admins can prevent makers from inadvertently using personal pipelines by ensuring those dev environments are linked to a custom host. If an environment is already tied to a custom pipeline host, makers won&rsquo;t be able to create a personal pipeline in it.</p></div>
+
+<h4>Custom Host (Managed Pipelines)</h4>
+<p>A pipeline host environment that an admin sets up to centrally govern ALM in Power Platform. This approach is <strong>recommended for enterprise scenarios</strong> because it supports the full range of pipeline capabilities:</p>
+<ul>
+<li>Multiple stages (<strong>up to 7</strong>)</li>
+<li>Involve multiple makers</li>
+<li>Enforce governance policies</li>
+<li>Shareable &mdash; once the admin configures the pipeline and shares it, any user with the Deployment Pipeline User role can run deployments (with proper environment permissions)</li>
+</ul>
+<p>Custom pipelines also allow advanced extensibility: for example, admins can integrate approval workflows, use the <strong>Power Platform CLI to script pipeline runs</strong>, or even trigger pipeline deployments from <strong>Azure DevOps or GitHub Actions</strong>.</p>
+<p><strong>All pipeline run data and configuration are stored in the Dataverse of the host environment, giving admins full visibility.</strong></p>
+</div></div></div>
+</div>
+
+<div class="subsection" id="sec-deploy-envmgmt" data-search="managing environments environment variables connection references deployment settings JSON managed environments release ready guardrails toggle">
+<h3>&#128295; 7.4 Managing Environments for Deployment</h3>
+<p>A common cause of deployment failures isn&rsquo;t the solution itself &mdash; it&rsquo;s the configuration around it. The same app, flow, or agent often needs to point to different resources in each environment (different SharePoint sites, endpoints, keys, connections, or databases), especially when going through the dev and test stages.</p>
+<p>Power Platform&rsquo;s ALM model addresses this directly with environment variables and connection references, so teams do not hard-code environment-specific values into components that then break as the solution moves.</p>
+<ul>
+<li><strong>Environment Variables:</strong> Store parameter keys and values separately from the sections that use them, which makes it straightforward to keep the solution consistent while changing only what must differ between development, test, and production. Because environment variables are solution components, teams can transport the references (keys) and set the appropriate values as the solution is promoted.</li>
+<li><strong>Connection References:</strong> Handle environment-specific connections without hard-coding values directly into apps, flows and agents</li>
+<li><strong>Deployment Settings Files (JSON):</strong> Microsoft provides deployment settings files (JSON) so connection references and environment variables can be prepopulated for the target environment, removing the need to enter values interactively after importing a solution and making CI/CD scenarios more reliable.</li>
+</ul>
+<p><strong>Managed Environments</strong> strengthen this model by making the target environment &quot;release ready.&quot; In practice, even if your configuration is perfect, deployments still fail (or create governance gaps) when target environments don&rsquo;t have consistent guardrails. Managed Environments are designed to activate governance capabilities so admins can apply policies consistently at scale.</p>
+<p>Enabling a Managed Environment is a simple admin action (for example, in the admin experience you can navigate to environments and use the Managed Environment toggle), and it unlocks controls that reduce deployment risk such as consistent policy application across environments and stronger governance posture.</p>
+<p>This becomes especially important once you introduce pipelines &mdash; pipeline target environments must be enabled as Managed Environments when using the custom host approach.</p>
+</div>
+
+<div class="subsection" id="sec-deploy-extended" data-search="extended deployment GitHub Actions Azure DevOps CI/CD automation provisioning static analysis escalation path service-native">
+<h3>&#128279; 7.5 Extended Deployment</h3>
+<p>While native pipelines cover many deployment needs, Power Platform also provides options if you require deeper DevOps integration:</p>
+<ul>
+<li><strong>GitHub Actions:</strong> Guidance describes automated workflows that can build, test, package, and deploy Power Platform solutions, including importing/exporting solutions and deploying to downstream environments</li>
+<li><strong>Azure DevOps Build Tools:</strong> Positioned for more complex enterprise workflows and integration with broader CI/CD practices</li>
+</ul>
+<p>These automation paths can also support activities such as <strong>environment provisioning and static analysis</strong> as part of an automated lifecycle.</p>
+<div class="callout"><p><strong>Escalation Path:</strong> Teams can adopt service-native deployment patterns first and introduce deeper DevOps automation where engineering standards or complexity may need it.</p></div>
+</div>
+
+<div class="subsection" id="sec-deploy-validation" data-search="validation testing solution checker static analysis agent evaluations evals automated testing human approvals regression graders test sets test cases identity context">
+<h3>&#9989; 7.6 Validation</h3>
+<p>For deployments, quality is not a one-time activity &mdash; it&rsquo;s a repeatable process that reduces risk every time a solution moves forward, especially when working in enterprise.</p>
+<p>In Power Platform, validation typically combines three layers: static quality checks, automated testing where applicable, and human approvals for risk-based releases. A structured testing and validation phase helps teams catch reliability, performance, and security issues early, so they are caught before they become production incidents.</p>
+
+<div class="journey-map">
+<div class="journey-step"><div class="journey-track"><div class="journey-dot"></div><div class="journey-line"></div></div>
+<div class="journey-content"><h4>1. Static Analysis (Baseline Quality Gate)</h4>
+<p>Start with static analysis as the baseline quality gate. Solution Checker performs a comprehensive static analysis of solution objects and produces a report that highlights issues, affected components and guidance on how to resolve each issue. It can be run quickly and consistently and is a great first step.</p>
+<p>Managed Environments can also enforce solution checker validations during the solution import, turning quality from a recommendation into an operational control. This approach allows organizations to scale safely &mdash; lower-risk environments can start with a <strong>warn</strong> approach while production can adopt stricter enforcement once teams are ready.</p>
+</div></div>
+
+<div class="journey-step"><div class="journey-track"><div class="journey-dot"></div><div class="journey-line"></div></div>
+<div class="journey-content"><h4>2. Automated Testing</h4>
+<p>Automation testing allows repetitive integration testing ensuring that when you make changes to your apps, flows and agents, that you&rsquo;re not having negative consequences in unchanged areas. This is something to consider when implementing your test strategy.</p>
+</div></div>
+
+<div class="journey-step"><div class="journey-track"><div class="journey-dot"></div><div class="journey-line"></div></div>
+<div class="journey-content"><h4>3. Human Approvals</h4>
+<p>Then finally focus on human approvals, with approval-based deployments which add a governance and compliance checkpoint before production promotion. This is especially important when releases affect business-critical processes, regulated data etc.</p>
+</div></div>
+
+<div class="journey-step"><div class="journey-track"><div class="journey-dot"></div></div>
+<div class="journey-content"><h4>4. Agent Evaluations</h4>
+<p>AI agents can drift over time as models, grounding data, instructions, tools, and context change. Agent evaluations (evals) provide a repeatable, evidence-based way to validate agent behavior beyond a few static manual spot checks, helping teams build confidence before a larger rollout.</p>
+<p>In Copilot Studio, evals use <strong>test cases</strong> (a user question that can be paired with an expected answer) grouped into <strong>test sets</strong> that can be run repeatedly as the agent evolves.</p>
+<p><strong>Creating Test Sets:</strong> Teams can create test sets from realistic prompts (including manually authored scenarios, imported datasets, AI-assisted generation, or past conversations).</p>
+<p><strong>Scoring with Configurable Graders:</strong> Score results using configurable graders (for example, quality/completeness, classification of expected behavior, or whether the agent used the right capability at the right time). This gives you a more realistic test scenario than just static box checking, mimicking what happens in real scenarios.</p>
+<p><strong>Production Readiness:</strong> Run evals under an explicit user identity context so results reflect the same access boundaries users will experience.</p>
+<p><strong>Review Outcomes:</strong> Review outcomes at two levels: aggregate trends across the set and case-level explainability to understand why specific tests pass or fail.</p>
+<p><strong>Regression Detection:</strong> Re-run and compare evaluation results after changes to confirm improvement and catch regressions early.</p>
+<div class="info-callout"><p><strong>Important:</strong> Agent evaluation complements (but does not replace) other validation controls and should be used together.</p></div>
+</div></div>
+</div>
+
+<p>Together, these approaches establish a consistent pattern: static analysis, enforcement for critical environments, automated tests where supported, and approvals for risk-based releases.</p>
+</div></div>
+
+<!-- CH8: RESOURCES -->
+<div class="section" id="sec-resources" data-search="resources links learn documentation whitepaper agent governance">
+<div class="section-header"><div class="section-num">8</div><h2>Resources</h2></div>
+<div class="card-grid">
+<div class="card"><h4>&#128216; Power Platform Docs</h4><p><a href="https://docs.microsoft.com/en-us/power-platform/" style="color:var(--cp-link)">docs.microsoft.com/power-platform</a></p></div>
+<div class="card"><h4>&#128215; Dataverse Training</h4><p><a href="https://learn.microsoft.com/en-us/training/paths/get-started-cds/" style="color:var(--cp-link)">Get started with Dataverse</a></p></div>
+<div class="card"><h4>&#128217; Power Apps</h4><p><a href="https://learn.microsoft.com/en-us/power-apps/" style="color:var(--cp-link)">learn.microsoft.com/power-apps</a></p></div>
+<div class="card"><h4>&#128213; Power Automate</h4><p><a href="https://learn.microsoft.com/en-us/power-automate/" style="color:var(--cp-link)">learn.microsoft.com/power-automate</a></p></div>
+<div class="card"><h4>&#128211; Power Pages</h4><p><a href="https://learn.microsoft.com/en-us/power-pages/" style="color:var(--cp-link)">learn.microsoft.com/power-pages</a></p></div>
+<div class="card"><h4>&#129302; Copilot Studio</h4><p><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/" style="color:var(--cp-link)">learn.microsoft.com/copilot-studio</a></p></div>
+<div class="card"><h4>&#128279; Connectors</h4><p><a href="https://learn.microsoft.com/en-us/connectors/" style="color:var(--cp-link)">learn.microsoft.com/connectors</a></p></div>
+<div class="card"><h4>&#9881; Managed Environments</h4><p><a href="https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-overview" style="color:var(--cp-link)">Managed Environments overview</a></p></div>
+<div class="card"><h4>&#129309; Community Framework</h4><p><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/guidance/community-framework-overview/" style="color:var(--cp-link)">Community 90 Day Plan</a></p></div>
+<div class="card"><h4>&#129516; AI Features</h4><p><a href="https://learn.microsoft.com/en-us/power-platform/copilot" style="color:var(--cp-link)">Power Platform Copilot</a></p></div>
+<div class="card"><h4>&#128737; Agent Governance &amp; Security</h4><p><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-governance-agents" style="color:var(--cp-link)">Agent Governance and Security whitepaper</a></p></div>
+</div></div>
+
+
+  </div></div>
+
+
+<!-- Zone Modal -->
+<div class="zone-modal-overlay" id="zoneModalOverlay" onclick="if(event.target===this)closeZoneModal()">
+<div class="zone-modal" id="zoneModal">
+<button class="zone-modal-close" onclick="closeZoneModal()">&#10005;</button>
+<div id="zoneModalContent"></div>
+</div></div>
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+
+<script>
+var chapters=[
+{id:'sec-intro',num:'1',label:'Introduction',subs:[{id:'sec-intro-purpose',label:'Purpose'},{id:'sec-intro-scope',label:'Scope'},{id:'sec-intro-new',label:"What's New"}]},
+{id:'sec-overview',num:'2',label:'Overview',subs:[{id:'sec-overview-why',label:'Why Power Platform?'},{id:'sec-overview-products',label:'Platform Components'},{id:'sec-overview-managed',label:'Managed Environments'},{id:'sec-overview-ai',label:'AI Features'}]},
+{id:'sec-planning',num:'3',label:'Planning',subs:[{id:'sec-planning-envs',label:'Understanding Environments'},{id:'sec-planning-strategy',label:'Environment Strategy'},{id:'sec-planning-dataverse',label:'Data with Dataverse'}]},
+{id:'sec-governance',num:'4',label:'Governance',subs:[{id:'sec-governance-fundamentals',label:'Fundamentals'},{id:'sec-governance-security',label:'Security Controls'},{id:'sec-governance-management',label:'Management Controls'},{id:'sec-governance-reporting',label:'Reporting & Visibility'},{id:'sec-governance-routing',label:'Maker Routing'},{id:'sec-governance-zones',label:'Governance Zones'}]},
+{id:'sec-security',num:'5',label:'Security',subs:[{id:'sec-security-ppac',label:'PPAC Security'},{id:'sec-security-dataverse',label:'Dataverse Security'}]},
+{id:'sec-change',num:'6',label:'Change Management',subs:[{id:'sec-change-types',label:'Types of Change'},{id:'sec-change-skilling',label:'Role-Based Skilling'},{id:'sec-change-decision',label:'Decision Rights'},{id:'sec-change-rings',label:'Release Rings'},{id:'sec-change-operationalize',label:'Operationalize Change'},{id:'sec-change-communication',label:'Communication'},{id:'sec-change-agents',label:'Agents for Change'}]},
+{id:'sec-deployment',num:'7',label:'Deployment',subs:[{id:'sec-deploy-planning',label:'Planning'},{id:'sec-deploy-alm',label:'ALM Fundamentals'},{id:'sec-deploy-pipelines',label:'Pipelines'},{id:'sec-deploy-envmgmt',label:'Environment Mgmt'},{id:'sec-deploy-extended',label:'Extended Deployment'},{id:'sec-deploy-validation',label:'Validation'}]},
+{id:'sec-resources',num:'8',label:'Resources',subs:[]}
+];
+function buildNav(){var nav=document.getElementById('sidebarNav'),h='';chapters.forEach(function(ch){h+='<div class="nav-chapter" id="nav-'+ch.id+'"><button class="nav-chapter-btn" onclick="toggleChapter(\''+ch.id+'\');scrollToSection(\''+ch.id+'\')"><span class="ch-num">'+ch.num+'</span>'+ch.label+'</button>';if(ch.subs.length){h+='<div class="nav-subs">';ch.subs.forEach(function(s){h+='<button class="nav-sub" onclick="event.stopPropagation();scrollToSection(\''+s.id+'\')">'+s.label+'</button>';});h+='</div>';}h+='</div>';});nav.innerHTML=h;}
+function toggleChapter(id){var el=document.getElementById('nav-'+id);if(el)el.classList.toggle('open');}
+function scrollToSection(id){var el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelector('.sidebar').classList.remove('open');}}
+function switchTab(e,tabId){var p=e.target.closest('.tabs');p.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});p.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});e.target.classList.add('active');document.getElementById(tabId).classList.add('active');}
+
+var zoneData={
+z1:{badge:'Zone 1 &mdash; Green',color:'var(--zone1)',title:'Personal Productivity',content:'<p>Zone 1 represents the entry point for Power Platform governance and is designed to enable safe, individual innovation while maintaining clear security and operational guardrails. This zone supports personal productivity scenarios, where individual makers create lightweight apps, flows, and agents to improve their own efficiency or explore early ideas without impacting others or enterprise systems.</p><p>In practice, Zone 1 is implemented using a dedicated environment group in the Power Platform admin center (PPAC) and typically consists of personal developer environments that are automatically provisioned and governed through managed platform capabilities. These environments provide isolation, reduce risk, and ensure baseline controls are consistently applied from the moment a maker begins building.</p><p>Zone 1 is intentionally optimized for experimentation and learning rather than broad sharing or production workloads. Assets created here are expected to remain personal, short-lived, or transitional, with a clear path to promotion into higher governance zones as scope, usage, or business impact increases.</p><h4>Platform Characteristics</h4><p>Assets in the personal productivity zone are characterized by low business risk, limited data exposure, and individual ownership.</p><p>Within Zone 1 environments:</p><ul><li><strong>Power Apps</strong> are typically small, task-focused applications built for individual use, often leveraging Microsoft 365 data sources such as SharePoint or Dataverse with limited scope.</li><li><strong>Power Automate</strong> flows support personal automation scenarios, such as notifications, approvals, or data synchronization related to the maker&rsquo;s own workload.</li><li><strong>Agents created with Copilot Studio</strong> assist individual users with productivity tasks or information retrieval and are not designed for team or organization-wide consumption.</li></ul><p>These environments are governed to ensure users can innovate safely without introducing unmanaged sprawl, data leakage, or dependency risk. All resources remain owned by the individual maker and operate within boundaries defined by platform policy rather than ad-hoc guidance.</p><h4>Security Controls</h4><p>Zone 1 applies a baseline security posture that protects organizational data while minimizing friction for individual makers.</p><p>The Power Platform admin center provides a control plane for managing Power Platform environments, connectors, and runtime behavior across apps, flows, and agents.</p><p>For Zone 1 environment groups, administrators typically configure:</p><ul><li><strong>Restricted connector availability</strong> using advanced connector policies, allowing only low-risk, tenant-approved services.</li><li><strong>Identity-based access</strong>, where assets execute under the maker&rsquo;s own identity and permissions.</li><li><strong>Environment-level settings</strong> that prevent elevation of privileges or bypassing of platform safeguards.</li></ul><p>These controls ensure that personal productivity assets cannot access data or services beyond what the maker is already authorized to use.</p><h4>Management Controls</h4><p>Management controls in Zone 1 focus on containment, clarity of ownership, and lifecycle visibility, rather than scale or enterprise reliability.</p><p>Zone 1 environments are grouped using environment groups and configured as managed environments, allowing administrators to enforce consistent settings across all personal developer environments. This approach prevents configuration drift and eliminates the need for one-off environment tuning.</p><p>Common management controls include:</p><ul><li>Automatic ownership assignment to the individual user.</li><li>Limited or disabled external sharing.</li><li>Welcome content and in-product guidance that clearly communicates usage boundaries and promotion expectations.</li></ul><p>By embedding these rules into the environment group, governance is applied by default rather than enforced retroactively.</p><p>Assets created in Zone 1 are expected to remain personal. Sharing is typically limited to the individual maker only, or a very small, explicitly approved review audience (for example, viewer-only access).</p><p>If an app, flow, or agent needs to be shared more broadly, integrated into a business process, or maintained over time, it should be promoted into a Zone 2 environment using solutions and managed ALM processes. Zone 1 is not designed to scale production workloads.</p><h4>Reporting &amp; Visibility</h4><p>Effective governance requires visibility, even at the personal productivity level. Zone 1 leverages platform-wide reporting to ensure assets remain discoverable, auditable, and manageable.</p><p>The Inventory experience in PPAC provides a tenant-wide view of all Power Platform assets, including apps, flows, and agents, regardless of environment. This inventory allows administrators to:</p><ul><li>Identify assets created in personal environments.</li><li>Understand ownership and usage patterns.</li><li>Detect inactive, orphaned, or high-growth resources that may require attention.</li></ul><p>Inventory establishes the foundation for governance by making personal productivity assets visible without requiring manual discovery or user reporting. As solutions mature, this visibility helps organizations identify candidates for promotion into higher governance zones with appropriate controls and operational ownership.</p>'},
+z2:{badge:'Zone 2 &mdash; Yellow',color:'var(--zone2)',title:'Team Collaboration',content:'<p>Zone 2 builds on the personal productivity foundation of Zone 1 and introduces shared, governed collaboration across teams and departments. This zone is designed for apps, flows, and agents that support team-level processes, require shared ownership, or interact with departmental data, while still remaining within clearly defined governance boundaries.</p><p>Zone 2 environments are implemented as managed environments grouped under a dedicated environment group in the Power Platform admin center (PPAC). Governance in this zone shifts from individual containment toward controlled collaboration, balancing increased capability with stronger enforcement, visibility, and lifecycle discipline.</p><p>Assets in Zone 2 are expected to be intentional, reusable, and supportable, with a clearer promotion path toward enterprise-managed deployment when business criticality increases.</p><h4>Platform Characteristics</h4><p>Zone 2 supports collaborative solutions that are used by multiple users within a team, function, or department.</p><p>These include:</p><ul><li><strong>Power Apps</strong> used by teams to manage shared processes (for example, intake, approvals, or operational tracking).</li><li><strong>Power Automate</strong> flows that orchestrate departmental workflows, integrations, or system interactions.</li><li><strong>Agents built with Copilot Studio</strong> that assist teams with task execution, information retrieval, or process automation, operating within defined connector and data boundaries.</li></ul><p>Unlike Zone 1, assets in Zone 2 are intentionally shared, may have multiple contributors, and are expected to follow a lightweight but consistent application lifecycle model. Ownership is defined at the solution level rather than the individual level, and assets are treated as team resources rather than personal experiments.</p><h4>Security Controls</h4><p>Security controls in Zone 2 are more restrictive than Zone 1, reflecting the increased data access, sharing scope, and operational impact of collaborative solutions.</p><p>Power Platform admin center remains the central control plane for Zone 2 governance, enforcing security consistently across all apps, flows, and agents within the environment group.</p><p>For Zone 2 environment groups, administrators typically configure:</p><ul><li><strong>Advanced connector policies</strong> that allow a broader but still curated set of connectors suited to departmental use, while blocking high-risk or external services.</li><li><strong>Explicit access scoping</strong> using Entra ID security groups, ensuring only approved makers and users can create, modify, or run solutions.</li><li><strong>Enforcement of environment-level security baselines</strong> that cannot be reduced by local environment administrators.</li></ul><p>These controls ensure collaboration does not come at the expense of data protection or compliance, and that solutions operate only within approved integration boundaries.</p><h4>Management Controls</h4><p>Management controls in Zone 2 formalize how collaborative solutions are created, changed, promoted, and operated, without introducing production-grade overhead.</p><p>All Zone 2 environments are configured as managed environments and grouped into a Zone 2 environment group. This allows administrators to apply rules that standardize:</p><ul><li>Sharing defaults and limitations</li><li>Connector availability</li><li>Solution and pipeline requirements</li><li>Maker onboarding experiences</li></ul><p>By enforcing these settings at the environment-group level, organizations prevent configuration drift and ensure every collaborative workspace behaves consistently.</p><p>Unlike Zone 1, assets in Zone 2 are expected to follow a defined lifecycle:</p><ul><li>Assets are packaged using solutions</li><li>Changes are tracked and promoted intentionally</li><li>Environments may be aligned to a typical development process of dev, test and prod</li></ul><p>While full enterprise ALM is not always required, Zone 2 establishes the discipline necessary to safely scale collaboration and prepares solutions for promotion into Zone 3 when appropriate.</p><h4>Reporting &amp; Visibility</h4><p>As collaboration increases, visibility becomes essential for effective governance. Zone 2 relies on platform-level reporting in PPAC to ensure administrators and governance teams have insight into usage, risk, and operational health across shared environments.</p><p><strong>Inventory:</strong> The Inventory experience in PPAC provides a consolidated view of all apps, flows and agents across Zone 2 environments. This allows administrators to understand what shared solutions exist, who owns and maintains them, and how broadly they are being used. Inventory data helps identify high-value solutions, detect unmanaged growth, and determine when assets should move toward enterprise management or retirement.</p><p><strong>Security:</strong> The Security experience in PPAC aggregates security insights across Zone 2 environments, highlighting connector usage patterns, configuration risks, and policy misalignments. By surfacing actionable recommendations, the Security experience supports proactive governance rather than reactive cleanup.</p><p><strong>Monitoring:</strong> The Monitoring experience in PPAC provides operational insight into the health and performance of collaborative apps, flows, and agents. This visibility enables early detection of issues that may impact teams and ensures shared solutions remain reliable as adoption grows.</p>'},
+z3:{badge:'Zone 3 &mdash; Red',color:'var(--zone3)',title:'Enterprise Managed',content:'<p>Zone 3 represents the highest level of governance maturity for the Power Platform and is intended for business-critical, high-impact, or organization-wide solutions. This zone builds upon both Zone 1 and Zone 2 and is designed for apps, flows, and agents that operate at scale, integrate with sensitive or regulated data, and require strong guarantees around security, reliability, compliance, and supportability.</p><p>Environments in Zone 3 are centrally owned and operated &mdash; typically by IT alongside a Center of Excellence (CoE) or a dedicated platform team &mdash; and are governed through managed environments and environment groups in the PPAC. Governance in this zone shifts from collaboration enablement toward enterprise assurance, ensuring that solutions can be trusted as part of the organization&rsquo;s core digital ecosystem.</p><h4>Platform Characteristics</h4><p>Zone 3 moves to enterprise-grade workloads that are:</p><ul><li>Used by large audiences or across multiple business units</li><li>Dependent on critical systems or sensitive data</li><li>Expected to meet formal requirements for availability, performance, and compliance</li></ul><p>The workloads in Zone 3 focus on:</p><ul><li><strong>Power Apps</strong> that function as line-of-business applications or external-facing experiences.</li><li><strong>Power Automate</strong> flows that orchestrate critical processes, system integrations, or operational automation.</li><li><strong>Agents built with Copilot Studio</strong> that provide shared AI-powered capabilities across teams or the entire organization.</li></ul><p>These assets are treated as <strong>products rather than projects</strong>. Ownership is explicit, operational responsibility is defined, and changes are introduced in a controlled and auditable manner. Zone 3 solutions are expected to follow standardized lifecycle practices and align to enterprise support and risk management models.</p><h4>Security Controls</h4><p>Security in Zone 3 is intentionally strict, reflecting the elevated risk and business impact of enterprise-managed solutions.</p><p>PPAC is the primary enforcement point for Zone 3 security, providing centralized management for environments, connectors, runtime behavior, and cost controls across the Power Platform.</p><p>Key security characteristics include:</p><ul><li><strong>Advanced connector policies</strong> that allow only explicitly approved connectors and, where supported, restrict specific connector actions.</li><li><strong>Identity-based access controls</strong> scoped through Entra ID security groups, with clear separation between makers, operators, and consumers.</li><li><strong>Enforcement of platform-wide security baselines</strong> that cannot be overridden locally.</li></ul><p>These controls ensure enterprise solutions cannot introduce unmanaged integration paths or expand their data access beyond what has been formally approved.</p><p>Zone 3 environments are explicitly designed to align with organizational security and compliance programs. Power Platform governance in this zone works together with <strong>Microsoft Purview</strong> to honor data classification, retention, audit, and compliance policies that apply across the broader Microsoft estate. This ensures that apps, flows, and agents in Zone 3 operate within the same trust boundaries as other enterprise systems.</p><h4>Management Controls</h4><p>Management controls in Zone 3 are focused on consistency, predictability, and operational resilience.</p><p>The Zone 3 environments are configured as managed environments, assigned to a Zone 3 environment group and governed by environment group rules that lock key settings across all environments in the zone. These rules enforce standards such as connector availability, sharing defaults, pipeline requirements, and environment configuration, ensuring that governance remains intact as solutions evolve.</p><p>Zone 3 solutions are expected to follow a full application lifecycle management practice, including:</p><ul><li>Solution-based development</li><li>Versioned promotion through development, test, and production environments</li><li>Controlled deployment using Power Platform pipelines</li></ul><p>Pipelines provide a repeatable and auditable mechanism for promoting apps, flows, and agents between environments, incorporating approvals, environment-specific configuration, and operational checks. This reduces risk while enabling teams to deliver changes at enterprise scale.</p><h4>Reporting &amp; Visibility</h4><p>At enterprise scale, governance depends on deep, continuous visibility into usage, risk, and operational health. Zone 3 relies on tenant-wide reporting experiences in PPAC to provide that insight.</p><p><strong>Inventory:</strong> The Inventory experience in PPAC serves as the authoritative catalog for all enterprise-managed Power Platform assets.</p><p><strong>Security:</strong> The Security experience consolidates information across Zone 3 environments, surfacing configuration risks, connector exposure, and policy misalignments.</p><p><strong>Monitoring:</strong> The Monitoring experience provides health and performance signals across enterprise workloads, including failure patterns, degradation trends, and usage anomalies.</p>'}
+};
+function openZoneModal(z){var d=zoneData[z],o=document.getElementById('zoneModalOverlay'),c=document.getElementById('zoneModalContent');c.innerHTML='<div style="display:inline-flex;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;background:'+d.color+';margin-bottom:12px">'+d.badge+'</div><h3>'+d.title+'</h3>'+d.content;o.classList.add('show');}
+function closeZoneModal(){document.getElementById('zoneModalOverlay').classList.remove('show');}
+function handleSearch(q){q=q.toLowerCase().trim();document.querySelectorAll('[data-search]').forEach(function(s){if(!q){s.style.display='';return;}var t=(s.dataset.search+' '+s.textContent).toLowerCase();s.style.display=t.indexOf(q)>=0?'':'none';});}
+window.addEventListener('scroll',function(){document.getElementById('backToTop').classList.toggle('visible',window.scrollY>400);});
+var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){var id=entry.target.id;document.querySelectorAll('.nav-chapter-btn,.nav-sub').forEach(function(b){b.classList.remove('active');});chapters.forEach(function(ch){if(ch.id===id){var btn=document.querySelector('#nav-'+ch.id+' .nav-chapter-btn');if(btn)btn.classList.add('active');var nav=document.getElementById('nav-'+ch.id);if(nav)nav.classList.add('open');}ch.subs.forEach(function(s){if(s.id===id){var subs=document.querySelectorAll('#nav-'+ch.id+' .nav-sub');subs.forEach(function(sb){if(sb.textContent.trim()===s.label)sb.classList.add('active');});var nav=document.getElementById('nav-'+ch.id);if(nav)nav.classList.add('open');var chBtn=document.querySelector('#nav-'+ch.id+' .nav-chapter-btn');if(chBtn)chBtn.classList.add('active');}});});}});},{threshold:0.1,rootMargin:'-20% 0px -60% 0px'});
+buildNav();document.querySelectorAll('.section,.subsection').forEach(function(s){observer.observe(s);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeZoneModal();});
+
+</script>
+
+</body>
+</html>
