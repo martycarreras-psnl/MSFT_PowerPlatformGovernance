@@ -136,7 +136,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .narrative-figure img:hover{box-shadow:0 4px 24px rgba(0,0,0,0.12)}
 .narrative-figure figcaption{font-size:12px;color:var(--cp-text-muted);margin-top:10px;font-style:italic;line-height:1.5}
 
-
+mark.search-hl{background:var(--cp-highlight);color:var(--cp-text);border-radius:3px;padding:1px 2px;box-shadow:0 0 0 1px var(--cp-accent);font-weight:inherit;font-style:inherit}
 </style>
 </head>
 <body>
@@ -1095,7 +1095,37 @@ z3:{badge:'Zone 3 &mdash; Red',color:'var(--zone3)',title:'Enterprise Managed',c
 };
 function openZoneModal(z){var d=zoneData[z],o=document.getElementById('zoneModalOverlay'),c=document.getElementById('zoneModalContent');c.innerHTML='<div style="display:inline-flex;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;background:'+d.color+';margin-bottom:12px">'+d.badge+'</div><h3>'+d.title+'</h3>'+d.content;o.classList.add('show');engAnalytics.track('zone_modal',{zone:z,title:d.title});}
 function closeZoneModal(){document.getElementById('zoneModalOverlay').classList.remove('show');}
-function handleSearch(q){q=q.toLowerCase().trim();document.querySelectorAll('[data-search]').forEach(function(s){if(!q){s.style.display='';return;}var t=(s.dataset.search+' '+s.textContent).toLowerCase();s.style.display=t.indexOf(q)>=0?'':'none';});if(q.length>=3)engAnalytics.trackSearch(q);}
+function clearHighlights(){document.querySelectorAll('mark.search-hl').forEach(function(m){var p=m.parentNode;p.replaceChild(document.createTextNode(m.textContent),m);p.normalize();});}
+function highlightText(el,q){
+  if(!q||el.nodeType===8)return;
+  if(el.nodeType===3){
+    var idx=el.textContent.toLowerCase().indexOf(q);
+    if(idx>=0){
+      var span=document.createElement('mark');span.className='search-hl';
+      var after=el.splitText(idx);
+      after.splitText(q.length);
+      span.appendChild(after.cloneNode(true));
+      after.parentNode.replaceChild(span,after);
+    }
+    return;
+  }
+  if(el.nodeName==='MARK'||el.nodeName==='SCRIPT'||el.nodeName==='STYLE')return;
+  var children=Array.from(el.childNodes);
+  children.forEach(function(c){highlightText(c,q);});
+}
+function handleSearch(q){
+  clearHighlights();
+  q=q.toLowerCase().trim();
+  document.querySelectorAll('[data-search]').forEach(function(s){
+    if(!q){s.style.display='';return;}
+    var t=(s.dataset.search+' '+s.textContent).toLowerCase();
+    var match=t.indexOf(q)>=0;
+    s.style.display=match?'':'none';
+    if(match&&q.length>=2)highlightText(s,q);
+  });
+  if(q.length>=3)engAnalytics.trackSearch(q);
+  if(q.length>=2){var first=document.querySelector('mark.search-hl');if(first)first.scrollIntoView({behavior:'smooth',block:'center'});}
+}
 window.addEventListener('scroll',function(){document.getElementById('backToTop').classList.toggle('visible',window.scrollY>400);});
 var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){var id=entry.target.id;document.querySelectorAll('.nav-chapter-btn,.nav-sub').forEach(function(b){b.classList.remove('active');});chapters.forEach(function(ch){if(ch.id===id){var btn=document.querySelector('#nav-'+ch.id+' .nav-chapter-btn');if(btn)btn.classList.add('active');var nav=document.getElementById('nav-'+ch.id);if(nav)nav.classList.add('open');}ch.subs.forEach(function(s){if(s.id===id){var subs=document.querySelectorAll('#nav-'+ch.id+' .nav-sub');subs.forEach(function(sb){if(sb.textContent.trim()===s.label)sb.classList.add('active');});var nav=document.getElementById('nav-'+ch.id);if(nav)nav.classList.add('open');var chBtn=document.querySelector('#nav-'+ch.id+' .nav-chapter-btn');if(chBtn)chBtn.classList.add('active');}});});}});},{threshold:0.1,rootMargin:'-20% 0px -60% 0px'});
 buildNav();document.querySelectorAll('.section,.subsection').forEach(function(s){observer.observe(s);});
