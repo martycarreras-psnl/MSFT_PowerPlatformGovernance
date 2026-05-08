@@ -94,18 +94,17 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 </head>
 <body>
 
-<div class="setup-overlay" id="setupOverlay" style="display:none">
+<div class="setup-overlay" id="setupOverlay">
 <div class="setup-card">
-<h2>&#128273; Connect to App Insights</h2>
-<p>Enter your Application Insights API key to load engagement data. You can create one in the Azure portal under your App Insights resource &rarr; <strong>API Access</strong> &rarr; <strong>Create API Key</strong>.</p>
+<h2>&#128274; Dashboard Access</h2>
+<p>Enter the passcode to unlock the engagement dashboard.</p>
 <div class="setup-error" id="setupError"></div>
-<input type="password" class="setup-input" id="apiKeyInput" placeholder="Paste your API key here...">
-<button class="ctrl-btn primary" style="width:100%;justify-content:center;padding:12px" onclick="saveApiKey()">Connect &amp; Load Data</button>
-<p style="margin-top:16px;font-size:12px;color:var(--cp-text-muted)">The key is stored in your browser only and never transmitted anywhere except the App Insights API.</p>
+<input type="password" class="setup-input" id="passcodeInput" placeholder="Enter passcode..." onkeydown="if(event.key==='Enter')unlockDashboard()">
+<button class="ctrl-btn primary" style="width:100%;justify-content:center;padding:12px" onclick="unlockDashboard()">Unlock</button>
 </div>
 </div>
 
-<div id="mainApp">
+<div id="mainApp" style="display:none">
 <div class="header">
 <a href="index.html" class="back-link">&#8592; Back to Guide</a>
 <div class="header-top">
@@ -122,7 +121,6 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 <option value="P90D">Last 90 Days</option>
 </select>
 <button class="ctrl-btn" onclick="refreshData()">&#8635; Refresh</button>
-<button class="ctrl-btn" onclick="resetApiKey()">&#9881; Settings</button>
 </div>
 </div>
 </div>
@@ -195,10 +193,38 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 <script>
 var APP_ID='d07ae3e4-b155-4229-981d-81093771292f';
 var API_BASE='https://api.applicationinsights.io/v1/apps/'+APP_ID+'/query';
-var API_KEY_STORAGE='ppgov_dash_apikey';
+var ENCRYPTED_KEY='/2h9bsX4zrDabRggmJ7JjJv5G5LEj/zlP0RqdxvBMTTbjCKwvqA9wMcJQx1Just3KOIjJqL2rYl1vE8/UGvHEzjYl7rJ0xMlnnnjfJlqx56UyJWZv2cAkLAo6+DwFPRwtKzq7iZ1dyAmZL4oCFeir99NxqJs9irB5uRJvMV6Z58=';
+var decryptedApiKey='';
 var chartInstances={};
 
-// ── Palette for charts ──
+// ── AES-GCM Decryption with PBKDF2 ──
+async function decryptApiKey(passcode){
+  var raw=Uint8Array.from(atob(ENCRYPTED_KEY),function(c){return c.charCodeAt(0);});
+  var salt=raw.slice(0,16);
+  var iv=raw.slice(16,28);
+  var tag=raw.slice(28,44);
+  var ciphertext=raw.slice(44);
+  var combined=new Uint8Array(ciphertext.length+tag.length);
+  combined.set(ciphertext);combined.set(tag,ciphertext.length);
+  var keyMaterial=await crypto.subtle.importKey('raw',new TextEncoder().encode(passcode),'PBKDF2',false,['deriveKey']);
+  var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:100000,hash:'SHA-256'},keyMaterial,{name:'AES-GCM',length:256},false,['decrypt']);
+  var decrypted=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,combined);
+  return new TextDecoder().decode(decrypted);
+}
+async function unlockDashboard(){
+  var passcode=document.getElementById('passcodeInput').value;
+  if(!passcode){document.getElementById('setupError').textContent='Please enter the passcode.';document.getElementById('setupError').style.display='block';return;}
+  try{
+    decryptedApiKey=await decryptApiKey(passcode);
+    document.getElementById('setupOverlay').style.display='none';
+    document.getElementById('mainApp').style.display='block';
+    refreshData();
+  }catch(e){
+    document.getElementById('setupError').textContent='Incorrect passcode. Please try again.';
+    document.getElementById('setupError').style.display='block';
+  }
+}
+function getApiKey(){return decryptedApiKey;}
 function getThemeColors(){
   var style=getComputedStyle(document.documentElement);
   return{
@@ -218,34 +244,12 @@ function getThemeColors(){
 }
 var PALETTE=['#b11f4b','#7c3aed','#3b82f6','#14b8a6','#f59e0b','#22c55e','#ef4444','#6366f1','#ec4899','#0ea5e9','#84cc16','#f97316'];
 
-// ── API key management ──
-function getApiKey(){return localStorage.getItem(API_KEY_STORAGE)||'';}
-function saveApiKey(){
-  var key=document.getElementById('apiKeyInput').value.trim();
-  if(!key){document.getElementById('setupError').textContent='Please enter an API key.';document.getElementById('setupError').style.display='block';return;}
-  localStorage.setItem(API_KEY_STORAGE,key);
-  document.getElementById('setupOverlay').style.display='none';
-  refreshData();
-}
-function resetApiKey(){
-  document.getElementById('setupOverlay').style.display='flex';
-  document.getElementById('apiKeyInput').value=getApiKey();
-  document.getElementById('setupError').style.display='none';
-}
-function checkApiKey(){
-  if(!getApiKey()){document.getElementById('setupOverlay').style.display='flex';return false;}
-  return true;
-}
-
-// ── Query App Insights ──
+// ── Palette for charts ──
 async function query(kql){
   var resp=await fetch(API_BASE+'?query='+encodeURIComponent(kql),{
     headers:{'x-api-key':getApiKey(),'Accept':'application/json'}
   });
   if(resp.status===403||resp.status===401){
-    document.getElementById('setupError').textContent='Invalid API key. Please check and try again.';
-    document.getElementById('setupError').style.display='block';
-    document.getElementById('setupOverlay').style.display='flex';
     throw new Error('Auth failed');
   }
   if(!resp.ok)throw new Error('Query failed: '+resp.status);
@@ -263,7 +267,6 @@ function parseResponse(data){
 
 // ── Refresh all data ──
 async function refreshData(){
-  if(!checkApiKey())return;
   var range=document.getElementById('timeRange').value;
   document.getElementById('loadingState').style.display='flex';
   document.getElementById('dashBody').style.display='none';
@@ -531,8 +534,8 @@ function friendlySection(id){
   return map[id]||id;
 }
 
-// ── Init ──
-if(checkApiKey())refreshData();
+// ── Init: passcode prompt shown by default ──
+document.getElementById('passcodeInput').focus();
 </script>
 </body>
 </html>
