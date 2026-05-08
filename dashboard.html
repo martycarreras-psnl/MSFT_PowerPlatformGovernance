@@ -355,8 +355,8 @@ function queryExpandables(range){
 function queryZones(range){
   return query(
     'customEvents | where timestamp > ago('+ts(range)+') and name == "zone_modal" '+
-    '| extend zone = tostring(customDimensions.zone), title = tostring(customDimensions.title) '+
-    '| summarize views=count() by zone, title '+
+    '| extend zone = tostring(customDimensions.zone), [`title`] = tostring(customDimensions.title) '+
+    '| summarize views=count() by zone, [`title`] '+
     '| order by views desc'
   );
 }
@@ -469,7 +469,7 @@ function renderExpandables(data){
 function renderZones(data){
   var c=getThemeColors();
   var zoneColors={'z1':'#22c55e','z2':'#eab308','z3':'#ef4444'};
-  var labels=data.map(function(d){return d.title||d.zone||'Unknown';});
+  var labels=data.map(function(d){return d['title']||d.zone||'Unknown';});
   var values=data.map(function(d){return d.views||0;});
   var colors=data.map(function(d){return zoneColors[d.zone]||c.accent;});
   destroyChart('chartZones');
