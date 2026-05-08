@@ -1253,6 +1253,7 @@ var engAnalytics=(function(){
   return{init:init,track:track,trackSearch:trackSearch,saveConfig:saveConfig};
 })();
 engAnalytics.init();
+document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.shiftKey&&e.key==='A'){e.preventDefault();window.location.href='dashboard.html';}});
 
 </script>
 
