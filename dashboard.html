@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Engagement Dashboard &mdash; Power Platform Governance Guide</title>
+<script>
+(()=>{
+  const param=new URLSearchParams(window.location.search).get("clawpilotTheme");
+  const theme=param||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  document.documentElement.setAttribute("data-theme",theme);
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root{color-scheme:light;--cp-bg:#f7f4ef;--cp-bg-elevated:#fcfbf8;--cp-surface:#ffffff;--cp-surface-soft:#f5f5f5;--cp-border:#dedede;--cp-border-strong:#919191;--cp-text:#242424;--cp-text-muted:#5c5c5c;--cp-text-soft:#6f6f6f;--cp-accent:#b11f4b;--cp-accent-hover:#9a1a41;--cp-accent-soft:rgba(177,31,75,0.08);--cp-accent-fg:#ffffff;--cp-success:#16a34a;--cp-danger:#dc2626;--cp-warning:#f59e0b;--cp-link:#0078d4;--cp-shadow:0 18px 48px rgba(0,0,0,0.12);--cp-overlay:rgba(255,255,255,0.8);--cp-panel:rgba(255,255,255,0.86);--cp-panel-strong:rgba(255,255,255,0.96);--cp-sheen:rgba(255,255,255,0.55);--cp-highlight:rgba(177,31,75,0.12)}
+html[data-theme="dark"]{color-scheme:dark;--cp-bg:#3d3b3a;--cp-bg-elevated:#343231;--cp-surface:#292929;--cp-surface-soft:#2e2e2e;--cp-border:#474747;--cp-border-strong:#5f5f5f;--cp-text:#dedede;--cp-text-muted:#919191;--cp-text-soft:#b0b0b0;--cp-accent:#fd8ea1;--cp-accent-hover:#fb7b91;--cp-accent-soft:rgba(253,142,161,0.14);--cp-accent-fg:#1a1a1a;--cp-success:#4ade80;--cp-danger:#f87171;--cp-warning:#fbbf24;--cp-link:#4da6ff;--cp-shadow:0 18px 48px rgba(0,0,0,0.32);--cp-overlay:rgba(41,41,41,0.88);--cp-panel:rgba(41,41,41,0.72);--cp-panel-strong:rgba(41,41,41,0.96);--cp-sheen:rgba(255,255,255,0.04);--cp-highlight:rgba(253,142,161,0.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--cp-bg);color:var(--cp-text);line-height:1.6;min-height:100vh}
+
+.header{background:linear-gradient(135deg,var(--cp-accent-soft) 0%,var(--cp-bg) 60%);border-bottom:1px solid var(--cp-border);padding:32px 40px 24px;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:var(--cp-accent-soft);filter:blur(60px);opacity:.4}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;position:relative}
+.header h1{font-size:28px;font-weight:700;display:flex;align-items:center;gap:10px}
+.header p{font-size:14px;color:var(--cp-text-muted);margin-top:4px;position:relative}
+.header-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ctrl-select{padding:8px 14px;border-radius:.625rem;border:1px solid var(--cp-border);background:var(--cp-surface);color:var(--cp-text);font-size:13px;font-weight:500;cursor:pointer;outline:none}
+.ctrl-select:focus{border-color:var(--cp-accent)}
+.ctrl-btn{padding:8px 16px;border-radius:.625rem;border:1px solid var(--cp-border);background:var(--cp-surface);color:var(--cp-text);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.ctrl-btn:hover{background:var(--cp-accent-soft);border-color:var(--cp-accent)}
+.ctrl-btn.primary{background:var(--cp-accent);color:var(--cp-accent-fg);border-color:var(--cp-accent)}
+.ctrl-btn.primary:hover{background:var(--cp-accent-hover)}
+.back-link{font-size:13px;color:var(--cp-link);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:12px;position:relative}
+.back-link:hover{text-decoration:underline}
+
+.content{max-width:1200px;margin:0 auto;padding:32px 40px 60px}
+
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:16px;padding:24px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);transition:transform .2s,box-shadow .2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--cp-shadow)}
+.stat-big{font-size:36px;font-weight:700;color:var(--cp-accent);line-height:1.1}
+.stat-label{font-size:11px;color:var(--cp-text-muted);text-transform:uppercase;letter-spacing:.6px;margin-top:6px;font-weight:600}
+.stat-sub{font-size:12px;color:var(--cp-text-soft);margin-top:4px}
+
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+.chart-card{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.chart-card.full{grid-column:1/-1}
+.chart-card h3{font-size:16px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.chart-card .chart-sub{font-size:12px;color:var(--cp-text-muted);margin-bottom:16px}
+.chart-wrap{position:relative;width:100%;min-height:280px}
+.chart-wrap canvas{width:100%!important}
+
+.table-card{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:24px}
+.table-card h3{font-size:16px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.table-card .chart-sub{font-size:12px;color:var(--cp-text-muted);margin-bottom:16px}
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{text-align:left;padding:10px 14px;background:var(--cp-accent-soft);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--cp-accent);color:var(--cp-text)}
+.data-table td{padding:8px 14px;border-bottom:1px solid var(--cp-border);color:var(--cp-text-soft)}
+.data-table tr:hover td{background:var(--cp-accent-soft)}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--cp-accent);color:var(--cp-accent-fg);font-size:11px;font-weight:700}
+.rank-badge.silver{background:var(--cp-border-strong)}
+.rank-badge.bronze{background:#cd7f32;color:#fff}
+
+.bar-h{display:flex;flex-direction:column;gap:8px}
+.bar-h-row{display:flex;align-items:center;gap:10px}
+.bar-h-label{width:180px;text-align:right;font-size:12px;color:var(--cp-text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.bar-h-track{flex:1;height:28px;background:var(--cp-surface-soft);border-radius:6px;overflow:hidden;border:1px solid var(--cp-border);position:relative}
+.bar-h-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--cp-accent),var(--cp-accent-hover));display:flex;align-items:center;padding-left:10px;font-size:11px;font-weight:700;color:var(--cp-accent-fg);min-width:2px;transition:width .6s ease}
+
+.setup-overlay{position:fixed;inset:0;background:var(--cp-overlay);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center}
+.setup-card{background:var(--cp-surface);border-radius:16px;padding:40px;max-width:540px;width:90%;box-shadow:var(--cp-shadow);text-align:center}
+.setup-card h2{font-size:22px;font-weight:700;margin-bottom:8px}
+.setup-card p{font-size:14px;color:var(--cp-text-muted);margin-bottom:24px;line-height:1.6}
+.setup-input{width:100%;padding:12px 16px;border-radius:.625rem;border:1px solid var(--cp-border);background:var(--cp-surface-soft);color:var(--cp-text);font-size:13px;font-family:monospace;outline:none;margin-bottom:16px}
+.setup-input:focus{border-color:var(--cp-accent)}
+.setup-error{color:var(--cp-danger);font-size:13px;margin-bottom:12px;display:none}
+
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--cp-text-muted);gap:12px}
+.spinner{width:32px;height:32px;border:3px solid var(--cp-border);border-top-color:var(--cp-accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.empty-state{text-align:center;padding:40px;color:var(--cp-text-muted);font-size:14px}
+
+.last-refresh{font-size:11px;color:var(--cp-text-muted);text-align:right;margin-bottom:16px}
+
+@media(max-width:768px){
+  .chart-grid{grid-template-columns:1fr}
+  .stat-row{grid-template-columns:repeat(2,1fr)}
+  .header{padding:24px 20px 20px}
+  .content{padding:20px}
+  .bar-h-label{width:120px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div class="setup-overlay" id="setupOverlay" style="display:none">
+<div class="setup-card">
+<h2>&#128273; Connect to App Insights</h2>
+<p>Enter your Application Insights API key to load engagement data. You can create one in the Azure portal under your App Insights resource &rarr; <strong>API Access</strong> &rarr; <strong>Create API Key</strong>.</p>
+<div class="setup-error" id="setupError"></div>
+<input type="password" class="setup-input" id="apiKeyInput" placeholder="Paste your API key here...">
+<button class="ctrl-btn primary" style="width:100%;justify-content:center;padding:12px" onclick="saveApiKey()">Connect &amp; Load Data</button>
+<p style="margin-top:16px;font-size:12px;color:var(--cp-text-muted)">The key is stored in your browser only and never transmitted anywhere except the App Insights API.</p>
+</div>
+</div>
+
+<div id="mainApp">
+<div class="header">
+<a href="index.html" class="back-link">&#8592; Back to Guide</a>
+<div class="header-top">
+<div>
+<h1>&#128202; Content Engagement Dashboard</h1>
+<p>Real-time analytics for the Power Platform Governance Guide</p>
+</div>
+<div class="header-controls">
+<select class="ctrl-select" id="timeRange" onchange="refreshData()">
+<option value="PT1H">Last Hour</option>
+<option value="PT24H" selected>Last 24 Hours</option>
+<option value="P7D">Last 7 Days</option>
+<option value="P30D">Last 30 Days</option>
+<option value="P90D">Last 90 Days</option>
+</select>
+<button class="ctrl-btn" onclick="refreshData()">&#8635; Refresh</button>
+<button class="ctrl-btn" onclick="resetApiKey()">&#9881; Settings</button>
+</div>
+</div>
+</div>
+
+<div class="content" id="dashContent">
+<div class="loading" id="loadingState"><div class="spinner"></div><span>Loading engagement data...</span></div>
+
+<div id="dashBody" style="display:none">
+<div class="last-refresh" id="lastRefresh"></div>
+
+<!-- KPI Row -->
+<div class="stat-row" id="statRow"></div>
+
+<!-- Charts Row 1 -->
+<div class="chart-grid">
+<div class="chart-card full">
+<h3>&#128200; Sessions Over Time</h3>
+<p class="chart-sub">Unique sessions per day visiting the guide</p>
+<div class="chart-wrap"><canvas id="chartSessions"></canvas></div>
+</div>
+</div>
+
+<div class="chart-grid">
+<div class="chart-card">
+<h3>&#9201; Time Spent by Section</h3>
+<p class="chart-sub">Where readers spend the most time (seconds)</p>
+<div id="dwellBars"></div>
+</div>
+<div class="chart-card">
+<h3>&#128270; Top Searches</h3>
+<p class="chart-sub">Most frequently searched terms</p>
+<div id="searchBars"></div>
+</div>
+</div>
+
+<div class="chart-grid">
+<div class="chart-card">
+<h3>&#128736; Expandable Sections</h3>
+<p class="chart-sub">Which deep-dive sections users open most</p>
+<div class="chart-wrap"><canvas id="chartExpandables"></canvas></div>
+</div>
+<div class="chart-card">
+<h3>&#127760; Governance Zones</h3>
+<p class="chart-sub">Zone modal views — which zones draw interest</p>
+<div class="chart-wrap"><canvas id="chartZones"></canvas></div>
+</div>
+</div>
+
+<div class="chart-grid">
+<div class="chart-card full">
+<h3>&#128204; Navigation Clicks</h3>
+<p class="chart-sub">Most clicked chapters and subsections in the sidebar</p>
+<div class="chart-wrap"><canvas id="chartNav"></canvas></div>
+</div>
+</div>
+
+<!-- Recent Events Table -->
+<div class="table-card">
+<h3>&#128221; Recent Events</h3>
+<p class="chart-sub">Latest 50 engagement events across all users</p>
+<div style="overflow-x:auto"><table class="data-table" id="eventsTable">
+<thead><tr><th>Time</th><th>Event</th><th>Details</th><th>Session</th></tr></thead>
+<tbody id="eventsBody"></tbody>
+</table></div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+var APP_ID='d07ae3e4-b155-4229-981d-81093771292f';
+var API_BASE='https://api.applicationinsights.io/v1/apps/'+APP_ID+'/query';
+var API_KEY_STORAGE='ppgov_dash_apikey';
+var chartInstances={};
+
+// ── Palette for charts ──
+function getThemeColors(){
+  var style=getComputedStyle(document.documentElement);
+  return{
+    accent:style.getPropertyValue('--cp-accent').trim(),
+    accentHover:style.getPropertyValue('--cp-accent-hover').trim(),
+    success:style.getPropertyValue('--cp-success').trim(),
+    warning:style.getPropertyValue('--cp-warning').trim(),
+    danger:style.getPropertyValue('--cp-danger').trim(),
+    link:style.getPropertyValue('--cp-link').trim(),
+    text:style.getPropertyValue('--cp-text').trim(),
+    textMuted:style.getPropertyValue('--cp-text-muted').trim(),
+    border:style.getPropertyValue('--cp-border').trim(),
+    surface:style.getPropertyValue('--cp-surface').trim(),
+    surfaceSoft:style.getPropertyValue('--cp-surface-soft').trim(),
+    accentSoft:style.getPropertyValue('--cp-accent-soft').trim()
+  };
+}
+var PALETTE=['#b11f4b','#7c3aed','#3b82f6','#14b8a6','#f59e0b','#22c55e','#ef4444','#6366f1','#ec4899','#0ea5e9','#84cc16','#f97316'];
+
+// ── API key management ──
+function getApiKey(){return localStorage.getItem(API_KEY_STORAGE)||'';}
+function saveApiKey(){
+  var key=document.getElementById('apiKeyInput').value.trim();
+  if(!key){document.getElementById('setupError').textContent='Please enter an API key.';document.getElementById('setupError').style.display='block';return;}
+  localStorage.setItem(API_KEY_STORAGE,key);
+  document.getElementById('setupOverlay').style.display='none';
+  refreshData();
+}
+function resetApiKey(){
+  document.getElementById('setupOverlay').style.display='flex';
+  document.getElementById('apiKeyInput').value=getApiKey();
+  document.getElementById('setupError').style.display='none';
+}
+function checkApiKey(){
+  if(!getApiKey()){document.getElementById('setupOverlay').style.display='flex';return false;}
+  return true;
+}
+
+// ── Query App Insights ──
+async function query(kql){
+  var resp=await fetch(API_BASE+'?query='+encodeURIComponent(kql),{
+    headers:{'x-api-key':getApiKey(),'Accept':'application/json'}
+  });
+  if(resp.status===403||resp.status===401){
+    document.getElementById('setupError').textContent='Invalid API key. Please check and try again.';
+    document.getElementById('setupError').style.display='block';
+    document.getElementById('setupOverlay').style.display='flex';
+    throw new Error('Auth failed');
+  }
+  if(!resp.ok)throw new Error('Query failed: '+resp.status);
+  var data=await resp.json();
+  return parseResponse(data);
+}
+function parseResponse(data){
+  if(!data.tables||!data.tables[0])return[];
+  var t=data.tables[0];
+  var cols=t.columns.map(function(c){return c.name;});
+  return t.rows.map(function(r){
+    var obj={};cols.forEach(function(c,i){obj[c]=r[i];});return obj;
+  });
+}
+
+// ── Refresh all data ──
+async function refreshData(){
+  if(!checkApiKey())return;
+  var range=document.getElementById('timeRange').value;
+  document.getElementById('loadingState').style.display='flex';
+  document.getElementById('dashBody').style.display='none';
+
+  try{
+    var results=await Promise.all([
+      queryKPIs(range),
+      querySessions(range),
+      queryDwell(range),
+      querySearches(range),
+      queryExpandables(range),
+      queryZones(range),
+      queryNavClicks(range),
+      queryRecentEvents(range)
+    ]);
+
+    renderKPIs(results[0]);
+    renderSessions(results[1]);
+    renderDwell(results[2]);
+    renderSearches(results[3]);
+    renderExpandables(results[4]);
+    renderZones(results[5]);
+    renderNavClicks(results[6]);
+    renderEvents(results[7]);
+
+    document.getElementById('lastRefresh').textContent='Last refreshed: '+new Date().toLocaleString();
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('dashBody').style.display='block';
+  }catch(e){
+    console.error(e);
+    document.getElementById('loadingState').innerHTML='<div style="color:var(--cp-danger)">Failed to load data. Check your API key and try again.</div>';
+  }
+}
+
+// ── KQL Queries ──
+function queryKPIs(range){
+  return query(
+    'let timeRange = '+range+'; '+
+    'customEvents | where timestamp > ago(timeRange) '+
+    '| summarize totalEvents=count(), '+
+    'uniqueSessions=dcount(tostring(customDimensions.sessionId)), '+
+    'pageLoads=countif(name=="page_load"), '+
+    'searches=countif(name=="search"), '+
+    'zoneViews=countif(name=="zone_modal"), '+
+    'expandClicks=countif(name=="expandable_open")'
+  );
+}
+function querySessions(range){
+  return query(
+    'let timeRange = '+range+'; '+
+    'customEvents | where timestamp > ago(timeRange) and name == "page_load" '+
+    '| summarize sessions=dcount(tostring(customDimensions.sessionId)) by bin(timestamp, '+
+    (range==='PT1H'?'5m':range==='PT24H'?'1h':range==='P7D'?'1d':range==='P30D'?'1d':'1d')+') '+
+    '| order by timestamp asc'
+  );
+}
+function queryDwell(range){
+  return query(
+    'let timeRange = '+range+'; '+
+    'customEvents | where timestamp > ago(timeRange) and name == "dwell_summary" '+
+    '| mv-expand bagexpansion=array props = todynamic(tostring(customDimensions)) '+
+    '| project timestamp, customDimensions '+
+    '| evaluate bag_unpack(customDimensions) '
+  );
+}
+function querySearches(range){
+  return query(
+    'let timeRange = '+range+'; '+
+    'customEvents | where timestamp > ago(timeRange) and name == "search" '+
+    '| extend q = tostring(customDimensions.query) '+
+    '| summarize searchCount=count() by q '+
+    '| order by searchCount desc | take 15'
+  );
+}
+function queryExpandables(range){
+  return query(
+    'let timeRange = '+range+'; '+
+    'customEvents | where timestamp > ago(timeRange) and name == "expandable_open" '+
+    '| extend label = tostring(customDimensions.label) '+
+    '| summarize clicks=count() by label '+
+    '| order by clicks desc | take 15'
+  );
+}
+function queryZones(range){
+  return query(
+    'let timeRange = '+range+'; '+
+    'customEvents | where timestamp > ago(timeRange) and name == "zone_modal" '+
+    '| extend zone = tostring(customDimensions.zone), title = tostring(customDimensions.title) '+
+    '| summarize views=count() by zone, title '+
+    '| order by views desc'
+  );
+}
+function queryNavClicks(range){
+  return query(
+    'let timeRange = '+range+'; '+
+    'customEvents | where timestamp > ago(timeRange) and name == "nav_click" '+
+    '| extend target = coalesce(tostring(customDimensions.chapter), tostring(customDimensions.subsection)) '+
+    '| summarize clicks=count() by target '+
+    '| order by clicks desc | take 15'
+  );
+}
+function queryRecentEvents(range){
+  return query(
+    'let timeRange = '+range+'; '+
+    'customEvents | where timestamp > ago(timeRange) '+
+    '| project timestamp, name, customDimensions '+
+    '| order by timestamp desc | take 50'
+  );
+}
+
+// ── Render functions ──
+function renderKPIs(data){
+  var d=data[0]||{totalEvents:0,uniqueSessions:0,pageLoads:0,searches:0,zoneViews:0,expandClicks:0};
+  document.getElementById('statRow').innerHTML=
+    statCard(d.uniqueSessions||0,'Unique Sessions','Distinct visitors')+
+    statCard(d.pageLoads||0,'Page Loads','Total guide opens')+
+    statCard(d.searches||0,'Searches','Search queries made')+
+    statCard(d.expandClicks||0,'Expandable Opens','Deep-dive sections viewed')+
+    statCard(d.zoneViews||0,'Zone Views','Governance zone details viewed');
+}
+function statCard(val,label,sub){
+  return '<div class="stat-card"><div class="stat-big">'+formatNum(val)+'</div><div class="stat-label">'+label+'</div><div class="stat-sub">'+sub+'</div></div>';
+}
+function formatNum(n){
+  n=Number(n)||0;
+  if(n>=1000000)return (n/1000000).toFixed(1)+'M';
+  if(n>=1000)return (n/1000).toFixed(1)+'K';
+  return n.toString();
+}
+
+function renderSessions(data){
+  var c=getThemeColors();
+  var labels=data.map(function(d){
+    var dt=new Date(d.timestamp);
+    return dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})+(data.length<=24?' '+dt.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}):'');
+  });
+  var values=data.map(function(d){return d.sessions||0;});
+  destroyChart('chartSessions');
+  chartInstances['chartSessions']=new Chart(document.getElementById('chartSessions'),{
+    type:'line',
+    data:{labels:labels,datasets:[{label:'Sessions',data:values,borderColor:c.accent,backgroundColor:c.accentSoft,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:c.accent}]},
+    options:chartOptions(c)
+  });
+}
+
+function renderDwell(data){
+  // Dwell data comes as key-value pairs in customDimensions
+  // Parse out section -> seconds from all rows
+  var sectionTotals={};
+  var skip=['sessionId','page'];
+  data.forEach(function(row){
+    Object.keys(row).forEach(function(k){
+      if(skip.indexOf(k)>=0||k==='timestamp'||k==='name')return;
+      var val=row[k];
+      if(typeof val==='string'&&val.endsWith('s')){
+        var secs=parseInt(val);
+        if(!isNaN(secs)){sectionTotals[k]=(sectionTotals[k]||0)+secs;}
+      }
+    });
+  });
+  var sorted=Object.entries(sectionTotals).sort(function(a,b){return b[1]-a[1];}).slice(0,12);
+  var max=sorted.length?sorted[0][1]:1;
+  var html='<div class="bar-h">';
+  if(!sorted.length)html+='<div class="empty-state">No dwell data yet</div>';
+  sorted.forEach(function(e){
+    var pct=Math.round(e[1]/max*100);
+    var label=friendlySection(e[0]);
+    html+='<div class="bar-h-row"><div class="bar-h-label" title="'+label+'">'+label+'</div><div class="bar-h-track"><div class="bar-h-fill" style="width:'+pct+'%">'+formatDuration(e[1])+'</div></div></div>';
+  });
+  html+='</div>';
+  document.getElementById('dwellBars').innerHTML=html;
+}
+
+function renderSearches(data){
+  var max=data.length?data[0].searchCount:1;
+  var html='<div class="bar-h">';
+  if(!data.length)html+='<div class="empty-state">No searches yet</div>';
+  data.forEach(function(d){
+    var pct=Math.round((d.searchCount||0)/max*100);
+    html+='<div class="bar-h-row"><div class="bar-h-label">&quot;'+escHtml(d.q)+'&quot;</div><div class="bar-h-track"><div class="bar-h-fill" style="width:'+pct+'%">'+d.searchCount+'</div></div></div>';
+  });
+  html+='</div>';
+  document.getElementById('searchBars').innerHTML=html;
+}
+
+function renderExpandables(data){
+  var c=getThemeColors();
+  var labels=data.map(function(d){return cleanLabel(d.label||'');});
+  var values=data.map(function(d){return d.clicks||0;});
+  destroyChart('chartExpandables');
+  chartInstances['chartExpandables']=new Chart(document.getElementById('chartExpandables'),{
+    type:'bar',
+    data:{labels:labels,datasets:[{label:'Opens',data:values,backgroundColor:PALETTE.slice(0,values.length),borderRadius:6,borderSkipped:false}]},
+    options:Object.assign({},chartOptions(c),{indexAxis:'y',plugins:{legend:{display:false}}})
+  });
+}
+
+function renderZones(data){
+  var c=getThemeColors();
+  var zoneColors={'z1':'#22c55e','z2':'#eab308','z3':'#ef4444'};
+  var labels=data.map(function(d){return d.title||d.zone||'Unknown';});
+  var values=data.map(function(d){return d.views||0;});
+  var colors=data.map(function(d){return zoneColors[d.zone]||c.accent;});
+  destroyChart('chartZones');
+  chartInstances['chartZones']=new Chart(document.getElementById('chartZones'),{
+    type:'doughnut',
+    data:{labels:labels,datasets:[{data:values,backgroundColor:colors,borderWidth:2,borderColor:c.surface}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{color:c.text,padding:16,font:{size:12}}}}}
+  });
+}
+
+function renderNavClicks(data){
+  var c=getThemeColors();
+  var labels=data.map(function(d){return d.target||'';});
+  var values=data.map(function(d){return d.clicks||0;});
+  destroyChart('chartNav');
+  chartInstances['chartNav']=new Chart(document.getElementById('chartNav'),{
+    type:'bar',
+    data:{labels:labels,datasets:[{label:'Clicks',data:values,backgroundColor:PALETTE.slice(0,values.length),borderRadius:6,borderSkipped:false}]},
+    options:Object.assign({},chartOptions(c),{plugins:{legend:{display:false}}})
+  });
+}
+
+function renderEvents(data){
+  var tbody=document.getElementById('eventsBody');
+  if(!data.length){tbody.innerHTML='<tr><td colspan="4" class="empty-state">No events yet</td></tr>';return;}
+  var html='';
+  data.forEach(function(e){
+    var ts=new Date(e.timestamp);
+    var dims=typeof e.customDimensions==='string'?JSON.parse(e.customDimensions):e.customDimensions||{};
+    var session=(dims.sessionId||'').substring(0,8);
+    var details=Object.entries(dims).filter(function(p){return p[0]!=='sessionId'&&p[0]!=='page';}).map(function(p){return '<strong>'+escHtml(p[0])+'</strong>: '+escHtml(String(p[1]));}).join(', ');
+    html+='<tr><td>'+ts.toLocaleDateString()+' '+ts.toLocaleTimeString()+'</td><td><strong>'+escHtml(e.name)+'</strong></td><td>'+details+'</td><td style="font-family:monospace;font-size:11px;color:var(--cp-text-muted)">'+session+'</td></tr>';
+  });
+  tbody.innerHTML=html;
+}
+
+// ── Helpers ──
+function chartOptions(c){
+  return{
+    responsive:true,maintainAspectRatio:true,
+    scales:{x:{grid:{color:c.border},ticks:{color:c.textMuted,font:{size:11}}},y:{grid:{color:c.border},ticks:{color:c.textMuted,font:{size:11}}}},
+    plugins:{legend:{labels:{color:c.text,font:{size:12}}}}
+  };
+}
+function destroyChart(id){if(chartInstances[id]){chartInstances[id].destroy();delete chartInstances[id];}}
+function formatDuration(s){
+  if(s<60)return s+'s';
+  if(s<3600)return Math.floor(s/60)+'m '+Math.round(s%60)+'s';
+  return Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m';
+}
+function escHtml(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function cleanLabel(s){return s.replace(/[\u{1F000}-\u{1FFFF}]/gu,'').trim();}
+function friendlySection(id){
+  var map={
+    'sec-intro':'1. Introduction','sec-intro-purpose':'1.1 Purpose','sec-intro-scope':'1.2 Scope','sec-intro-new':'1.3 What\'s New',
+    'sec-overview':'2. Overview','sec-overview-why':'2.1 Why Power Platform?','sec-overview-products':'2.2 Platform Components','sec-overview-managed':'2.3 Managed Environments','sec-overview-ai':'2.4 AI Features',
+    'sec-planning':'3. Planning','sec-planning-envs':'3.1 Understanding Environments','sec-planning-strategy':'3.2 Environment Strategy','sec-planning-dataverse':'3.3 Data with Dataverse',
+    'sec-governance':'4. Governance','sec-governance-fundamentals':'4.1 Fundamentals','sec-governance-security':'4.2 Security Controls','sec-governance-management':'4.3 Management Controls','sec-governance-reporting':'4.4 Reporting & Visibility','sec-governance-routing':'4.5 Maker Routing','sec-governance-zones':'4.6 Governance Zones',
+    'sec-security':'5. Security','sec-security-ppac':'5.1 PPAC Security','sec-security-dataverse':'5.2 Dataverse Security',
+    'sec-change':'6. Change Management','sec-change-types':'6.1 Types of Change','sec-change-skilling':'6.2 Role-Based Skilling','sec-change-decision':'6.3 Decision Rights','sec-change-rings':'6.4 Release Rings','sec-change-operationalize':'6.5 Operationalize Change','sec-change-communication':'6.6 Communication','sec-change-agents':'6.7 Agents for Change',
+    'sec-deployment':'7. Deployment','sec-deploy-planning':'7.1 Planning','sec-deploy-alm':'7.2 ALM Fundamentals','sec-deploy-pipelines':'7.3 Pipelines','sec-deploy-envmgmt':'7.4 Environment Mgmt','sec-deploy-extended':'7.5 Extended Deployment','sec-deploy-validation':'7.6 Validation',
+    'sec-resources':'8. Resources'
+  };
+  return map[id]||id;
+}
+
+// ── Init ──
+if(checkApiKey())refreshData();
+</script>
+</body>
+</html>
