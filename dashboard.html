@@ -246,13 +246,19 @@ var PALETTE=['#b11f4b','#7c3aed','#3b82f6','#14b8a6','#f59e0b','#22c55e','#ef444
 
 // ── Palette for charts ──
 async function query(kql){
-  var resp=await fetch(API_BASE+'?query='+encodeURIComponent(kql),{
-    headers:{'x-api-key':getApiKey(),'Accept':'application/json'}
+  var resp=await fetch(API_BASE,{
+    method:'POST',
+    headers:{'x-api-key':getApiKey(),'Accept':'application/json','Content-Type':'application/json'},
+    body:JSON.stringify({query:kql})
   });
   if(resp.status===403||resp.status===401){
     throw new Error('Auth failed');
   }
-  if(!resp.ok)throw new Error('Query failed: '+resp.status);
+  if(!resp.ok){
+    var errBody='';try{errBody=await resp.text();}catch(e){}
+    console.error('KQL error ('+resp.status+'):',kql,errBody);
+    throw new Error('Query failed: '+resp.status);
+  }
   var data=await resp.json();
   return parseResponse(data);
 }
@@ -272,7 +278,7 @@ async function refreshData(){
   document.getElementById('dashBody').style.display='none';
 
   try{
-    var results=await Promise.all([
+    var results=await Promise.allSettled([
       queryKPIs(range),
       querySessions(range),
       queryDwell(range),
@@ -282,15 +288,16 @@ async function refreshData(){
       queryNavClicks(range),
       queryRecentEvents(range)
     ]);
+    function val(i){return results[i].status==='fulfilled'?results[i].value:[];}
 
-    renderKPIs(results[0]);
-    renderSessions(results[1]);
-    renderDwell(results[2]);
-    renderSearches(results[3]);
-    renderExpandables(results[4]);
-    renderZones(results[5]);
-    renderNavClicks(results[6]);
-    renderEvents(results[7]);
+    renderKPIs(val(0));
+    renderSessions(val(1));
+    renderDwell(val(2));
+    renderSearches(val(3));
+    renderExpandables(val(4));
+    renderZones(val(5));
+    renderNavClicks(val(6));
+    renderEvents(val(7));
 
     document.getElementById('lastRefresh').textContent='Last refreshed: '+new Date().toLocaleString();
     document.getElementById('loadingState').style.display='none';
