@@ -1177,6 +1177,7 @@ var engAnalytics=(function(){
   var STORAGE_KEY='ppgov_analytics';
   var SESSION_KEY='ppgov_session';
   var CONFIG_KEY='ppgov_ai_conn';
+  var DEFAULT_CONN='InstrumentationKey=226eaa3f-6a50-453b-b115-a132d4f439ea;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/;ApplicationId=d07ae3e4-b155-4229-981d-81093771292f';
   var searchDebounce=null;
   var sessionId=crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2));
   var dwellTimers={};  // sectionId -> {start, total}
@@ -1184,7 +1185,7 @@ var engAnalytics=(function(){
 
   function getData(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{events:[],dwell:{},searches:{},sessions:0,firstSeen:null};}catch(e){return{events:[],dwell:{},searches:{},sessions:0,firstSeen:null};}}
   function saveData(d){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}catch(e){}}
-  function getConfig(){return localStorage.getItem(CONFIG_KEY)||'';}
+  function getConfig(){return localStorage.getItem(CONFIG_KEY)||DEFAULT_CONN;}
   function saveConfig(v){localStorage.setItem(CONFIG_KEY,v);document.getElementById('aiConnStr').value=v;}
 
   // ── Initialize session ──
