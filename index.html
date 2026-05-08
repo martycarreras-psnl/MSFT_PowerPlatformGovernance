@@ -136,41 +136,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .narrative-figure img:hover{box-shadow:0 4px 24px rgba(0,0,0,0.12)}
 .narrative-figure figcaption{font-size:12px;color:var(--cp-text-muted);margin-top:10px;font-style:italic;line-height:1.5}
 
-/* ── Engagement Analytics Panel ── */
-.analytics-overlay{display:none;position:fixed;inset:0;background:var(--cp-overlay);z-index:600;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.analytics-overlay.show{display:flex}
-.analytics-panel{background:var(--cp-surface);border-radius:16px;max-width:860px;width:92%;max-height:88vh;overflow-y:auto;box-shadow:var(--cp-shadow);padding:32px;position:relative}
-.analytics-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;border:1px solid var(--cp-border);background:var(--cp-surface-soft);cursor:pointer;font-size:16px;color:var(--cp-text-muted);display:flex;align-items:center;justify-content:center}
-.analytics-panel h3{font-size:20px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-.analytics-panel .analytics-sub{font-size:12px;color:var(--cp-text-muted);margin-bottom:24px}
-.analytics-tabs{display:flex;gap:4px;border-bottom:2px solid var(--cp-border);margin-bottom:20px}
-.analytics-tab{padding:8px 16px;border:none;background:none;color:var(--cp-text-muted);font-size:13px;font-weight:600;cursor:pointer;position:relative}
-.analytics-tab.active{color:var(--cp-accent)}
-.analytics-tab.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--cp-accent)}
-.analytics-tab-panel{display:none}.analytics-tab-panel.active{display:block}
-.analytics-bar-chart{display:flex;flex-direction:column;gap:6px;margin:16px 0}
-.analytics-bar-row{display:flex;align-items:center;gap:10px;font-size:12px}
-.analytics-bar-label{width:200px;text-align:right;color:var(--cp-text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
-.analytics-bar-track{flex:1;height:22px;background:var(--cp-surface-soft);border-radius:4px;position:relative;overflow:hidden;border:1px solid var(--cp-border)}
-.analytics-bar-fill{height:100%;border-radius:4px;background:var(--cp-accent);transition:width .4s ease;min-width:2px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:var(--cp-accent-fg)}
-.analytics-bar-val{width:50px;font-weight:600;color:var(--cp-text);font-size:12px}
-.analytics-stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:20px}
-.analytics-stat-card{background:var(--cp-surface-soft);border:1px solid var(--cp-border);border-radius:10px;padding:16px;text-align:center}
-.analytics-stat-card .big{font-size:28px;font-weight:700;color:var(--cp-accent)}
-.analytics-stat-card .lbl{font-size:11px;color:var(--cp-text-muted);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
-.analytics-event-list{max-height:300px;overflow-y:auto;font-size:12px;border:1px solid var(--cp-border);border-radius:8px}
-.analytics-event-list table{width:100%;border-collapse:collapse}
-.analytics-event-list th{position:sticky;top:0;background:var(--cp-accent-soft);padding:8px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.3px}
-.analytics-event-list td{padding:6px 12px;border-top:1px solid var(--cp-border);color:var(--cp-text-soft)}
-.analytics-actions{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
-.analytics-btn{padding:8px 16px;border-radius:.625rem;border:1px solid var(--cp-border);background:var(--cp-surface-soft);color:var(--cp-text);font-size:12px;font-weight:600;cursor:pointer;transition:background .15s}
-.analytics-btn:hover{background:var(--cp-accent-soft)}
-.analytics-btn.primary{background:var(--cp-accent);color:var(--cp-accent-fg);border-color:var(--cp-accent)}
-.analytics-btn.primary:hover{background:var(--cp-accent-hover)}
-.analytics-config-row{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
-.analytics-config-row input{flex:1;min-width:200px;padding:8px 12px;border-radius:.625rem;border:1px solid var(--cp-border);background:var(--cp-surface-soft);color:var(--cp-text);font-size:12px;outline:none;font-family:monospace}
-.analytics-config-row input:focus{border-color:var(--cp-accent)}
-.analytics-config-row label{font-size:12px;font-weight:600;color:var(--cp-text-muted);white-space:nowrap}
+
 </style>
 </head>
 <body>
@@ -1103,42 +1069,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
 
-<!-- Engagement Analytics Panel -->
-<div class="analytics-overlay" id="analyticsOverlay" onclick="if(event.target===this)closeAnalytics()">
-<div class="analytics-panel">
-<button class="analytics-close" onclick="closeAnalytics()">&#10005;</button>
-<h3>&#128202; Content Engagement</h3>
-<p class="analytics-sub">Press <kbd>Ctrl+Shift+A</kbd> to toggle &bull; Data from this browser session + stored history</p>
 
-<div class="analytics-config-row">
-<label>App Insights Connection String:</label>
-<input type="text" id="aiConnStr" placeholder="InstrumentationKey=00000000-...;IngestionEndpoint=https://..." oninput="engAnalytics.saveConfig(this.value)">
-</div>
-
-<div class="analytics-stat-grid" id="analyticsStats"></div>
-
-<div class="analytics-tabs" id="analyticsTabs">
-<button class="analytics-tab active" onclick="switchAnalyticsTab(event,'atab-dwell')">Time on Section</button>
-<button class="analytics-tab" onclick="switchAnalyticsTab(event,'atab-events')">Events</button>
-<button class="analytics-tab" onclick="switchAnalyticsTab(event,'atab-searches')">Searches</button>
-</div>
-
-<div class="analytics-tab-panel active" id="atab-dwell">
-<div class="analytics-bar-chart" id="analyticsDwell"></div>
-</div>
-<div class="analytics-tab-panel" id="atab-events">
-<div class="analytics-event-list" id="analyticsEvents"></div>
-</div>
-<div class="analytics-tab-panel" id="atab-searches">
-<div class="analytics-bar-chart" id="analyticsSearches"></div>
-</div>
-
-<div class="analytics-actions">
-<button class="analytics-btn" onclick="engAnalytics.exportCSV()">&#128229; Export CSV</button>
-<button class="analytics-btn" onclick="engAnalytics.clearData()">&#128465; Clear Local Data</button>
-</div>
-</div>
-</div>
 
 
 <script>
@@ -1307,95 +1238,7 @@ var engAnalytics=(function(){
     });
   }
 
-  // ── Render analytics panel ──
-  function renderPanel(){
-    var d=getData();
-    // Stats
-    var totalEvents=d.events.length;
-    var totalSearches=Object.keys(d.searches).length;
-    var totalDwellSec=Object.values(d.dwell).reduce(function(a,b){return a+b;},0)/1000;
-    var statsHtml='<div class="analytics-stat-card"><div class="big">'+d.sessions+'</div><div class="lbl">Sessions</div></div>';
-    statsHtml+='<div class="analytics-stat-card"><div class="big">'+totalEvents+'</div><div class="lbl">Events</div></div>';
-    statsHtml+='<div class="analytics-stat-card"><div class="big">'+totalSearches+'</div><div class="lbl">Unique Searches</div></div>';
-    statsHtml+='<div class="analytics-stat-card"><div class="big">'+formatDuration(totalDwellSec)+'</div><div class="lbl">Total Read Time</div></div>';
-    document.getElementById('analyticsStats').innerHTML=statsHtml;
 
-    // Dwell chart — merge live timers with stored
-    var merged=Object.assign({},d.dwell);
-    visibleSections.forEach(function(id){if(dwellTimers[id]&&dwellTimers[id].start)merged[id]=(merged[id]||0)+(Date.now()-dwellTimers[id].start);});
-    var dwellArr=Object.entries(merged).map(function(e){return{id:e[0],ms:e[1]};}).sort(function(a,b){return b.ms-a.ms;});
-    var maxDwell=dwellArr.length?dwellArr[0].ms:1;
-    var dwellHtml='';
-    dwellArr.forEach(function(r){
-      var label=getSectionLabel(r.id);
-      var pct=Math.round(r.ms/maxDwell*100);
-      var secs=Math.round(r.ms/1000);
-      dwellHtml+='<div class="analytics-bar-row"><div class="analytics-bar-label" title="'+label+'">'+label+'</div><div class="analytics-bar-track"><div class="analytics-bar-fill" style="width:'+pct+'%">'+formatDuration(secs)+'</div></div></div>';
-    });
-    document.getElementById('analyticsDwell').innerHTML=dwellHtml||'<p style="color:var(--cp-text-muted);font-size:13px;padding:16px">No dwell data yet. Scroll through the guide to generate data.</p>';
-
-    // Search chart
-    var searchArr=Object.entries(d.searches).map(function(e){return{q:e[0],count:e[1]};}).sort(function(a,b){return b.count-a.count;}).slice(0,30);
-    var maxSearch=searchArr.length?searchArr[0].count:1;
-    var searchHtml='';
-    searchArr.forEach(function(r){
-      var pct=Math.round(r.count/maxSearch*100);
-      searchHtml+='<div class="analytics-bar-row"><div class="analytics-bar-label">"'+escHtml(r.q)+'"</div><div class="analytics-bar-track"><div class="analytics-bar-fill" style="width:'+pct+'%">'+r.count+'</div></div></div>';
-    });
-    document.getElementById('analyticsSearches').innerHTML=searchHtml||'<p style="color:var(--cp-text-muted);font-size:13px;padding:16px">No searches yet.</p>';
-
-    // Events table (most recent first)
-    var recent=d.events.slice(-100).reverse();
-    var evtHtml='<table><thead><tr><th>Time</th><th>Event</th><th>Details</th></tr></thead><tbody>';
-    recent.forEach(function(e){
-      var time=new Date(e.ts);
-      var timeStr=time.toLocaleDateString()+' '+time.toLocaleTimeString();
-      var details=Object.entries(e.props||{}).map(function(p){return p[0]+': '+p[1];}).join(', ');
-      evtHtml+='<tr><td>'+timeStr+'</td><td><strong>'+escHtml(e.name)+'</strong></td><td>'+escHtml(details)+'</td></tr>';
-    });
-    evtHtml+='</tbody></table>';
-    document.getElementById('analyticsEvents').innerHTML=evtHtml;
-
-    // Config
-    document.getElementById('aiConnStr').value=getConfig();
-  }
-
-  function getSectionLabel(id){
-    for(var i=0;i<chapters.length;i++){
-      if(chapters[i].id===id)return chapters[i].num+'. '+chapters[i].label;
-      for(var j=0;j<chapters[i].subs.length;j++){
-        if(chapters[i].subs[j].id===id)return chapters[i].num+'.'+String(j+1)+' '+chapters[i].subs[j].label;
-      }
-    }
-    return id;
-  }
-  function formatDuration(s){
-    if(s<60)return Math.round(s)+'s';
-    if(s<3600)return Math.floor(s/60)+'m '+Math.round(s%60)+'s';
-    return Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m';
-  }
-  function escHtml(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
-
-  function exportCSV(){
-    var d=getData();
-    var rows=[['Type','Section/Query','Value','Timestamp']];
-    Object.entries(d.dwell).forEach(function(e){rows.push(['dwell',e[0],Math.round(e[1]/1000)+'s','']);});
-    Object.entries(d.searches).forEach(function(e){rows.push(['search',e[0],e[1],'']);});
-    d.events.forEach(function(e){
-      var details=Object.entries(e.props||{}).map(function(p){return p[0]+'='+p[1];}).join('; ');
-      rows.push(['event',e.name,details,e.ts]);
-    });
-    var csv=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
-    var blob=new Blob([csv],{type:'text/csv'});
-    var url=URL.createObjectURL(blob);
-    var a=document.createElement('a');a.href=url;a.download='ppgov_engagement_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-    URL.revokeObjectURL(url);
-  }
-  function clearData(){
-    if(confirm('Clear all local engagement data? This cannot be undone.')){
-      localStorage.removeItem(STORAGE_KEY);renderPanel();
-    }
-  }
 
   // ── Bootstrap ──
   function init(){
@@ -1407,19 +1250,8 @@ var engAnalytics=(function(){
     window.addEventListener('beforeunload',flushDwell);
   }
 
-  return{init:init,track:track,trackSearch:trackSearch,render:renderPanel,exportCSV:exportCSV,clearData:clearData,saveConfig:saveConfig};
+  return{init:init,track:track,trackSearch:trackSearch,saveConfig:saveConfig};
 })();
-
-function openAnalytics(){engAnalytics.render();document.getElementById('analyticsOverlay').classList.add('show');}
-function closeAnalytics(){document.getElementById('analyticsOverlay').classList.remove('show');}
-function switchAnalyticsTab(e,tabId){
-  document.querySelectorAll('#analyticsTabs .analytics-tab').forEach(function(b){b.classList.remove('active');});
-  document.querySelectorAll('.analytics-tab-panel').forEach(function(p){p.classList.remove('active');});
-  e.target.classList.add('active');document.getElementById(tabId).classList.add('active');
-}
-document.addEventListener('keydown',function(e){
-  if(e.ctrlKey&&e.shiftKey&&e.key==='A'){e.preventDefault();var ov=document.getElementById('analyticsOverlay');if(ov.classList.contains('show'))closeAnalytics();else openAnalytics();}
-});
 engAnalytics.init();
 
 </script>
