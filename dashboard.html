@@ -302,10 +302,12 @@ async function refreshData(){
 }
 
 // ── KQL Queries ──
+var kqlTimespan={'PT1H':'1h','PT24H':'24h','P7D':'7d','P30D':'30d','P90D':'90d'};
+function ts(range){return kqlTimespan[range]||'24h';}
+function binSize(range){return range==='PT1H'?'5m':range==='PT24H'?'1h':'1d';}
 function queryKPIs(range){
   return query(
-    'let timeRange = '+range+'; '+
-    'customEvents | where timestamp > ago(timeRange) '+
+    'customEvents | where timestamp > ago('+ts(range)+') '+
     '| summarize totalEvents=count(), '+
     'uniqueSessions=dcount(tostring(customDimensions.sessionId)), '+
     'pageLoads=countif(name=="page_load"), '+
@@ -316,26 +318,20 @@ function queryKPIs(range){
 }
 function querySessions(range){
   return query(
-    'let timeRange = '+range+'; '+
-    'customEvents | where timestamp > ago(timeRange) and name == "page_load" '+
-    '| summarize sessions=dcount(tostring(customDimensions.sessionId)) by bin(timestamp, '+
-    (range==='PT1H'?'5m':range==='PT24H'?'1h':range==='P7D'?'1d':range==='P30D'?'1d':'1d')+') '+
+    'customEvents | where timestamp > ago('+ts(range)+') and name == "page_load" '+
+    '| summarize sessions=dcount(tostring(customDimensions.sessionId)) by bin(timestamp, '+binSize(range)+') '+
     '| order by timestamp asc'
   );
 }
 function queryDwell(range){
   return query(
-    'let timeRange = '+range+'; '+
-    'customEvents | where timestamp > ago(timeRange) and name == "dwell_summary" '+
-    '| mv-expand bagexpansion=array props = todynamic(tostring(customDimensions)) '+
-    '| project timestamp, customDimensions '+
-    '| evaluate bag_unpack(customDimensions) '
+    'customEvents | where timestamp > ago('+ts(range)+') and name == "dwell_summary" '+
+    '| project timestamp, customDimensions'
   );
 }
 function querySearches(range){
   return query(
-    'let timeRange = '+range+'; '+
-    'customEvents | where timestamp > ago(timeRange) and name == "search" '+
+    'customEvents | where timestamp > ago('+ts(range)+') and name == "search" '+
     '| extend q = tostring(customDimensions.query) '+
     '| summarize searchCount=count() by q '+
     '| order by searchCount desc | take 15'
@@ -343,8 +339,7 @@ function querySearches(range){
 }
 function queryExpandables(range){
   return query(
-    'let timeRange = '+range+'; '+
-    'customEvents | where timestamp > ago(timeRange) and name == "expandable_open" '+
+    'customEvents | where timestamp > ago('+ts(range)+') and name == "expandable_open" '+
     '| extend label = tostring(customDimensions.label) '+
     '| summarize clicks=count() by label '+
     '| order by clicks desc | take 15'
@@ -352,8 +347,7 @@ function queryExpandables(range){
 }
 function queryZones(range){
   return query(
-    'let timeRange = '+range+'; '+
-    'customEvents | where timestamp > ago(timeRange) and name == "zone_modal" '+
+    'customEvents | where timestamp > ago('+ts(range)+') and name == "zone_modal" '+
     '| extend zone = tostring(customDimensions.zone), title = tostring(customDimensions.title) '+
     '| summarize views=count() by zone, title '+
     '| order by views desc'
@@ -361,8 +355,7 @@ function queryZones(range){
 }
 function queryNavClicks(range){
   return query(
-    'let timeRange = '+range+'; '+
-    'customEvents | where timestamp > ago(timeRange) and name == "nav_click" '+
+    'customEvents | where timestamp > ago('+ts(range)+') and name == "nav_click" '+
     '| extend target = coalesce(tostring(customDimensions.chapter), tostring(customDimensions.subsection)) '+
     '| summarize clicks=count() by target '+
     '| order by clicks desc | take 15'
@@ -370,8 +363,7 @@ function queryNavClicks(range){
 }
 function queryRecentEvents(range){
   return query(
-    'let timeRange = '+range+'; '+
-    'customEvents | where timestamp > ago(timeRange) '+
+    'customEvents | where timestamp > ago('+ts(range)+') '+
     '| project timestamp, name, customDimensions '+
     '| order by timestamp desc | take 50'
   );
@@ -418,9 +410,12 @@ function renderDwell(data){
   var sectionTotals={};
   var skip=['sessionId','page'];
   data.forEach(function(row){
-    Object.keys(row).forEach(function(k){
-      if(skip.indexOf(k)>=0||k==='timestamp'||k==='name')return;
-      var val=row[k];
+    var dims=row.customDimensions;
+    if(typeof dims==='string'){try{dims=JSON.parse(dims);}catch(e){return;}}
+    if(!dims)return;
+    Object.keys(dims).forEach(function(k){
+      if(skip.indexOf(k)>=0)return;
+      var val=dims[k];
       if(typeof val==='string'&&val.endsWith('s')){
         var secs=parseInt(val);
         if(!isNaN(secs)){sectionTotals[k]=(sectionTotals[k]||0)+secs;}
