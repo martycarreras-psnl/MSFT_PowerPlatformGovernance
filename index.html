@@ -135,6 +135,42 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .narrative-figure img{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--cp-border);box-shadow:0 2px 16px rgba(0,0,0,0.07);transition:box-shadow .3s}
 .narrative-figure img:hover{box-shadow:0 4px 24px rgba(0,0,0,0.12)}
 .narrative-figure figcaption{font-size:12px;color:var(--cp-text-muted);margin-top:10px;font-style:italic;line-height:1.5}
+
+/* ── Engagement Analytics Panel ── */
+.analytics-overlay{display:none;position:fixed;inset:0;background:var(--cp-overlay);z-index:600;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.analytics-overlay.show{display:flex}
+.analytics-panel{background:var(--cp-surface);border-radius:16px;max-width:860px;width:92%;max-height:88vh;overflow-y:auto;box-shadow:var(--cp-shadow);padding:32px;position:relative}
+.analytics-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;border:1px solid var(--cp-border);background:var(--cp-surface-soft);cursor:pointer;font-size:16px;color:var(--cp-text-muted);display:flex;align-items:center;justify-content:center}
+.analytics-panel h3{font-size:20px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.analytics-panel .analytics-sub{font-size:12px;color:var(--cp-text-muted);margin-bottom:24px}
+.analytics-tabs{display:flex;gap:4px;border-bottom:2px solid var(--cp-border);margin-bottom:20px}
+.analytics-tab{padding:8px 16px;border:none;background:none;color:var(--cp-text-muted);font-size:13px;font-weight:600;cursor:pointer;position:relative}
+.analytics-tab.active{color:var(--cp-accent)}
+.analytics-tab.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--cp-accent)}
+.analytics-tab-panel{display:none}.analytics-tab-panel.active{display:block}
+.analytics-bar-chart{display:flex;flex-direction:column;gap:6px;margin:16px 0}
+.analytics-bar-row{display:flex;align-items:center;gap:10px;font-size:12px}
+.analytics-bar-label{width:200px;text-align:right;color:var(--cp-text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.analytics-bar-track{flex:1;height:22px;background:var(--cp-surface-soft);border-radius:4px;position:relative;overflow:hidden;border:1px solid var(--cp-border)}
+.analytics-bar-fill{height:100%;border-radius:4px;background:var(--cp-accent);transition:width .4s ease;min-width:2px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:var(--cp-accent-fg)}
+.analytics-bar-val{width:50px;font-weight:600;color:var(--cp-text);font-size:12px}
+.analytics-stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.analytics-stat-card{background:var(--cp-surface-soft);border:1px solid var(--cp-border);border-radius:10px;padding:16px;text-align:center}
+.analytics-stat-card .big{font-size:28px;font-weight:700;color:var(--cp-accent)}
+.analytics-stat-card .lbl{font-size:11px;color:var(--cp-text-muted);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.analytics-event-list{max-height:300px;overflow-y:auto;font-size:12px;border:1px solid var(--cp-border);border-radius:8px}
+.analytics-event-list table{width:100%;border-collapse:collapse}
+.analytics-event-list th{position:sticky;top:0;background:var(--cp-accent-soft);padding:8px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.3px}
+.analytics-event-list td{padding:6px 12px;border-top:1px solid var(--cp-border);color:var(--cp-text-soft)}
+.analytics-actions{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.analytics-btn{padding:8px 16px;border-radius:.625rem;border:1px solid var(--cp-border);background:var(--cp-surface-soft);color:var(--cp-text);font-size:12px;font-weight:600;cursor:pointer;transition:background .15s}
+.analytics-btn:hover{background:var(--cp-accent-soft)}
+.analytics-btn.primary{background:var(--cp-accent);color:var(--cp-accent-fg);border-color:var(--cp-accent)}
+.analytics-btn.primary:hover{background:var(--cp-accent-hover)}
+.analytics-config-row{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.analytics-config-row input{flex:1;min-width:200px;padding:8px 12px;border-radius:.625rem;border:1px solid var(--cp-border);background:var(--cp-surface-soft);color:var(--cp-text);font-size:12px;outline:none;font-family:monospace}
+.analytics-config-row input:focus{border-color:var(--cp-accent)}
+.analytics-config-row label{font-size:12px;font-weight:600;color:var(--cp-text-muted);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -159,8 +195,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 <div class="callout" style="border-left-color:var(--cp-accent);background:var(--cp-accent-soft);margin-bottom:24px;font-size:13.5px;line-height:1.6">
 <p style="margin:0"><strong>Attribution &amp; Original Source</strong></p>
 <p style="margin:8px 0 0">This guide is an interactive adaptation of the <em>Microsoft Power Platform Governance Whitepaper</em>, authored and maintained by Joe Unwin, Katie Liu, and Marek Lutz. All core content, frameworks, and recommendations are theirs. Full credit belongs to the original authors. The official PDF is available at:<br>
-<a href="https://lnkd.in/gg4BDqKG" style="color:var(--cp-link);word-break:break-all" target="_blank" rel="noopener">https://lnkd.in/gg4BDqKG</a></p>
-<p style="margin:12px 0 0"><a href="power_platform_governance_guide.zip" download style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:var(--cp-accent);color:var(--cp-accent-fg);border-radius:.625rem;text-decoration:none;font-size:13px;font-weight:600">&#11015;&#65039; Download ZIP Version</a></p>
+<a href="https://aka.ms/PowerPlatformAdministrationandGovernance" style="color:var(--cp-link);word-break:break-all" target="_blank" rel="noopener">https://aka.ms/PowerPlatformAdministrationandGovernance</a></p>
 </div>
 
 <div class="subsection" id="sec-intro-opening" data-search="power platform productivity application development platform power apps automate pages copilot studio dataverse connectors dynamics 365">
@@ -1068,6 +1103,43 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
 
+<!-- Engagement Analytics Panel -->
+<div class="analytics-overlay" id="analyticsOverlay" onclick="if(event.target===this)closeAnalytics()">
+<div class="analytics-panel">
+<button class="analytics-close" onclick="closeAnalytics()">&#10005;</button>
+<h3>&#128202; Content Engagement</h3>
+<p class="analytics-sub">Press <kbd>Ctrl+Shift+A</kbd> to toggle &bull; Data from this browser session + stored history</p>
+
+<div class="analytics-config-row">
+<label>App Insights Connection String:</label>
+<input type="text" id="aiConnStr" placeholder="InstrumentationKey=00000000-...;IngestionEndpoint=https://..." oninput="engAnalytics.saveConfig(this.value)">
+</div>
+
+<div class="analytics-stat-grid" id="analyticsStats"></div>
+
+<div class="analytics-tabs" id="analyticsTabs">
+<button class="analytics-tab active" onclick="switchAnalyticsTab(event,'atab-dwell')">Time on Section</button>
+<button class="analytics-tab" onclick="switchAnalyticsTab(event,'atab-events')">Events</button>
+<button class="analytics-tab" onclick="switchAnalyticsTab(event,'atab-searches')">Searches</button>
+</div>
+
+<div class="analytics-tab-panel active" id="atab-dwell">
+<div class="analytics-bar-chart" id="analyticsDwell"></div>
+</div>
+<div class="analytics-tab-panel" id="atab-events">
+<div class="analytics-event-list" id="analyticsEvents"></div>
+</div>
+<div class="analytics-tab-panel" id="atab-searches">
+<div class="analytics-bar-chart" id="analyticsSearches"></div>
+</div>
+
+<div class="analytics-actions">
+<button class="analytics-btn" onclick="engAnalytics.exportCSV()">&#128229; Export CSV</button>
+<button class="analytics-btn" onclick="engAnalytics.clearData()">&#128465; Clear Local Data</button>
+</div>
+</div>
+</div>
+
 
 <script>
 var chapters=[
@@ -1090,13 +1162,264 @@ z1:{badge:'Zone 1 &mdash; Green',color:'var(--zone1)',title:'Personal Productivi
 z2:{badge:'Zone 2 &mdash; Yellow',color:'var(--zone2)',title:'Team Collaboration',content:'<p>Zone 2 builds on the personal productivity foundation of Zone 1 and introduces shared, governed collaboration across teams and departments. This zone is designed for apps, flows, and agents that support team-level processes, require shared ownership, or interact with departmental data, while still remaining within clearly defined governance boundaries.</p><p>Zone 2 environments are implemented as managed environments grouped under a dedicated environment group in the Power Platform admin center (PPAC). Governance in this zone shifts from individual containment toward controlled collaboration, balancing increased capability with stronger enforcement, visibility, and lifecycle discipline.</p><p>Assets in Zone 2 are expected to be intentional, reusable, and supportable, with a clearer promotion path toward enterprise-managed deployment when business criticality increases.</p><h4>Platform Characteristics</h4><p>Zone 2 supports collaborative solutions that are used by multiple users within a team, function, or department.</p><p>These include:</p><ul><li><strong>Power Apps</strong> used by teams to manage shared processes (for example, intake, approvals, or operational tracking).</li><li><strong>Power Automate</strong> flows that orchestrate departmental workflows, integrations, or system interactions.</li><li><strong>Agents built with Copilot Studio</strong> that assist teams with task execution, information retrieval, or process automation, operating within defined connector and data boundaries.</li></ul><p>Unlike Zone 1, assets in Zone 2 are intentionally shared, may have multiple contributors, and are expected to follow a lightweight but consistent application lifecycle model. Ownership is defined at the solution level rather than the individual level, and assets are treated as team resources rather than personal experiments.</p><h4>Security Controls</h4><p>Security controls in Zone 2 are more restrictive than Zone 1, reflecting the increased data access, sharing scope, and operational impact of collaborative solutions.</p><p>Power Platform admin center remains the central control plane for Zone 2 governance, enforcing security consistently across all apps, flows, and agents within the environment group.</p><p>For Zone 2 environment groups, administrators typically configure:</p><ul><li><strong>Advanced connector policies</strong> that allow a broader but still curated set of connectors suited to departmental use, while blocking high-risk or external services.</li><li><strong>Explicit access scoping</strong> using Entra ID security groups, ensuring only approved makers and users can create, modify, or run solutions.</li><li><strong>Enforcement of environment-level security baselines</strong> that cannot be reduced by local environment administrators.</li></ul><p>These controls ensure collaboration does not come at the expense of data protection or compliance, and that solutions operate only within approved integration boundaries.</p><h4>Management Controls</h4><p>Management controls in Zone 2 formalize how collaborative solutions are created, changed, promoted, and operated, without introducing production-grade overhead.</p><p>All Zone 2 environments are configured as managed environments and grouped into a Zone 2 environment group. This allows administrators to apply rules that standardize:</p><ul><li>Sharing defaults and limitations</li><li>Connector availability</li><li>Solution and pipeline requirements</li><li>Maker onboarding experiences</li></ul><p>By enforcing these settings at the environment-group level, organizations prevent configuration drift and ensure every collaborative workspace behaves consistently.</p><p>Unlike Zone 1, assets in Zone 2 are expected to follow a defined lifecycle:</p><ul><li>Assets are packaged using solutions</li><li>Changes are tracked and promoted intentionally</li><li>Environments may be aligned to a typical development process of dev, test and prod</li></ul><p>While full enterprise ALM is not always required, Zone 2 establishes the discipline necessary to safely scale collaboration and prepares solutions for promotion into Zone 3 when appropriate.</p><h4>Reporting &amp; Visibility</h4><p>As collaboration increases, visibility becomes essential for effective governance. Zone 2 relies on platform-level reporting in PPAC to ensure administrators and governance teams have insight into usage, risk, and operational health across shared environments.</p><p><strong>Inventory:</strong> The Inventory experience in PPAC provides a consolidated view of all apps, flows and agents across Zone 2 environments. This allows administrators to understand what shared solutions exist, who owns and maintains them, and how broadly they are being used. Inventory data helps identify high-value solutions, detect unmanaged growth, and determine when assets should move toward enterprise management or retirement.</p><p><strong>Security:</strong> The Security experience in PPAC aggregates security insights across Zone 2 environments, highlighting connector usage patterns, configuration risks, and policy misalignments. By surfacing actionable recommendations, the Security experience supports proactive governance rather than reactive cleanup.</p><p><strong>Monitoring:</strong> The Monitoring experience in PPAC provides operational insight into the health and performance of collaborative apps, flows, and agents. This visibility enables early detection of issues that may impact teams and ensures shared solutions remain reliable as adoption grows.</p>'},
 z3:{badge:'Zone 3 &mdash; Red',color:'var(--zone3)',title:'Enterprise Managed',content:'<p>Zone 3 represents the highest level of governance maturity for the Power Platform and is intended for business-critical, high-impact, or organization-wide solutions. This zone builds upon both Zone 1 and Zone 2 and is designed for apps, flows, and agents that operate at scale, integrate with sensitive or regulated data, and require strong guarantees around security, reliability, compliance, and supportability.</p><p>Environments in Zone 3 are centrally owned and operated &mdash; typically by IT alongside a Center of Excellence (CoE) or a dedicated platform team &mdash; and are governed through managed environments and environment groups in the PPAC. Governance in this zone shifts from collaboration enablement toward enterprise assurance, ensuring that solutions can be trusted as part of the organization&rsquo;s core digital ecosystem.</p><h4>Platform Characteristics</h4><p>Zone 3 moves to enterprise-grade workloads that are:</p><ul><li>Used by large audiences or across multiple business units</li><li>Dependent on critical systems or sensitive data</li><li>Expected to meet formal requirements for availability, performance, and compliance</li></ul><p>The workloads in Zone 3 focus on:</p><ul><li><strong>Power Apps</strong> that function as line-of-business applications or external-facing experiences.</li><li><strong>Power Automate</strong> flows that orchestrate critical processes, system integrations, or operational automation.</li><li><strong>Agents built with Copilot Studio</strong> that provide shared AI-powered capabilities across teams or the entire organization.</li></ul><p>These assets are treated as <strong>products rather than projects</strong>. Ownership is explicit, operational responsibility is defined, and changes are introduced in a controlled and auditable manner. Zone 3 solutions are expected to follow standardized lifecycle practices and align to enterprise support and risk management models.</p><h4>Security Controls</h4><p>Security in Zone 3 is intentionally strict, reflecting the elevated risk and business impact of enterprise-managed solutions.</p><p>PPAC is the primary enforcement point for Zone 3 security, providing centralized management for environments, connectors, runtime behavior, and cost controls across the Power Platform.</p><p>Key security characteristics include:</p><ul><li><strong>Advanced connector policies</strong> that allow only explicitly approved connectors and, where supported, restrict specific connector actions.</li><li><strong>Identity-based access controls</strong> scoped through Entra ID security groups, with clear separation between makers, operators, and consumers.</li><li><strong>Enforcement of platform-wide security baselines</strong> that cannot be overridden locally.</li></ul><p>These controls ensure enterprise solutions cannot introduce unmanaged integration paths or expand their data access beyond what has been formally approved.</p><p>Zone 3 environments are explicitly designed to align with organizational security and compliance programs. Power Platform governance in this zone works together with <strong>Microsoft Purview</strong> to honor data classification, retention, audit, and compliance policies that apply across the broader Microsoft estate. This ensures that apps, flows, and agents in Zone 3 operate within the same trust boundaries as other enterprise systems.</p><h4>Management Controls</h4><p>Management controls in Zone 3 are focused on consistency, predictability, and operational resilience.</p><p>The Zone 3 environments are configured as managed environments, assigned to a Zone 3 environment group and governed by environment group rules that lock key settings across all environments in the zone. These rules enforce standards such as connector availability, sharing defaults, pipeline requirements, and environment configuration, ensuring that governance remains intact as solutions evolve.</p><p>Zone 3 solutions are expected to follow a full application lifecycle management practice, including:</p><ul><li>Solution-based development</li><li>Versioned promotion through development, test, and production environments</li><li>Controlled deployment using Power Platform pipelines</li></ul><p>Pipelines provide a repeatable and auditable mechanism for promoting apps, flows, and agents between environments, incorporating approvals, environment-specific configuration, and operational checks. This reduces risk while enabling teams to deliver changes at enterprise scale.</p><h4>Reporting &amp; Visibility</h4><p>At enterprise scale, governance depends on deep, continuous visibility into usage, risk, and operational health. Zone 3 relies on tenant-wide reporting experiences in PPAC to provide that insight.</p><p><strong>Inventory:</strong> The Inventory experience in PPAC serves as the authoritative catalog for all enterprise-managed Power Platform assets.</p><p><strong>Security:</strong> The Security experience consolidates information across Zone 3 environments, surfacing configuration risks, connector exposure, and policy misalignments.</p><p><strong>Monitoring:</strong> The Monitoring experience provides health and performance signals across enterprise workloads, including failure patterns, degradation trends, and usage anomalies.</p>'}
 };
-function openZoneModal(z){var d=zoneData[z],o=document.getElementById('zoneModalOverlay'),c=document.getElementById('zoneModalContent');c.innerHTML='<div style="display:inline-flex;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;background:'+d.color+';margin-bottom:12px">'+d.badge+'</div><h3>'+d.title+'</h3>'+d.content;o.classList.add('show');}
+function openZoneModal(z){var d=zoneData[z],o=document.getElementById('zoneModalOverlay'),c=document.getElementById('zoneModalContent');c.innerHTML='<div style="display:inline-flex;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;background:'+d.color+';margin-bottom:12px">'+d.badge+'</div><h3>'+d.title+'</h3>'+d.content;o.classList.add('show');engAnalytics.track('zone_modal',{zone:z,title:d.title});}
 function closeZoneModal(){document.getElementById('zoneModalOverlay').classList.remove('show');}
-function handleSearch(q){q=q.toLowerCase().trim();document.querySelectorAll('[data-search]').forEach(function(s){if(!q){s.style.display='';return;}var t=(s.dataset.search+' '+s.textContent).toLowerCase();s.style.display=t.indexOf(q)>=0?'':'none';});}
+function handleSearch(q){q=q.toLowerCase().trim();document.querySelectorAll('[data-search]').forEach(function(s){if(!q){s.style.display='';return;}var t=(s.dataset.search+' '+s.textContent).toLowerCase();s.style.display=t.indexOf(q)>=0?'':'none';});if(q.length>=3)engAnalytics.trackSearch(q);}
 window.addEventListener('scroll',function(){document.getElementById('backToTop').classList.toggle('visible',window.scrollY>400);});
 var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){var id=entry.target.id;document.querySelectorAll('.nav-chapter-btn,.nav-sub').forEach(function(b){b.classList.remove('active');});chapters.forEach(function(ch){if(ch.id===id){var btn=document.querySelector('#nav-'+ch.id+' .nav-chapter-btn');if(btn)btn.classList.add('active');var nav=document.getElementById('nav-'+ch.id);if(nav)nav.classList.add('open');}ch.subs.forEach(function(s){if(s.id===id){var subs=document.querySelectorAll('#nav-'+ch.id+' .nav-sub');subs.forEach(function(sb){if(sb.textContent.trim()===s.label)sb.classList.add('active');});var nav=document.getElementById('nav-'+ch.id);if(nav)nav.classList.add('open');var chBtn=document.querySelector('#nav-'+ch.id+' .nav-chapter-btn');if(chBtn)chBtn.classList.add('active');}});});}});},{threshold:0.1,rootMargin:'-20% 0px -60% 0px'});
 buildNav();document.querySelectorAll('.section,.subsection').forEach(function(s){observer.observe(s);});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeZoneModal();});
+
+/* ═══════════════════════════════════════════
+   Engagement Analytics Engine
+   ═══════════════════════════════════════════ */
+var engAnalytics=(function(){
+  var STORAGE_KEY='ppgov_analytics';
+  var SESSION_KEY='ppgov_session';
+  var CONFIG_KEY='ppgov_ai_conn';
+  var searchDebounce=null;
+  var sessionId=crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2));
+  var dwellTimers={};  // sectionId -> {start, total}
+  var visibleSections=new Set();
+
+  function getData(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{events:[],dwell:{},searches:{},sessions:0,firstSeen:null};}catch(e){return{events:[],dwell:{},searches:{},sessions:0,firstSeen:null};}}
+  function saveData(d){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}catch(e){}}
+  function getConfig(){return localStorage.getItem(CONFIG_KEY)||'';}
+  function saveConfig(v){localStorage.setItem(CONFIG_KEY,v);document.getElementById('aiConnStr').value=v;}
+
+  // ── Initialize session ──
+  function initSession(){
+    var d=getData();
+    d.sessions=(d.sessions||0)+1;
+    if(!d.firstSeen)d.firstSeen=new Date().toISOString();
+    saveData(d);
+  }
+
+  // ── Track a named event ──
+  function track(name,props){
+    var d=getData();
+    var evt={ts:new Date().toISOString(),name:name,props:props||{},session:sessionId};
+    d.events.push(evt);
+    if(d.events.length>2000)d.events=d.events.slice(-1500);
+    saveData(d);
+    sendToAppInsights('event',{name:name,properties:props});
+  }
+
+  // ── Search tracking (debounced) ──
+  function trackSearch(q){
+    clearTimeout(searchDebounce);
+    searchDebounce=setTimeout(function(){
+      var d=getData();
+      d.searches[q]=(d.searches[q]||0)+1;
+      saveData(d);
+      track('search',{query:q});
+    },800);
+  }
+
+  // ── Dwell time: section entered viewport ──
+  function sectionEnter(id){
+    if(!id)return;
+    visibleSections.add(id);
+    dwellTimers[id]=dwellTimers[id]||{start:0,total:0};
+    dwellTimers[id].start=Date.now();
+  }
+  // ── Dwell time: section left viewport ──
+  function sectionExit(id){
+    if(!id||!dwellTimers[id]||!dwellTimers[id].start)return;
+    visibleSections.delete(id);
+    var elapsed=Date.now()-dwellTimers[id].start;
+    dwellTimers[id].total+=elapsed;
+    dwellTimers[id].start=0;
+    // Persist every time a section exits view
+    var d=getData();
+    d.dwell[id]=(d.dwell[id]||0)+elapsed;
+    saveData(d);
+  }
+  // ── Flush dwell on page unload ──
+  function flushDwell(){
+    var d=getData();
+    visibleSections.forEach(function(id){
+      if(dwellTimers[id]&&dwellTimers[id].start){
+        var elapsed=Date.now()-dwellTimers[id].start;
+        d.dwell[id]=(d.dwell[id]||0)+elapsed;
+        dwellTimers[id].start=0;
+      }
+    });
+    saveData(d);
+    // Send final dwell data to App Insights
+    var dwell=d.dwell;
+    var top5=Object.keys(dwell).sort(function(a,b){return dwell[b]-dwell[a];}).slice(0,10);
+    if(top5.length){
+      var props={};top5.forEach(function(k){props[k]=Math.round(dwell[k]/1000)+'s';});
+      sendToAppInsights('metric',{name:'dwell_summary',properties:props});
+    }
+  }
+
+  // ── Application Insights beacon ──
+  function sendToAppInsights(type,payload){
+    var connStr=getConfig();
+    if(!connStr)return;
+    var parts={};connStr.split(';').forEach(function(p){var kv=p.split('=');if(kv.length>=2)parts[kv[0].trim()]=kv.slice(1).join('=').trim();});
+    var iKey=parts['InstrumentationKey'];
+    var endpoint=(parts['IngestionEndpoint']||'https://dc.services.visualstudio.com').replace(/\/$/,'')+'/v2/track';
+    if(!iKey)return;
+    var envelope={name:'Microsoft.ApplicationInsights.'+iKey.replace(/-/g,'')+'.Event',time:new Date().toISOString(),iKey:iKey,data:{baseType:'EventData',baseData:{ver:2,name:payload.name||type,properties:Object.assign({sessionId:sessionId,page:'ppgov_guide'},payload.properties||{})}}};
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(endpoint,JSON.stringify(envelope));
+    }else{
+      var xhr=new XMLHttpRequest();xhr.open('POST',endpoint);xhr.setRequestHeader('Content-Type','application/json');xhr.send(JSON.stringify(envelope));
+    }
+  }
+
+  // ── Setup dwell observer ──
+  function setupDwellObserver(){
+    var dwellObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var id=entry.target.id;
+        if(!id)return;
+        if(entry.isIntersecting){sectionEnter(id);}else{sectionExit(id);}
+      });
+    },{threshold:0.2});
+    document.querySelectorAll('.section,.subsection').forEach(function(s){if(s.id)dwellObs.observe(s);});
+  }
+
+  // ── Track expandable clicks ──
+  function setupExpandableTracking(){
+    document.querySelectorAll('.expandable').forEach(function(el){
+      el.addEventListener('click',function(){
+        var h4=el.querySelector('.expandable-header h4');
+        var label=h4?h4.textContent.trim():'unknown';
+        if(el.classList.contains('open')){
+          track('expandable_open',{label:label});
+        }
+      });
+    });
+  }
+
+  // ── Track nav clicks ──
+  function setupNavTracking(){
+    document.querySelectorAll('.nav-chapter-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){track('nav_click',{chapter:btn.textContent.trim()});});
+    });
+    document.querySelectorAll('.nav-sub').forEach(function(btn){
+      btn.addEventListener('click',function(){track('nav_click',{subsection:btn.textContent.trim()});});
+    });
+  }
+
+  // ── Render analytics panel ──
+  function renderPanel(){
+    var d=getData();
+    // Stats
+    var totalEvents=d.events.length;
+    var totalSearches=Object.keys(d.searches).length;
+    var totalDwellSec=Object.values(d.dwell).reduce(function(a,b){return a+b;},0)/1000;
+    var statsHtml='<div class="analytics-stat-card"><div class="big">'+d.sessions+'</div><div class="lbl">Sessions</div></div>';
+    statsHtml+='<div class="analytics-stat-card"><div class="big">'+totalEvents+'</div><div class="lbl">Events</div></div>';
+    statsHtml+='<div class="analytics-stat-card"><div class="big">'+totalSearches+'</div><div class="lbl">Unique Searches</div></div>';
+    statsHtml+='<div class="analytics-stat-card"><div class="big">'+formatDuration(totalDwellSec)+'</div><div class="lbl">Total Read Time</div></div>';
+    document.getElementById('analyticsStats').innerHTML=statsHtml;
+
+    // Dwell chart — merge live timers with stored
+    var merged=Object.assign({},d.dwell);
+    visibleSections.forEach(function(id){if(dwellTimers[id]&&dwellTimers[id].start)merged[id]=(merged[id]||0)+(Date.now()-dwellTimers[id].start);});
+    var dwellArr=Object.entries(merged).map(function(e){return{id:e[0],ms:e[1]};}).sort(function(a,b){return b.ms-a.ms;});
+    var maxDwell=dwellArr.length?dwellArr[0].ms:1;
+    var dwellHtml='';
+    dwellArr.forEach(function(r){
+      var label=getSectionLabel(r.id);
+      var pct=Math.round(r.ms/maxDwell*100);
+      var secs=Math.round(r.ms/1000);
+      dwellHtml+='<div class="analytics-bar-row"><div class="analytics-bar-label" title="'+label+'">'+label+'</div><div class="analytics-bar-track"><div class="analytics-bar-fill" style="width:'+pct+'%">'+formatDuration(secs)+'</div></div></div>';
+    });
+    document.getElementById('analyticsDwell').innerHTML=dwellHtml||'<p style="color:var(--cp-text-muted);font-size:13px;padding:16px">No dwell data yet. Scroll through the guide to generate data.</p>';
+
+    // Search chart
+    var searchArr=Object.entries(d.searches).map(function(e){return{q:e[0],count:e[1]};}).sort(function(a,b){return b.count-a.count;}).slice(0,30);
+    var maxSearch=searchArr.length?searchArr[0].count:1;
+    var searchHtml='';
+    searchArr.forEach(function(r){
+      var pct=Math.round(r.count/maxSearch*100);
+      searchHtml+='<div class="analytics-bar-row"><div class="analytics-bar-label">"'+escHtml(r.q)+'"</div><div class="analytics-bar-track"><div class="analytics-bar-fill" style="width:'+pct+'%">'+r.count+'</div></div></div>';
+    });
+    document.getElementById('analyticsSearches').innerHTML=searchHtml||'<p style="color:var(--cp-text-muted);font-size:13px;padding:16px">No searches yet.</p>';
+
+    // Events table (most recent first)
+    var recent=d.events.slice(-100).reverse();
+    var evtHtml='<table><thead><tr><th>Time</th><th>Event</th><th>Details</th></tr></thead><tbody>';
+    recent.forEach(function(e){
+      var time=new Date(e.ts);
+      var timeStr=time.toLocaleDateString()+' '+time.toLocaleTimeString();
+      var details=Object.entries(e.props||{}).map(function(p){return p[0]+': '+p[1];}).join(', ');
+      evtHtml+='<tr><td>'+timeStr+'</td><td><strong>'+escHtml(e.name)+'</strong></td><td>'+escHtml(details)+'</td></tr>';
+    });
+    evtHtml+='</tbody></table>';
+    document.getElementById('analyticsEvents').innerHTML=evtHtml;
+
+    // Config
+    document.getElementById('aiConnStr').value=getConfig();
+  }
+
+  function getSectionLabel(id){
+    for(var i=0;i<chapters.length;i++){
+      if(chapters[i].id===id)return chapters[i].num+'. '+chapters[i].label;
+      for(var j=0;j<chapters[i].subs.length;j++){
+        if(chapters[i].subs[j].id===id)return chapters[i].num+'.'+String(j+1)+' '+chapters[i].subs[j].label;
+      }
+    }
+    return id;
+  }
+  function formatDuration(s){
+    if(s<60)return Math.round(s)+'s';
+    if(s<3600)return Math.floor(s/60)+'m '+Math.round(s%60)+'s';
+    return Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m';
+  }
+  function escHtml(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+  function exportCSV(){
+    var d=getData();
+    var rows=[['Type','Section/Query','Value','Timestamp']];
+    Object.entries(d.dwell).forEach(function(e){rows.push(['dwell',e[0],Math.round(e[1]/1000)+'s','']);});
+    Object.entries(d.searches).forEach(function(e){rows.push(['search',e[0],e[1],'']);});
+    d.events.forEach(function(e){
+      var details=Object.entries(e.props||{}).map(function(p){return p[0]+'='+p[1];}).join('; ');
+      rows.push(['event',e.name,details,e.ts]);
+    });
+    var csv=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+    var blob=new Blob([csv],{type:'text/csv'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='ppgov_engagement_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+    URL.revokeObjectURL(url);
+  }
+  function clearData(){
+    if(confirm('Clear all local engagement data? This cannot be undone.')){
+      localStorage.removeItem(STORAGE_KEY);renderPanel();
+    }
+  }
+
+  // ── Bootstrap ──
+  function init(){
+    initSession();
+    setupDwellObserver();
+    setupExpandableTracking();
+    setupNavTracking();
+    track('page_load',{referrer:document.referrer||'direct'});
+    window.addEventListener('beforeunload',flushDwell);
+  }
+
+  return{init:init,track:track,trackSearch:trackSearch,render:renderPanel,exportCSV:exportCSV,clearData:clearData,saveConfig:saveConfig};
+})();
+
+function openAnalytics(){engAnalytics.render();document.getElementById('analyticsOverlay').classList.add('show');}
+function closeAnalytics(){document.getElementById('analyticsOverlay').classList.remove('show');}
+function switchAnalyticsTab(e,tabId){
+  document.querySelectorAll('#analyticsTabs .analytics-tab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.analytics-tab-panel').forEach(function(p){p.classList.remove('active');});
+  e.target.classList.add('active');document.getElementById(tabId).classList.add('active');
+}
+document.addEventListener('keydown',function(e){
+  if(e.ctrlKey&&e.shiftKey&&e.key==='A'){e.preventDefault();var ov=document.getElementById('analyticsOverlay');if(ov.classList.contains('show'))closeAnalytics();else openAnalytics();}
+});
+engAnalytics.init();
 
 </script>
 
