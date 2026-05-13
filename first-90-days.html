@@ -75,6 +75,18 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 html[data-theme="dark"] .nuance .nuance-label{color:#5eead4;background:rgba(94,234,212,.14)}
 .nuance code{font-family:"SFMono-Regular",Consolas,monospace;font-size:11.5px;background:rgba(20,184,166,.12);color:#0d9488;padding:1px 5px;border-radius:4px}
 html[data-theme="dark"] .nuance code{color:#5eead4;background:rgba(94,234,212,.12)}
+.spotlight{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:20px;align-items:stretch;margin:18px 0;padding:18px 20px;background:linear-gradient(135deg,var(--cp-accent-soft) 0%,rgba(124,58,237,.06) 100%);border:1px solid var(--cp-accent);border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+.spotlight-body{display:flex;flex-direction:column;justify-content:center}
+.spotlight-label{display:inline-block;align-self:flex-start;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#fff;background:var(--cp-accent);padding:3px 10px;border-radius:12px;margin-bottom:10px}
+.spotlight-body h4{margin:0 0 8px 0;font-size:18px;line-height:1.3;color:var(--cp-text)}
+.spotlight-body p{margin:0 0 8px 0;font-size:13.5px;line-height:1.55;color:var(--cp-text)}
+.spotlight-body ul{margin:6px 0 0 0;padding-left:20px;font-size:12.5px;line-height:1.55;color:var(--cp-text)}
+.spotlight-body ul li{margin-bottom:4px}
+.spotlight-figure{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px}
+.spotlight-figure img{width:100%;max-width:100%;height:auto;border-radius:8px;border:1px solid var(--cp-border);box-shadow:0 6px 18px rgba(0,0,0,.12)}
+.spotlight-figure figcaption{font-size:11px;color:var(--cp-muted);font-style:italic;text-align:center;line-height:1.4}
+@media (max-width:780px){.spotlight{grid-template-columns:1fr}}
+html[data-theme="dark"] .spotlight{background:linear-gradient(135deg,rgba(220,38,127,.12) 0%,rgba(124,58,237,.12) 100%)}
 .go-deeper{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;font-weight:600;color:var(--cp-link);text-decoration:none}
 .go-deeper:hover{text-decoration:underline}
 .go-deeper-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--cp-border)}
@@ -266,8 +278,28 @@ html[data-theme="dark"] .nuance code{color:#5eead4;background:rgba(94,234,212,.1
     <div class="meta-item"><span class="meta-label">Why now, not later</span><span class="meta-value">You can't govern what you can't see. Every later stage depends on knowing the footprint.</span></div>
   </div>
 
+  <!-- PPAC Recommendations spotlight -->
+  <div class="spotlight">
+    <div class="spotlight-body">
+      <span class="spotlight-label">&#11088; PPAC Spotlight &middot; Start Here</span>
+      <h4>Let the Recommendations engine tell you what's broken</h4>
+      <p>PPAC &rarr; <strong>Actions &rarr; Recommendations</strong> is a prioritized, severity-ranked, tenant-scoped checklist of the most impactful governance gaps Microsoft can detect on your tenant. It is the single highest-leverage screen in the admin center and the natural <em>iteration loop</em> for the entire 90-day plan &mdash; an Admin should refresh this list on a cadence (weekly at minimum) and treat it as the running scoreboard.</p>
+      <ul>
+        <li><strong>Severity-driven triage:</strong> High &rarr; Medium &rarr; Performance. Work top-down, snooze with reason, dismiss only when justified (an audit trail lives in <em>Action history</em>).</li>
+        <li><strong>Maps directly to this guide:</strong> tenant isolation, IP firewall, sharing controls, owner assignment, guest user lockdown, auditing, and <em>&ldquo;Maintain tenant hygiene by cleaning up unused apps&rdquo;</em> &mdash; the same default-env sprawl Lens C addresses.</li>
+        <li><strong>Affected-resource counts</strong> on each row tell you the blast radius before you act &mdash; a 325-app hygiene recommendation is a multi-week program; a 1-tenant Lockbox toggle is a same-day fix.</li>
+        <li><strong>Don't dismiss without reason.</strong> Snooze for a planned remediation window; dismiss only when the recommendation genuinely doesn't apply (e.g., no guest users by policy).</li>
+      </ul>
+    </div>
+    <figure class="spotlight-figure">
+      <img src="images/ppac-recommendations.png" alt="Power Platform admin center Recommendations view showing 14 active recommendations across Security, Operational efficiency, and Performance categories with severity, affected resource counts, and last-refresh date." loading="lazy">
+      <figcaption>PPAC &rarr; Actions &rarr; Recommendations &mdash; a single ranked queue of tenant-health items, refreshed continuously.</figcaption>
+    </figure>
+  </div>
+
   <div class="stage-actions">
     <h4>Actions</h4>
+    <label class="action-item"><input type="checkbox" id="s1-a0"><span class="action-text">Open <strong>PPAC &rarr; Actions &rarr; Recommendations</strong> and capture the current Active count + High-severity list as the &ldquo;before&rdquo; baseline. Re-check weekly.</span></label>
     <label class="action-item"><input type="checkbox" id="s1-a1"><span class="action-text">Enable tenant-level Inventory in PPAC and confirm Inventory data is flowing.</span></label>
     <label class="action-item"><input type="checkbox" id="s1-a2"><span class="action-text">Pull a tenant-wide inventory across all four asset classes: <strong>canvas / model-driven apps</strong>, <strong>cloud flows</strong>, <strong>Copilot Studio agents</strong> (and their published/draft state), and <strong>agent flows</strong>. Export the merged list.</span></label>
     <label class="action-item"><input type="checkbox" id="s1-a3"><span class="action-text">Identify default-environment sprawl &mdash; tag apps/flows by usage, owner, connectors, and business criticality.</span></label>
@@ -537,6 +569,7 @@ html[data-theme="dark"] .nuance code{color:#5eead4;background:rgba(94,234,212,.1
 
   <div class="stage-actions">
     <h4>Actions</h4>
+    <label class="action-item"><input type="checkbox" id="s7-a0"><span class="action-text">Re-open <strong>PPAC &rarr; Actions &rarr; Recommendations</strong> at the start of every review cadence. Compare Active count + High-severity items against the Stage 1 baseline; resolved items appear in <em>Action history</em>. This is the running scoreboard for the entire program.</span></label>
     <label class="action-item"><input type="checkbox" id="s7-a1"><span class="action-text">Schedule a monthly inventory + DLP review (zone owner + platform owner).</span></label>
     <label class="action-item"><input type="checkbox" id="s7-a2"><span class="action-text">Trend Managed-Environments usage and consumption month-over-month.</span></label>
     <label class="action-item"><input type="checkbox" id="s7-a3"><span class="action-text">Review zone graduations (apps/flows promoted Z1 &rarr; Z2 &rarr; Z3) and demote where appropriate.</span></label>
