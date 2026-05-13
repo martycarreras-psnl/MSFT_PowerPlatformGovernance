@@ -90,6 +90,9 @@ html[data-theme="dark"] .ga-msg .ga-bubble-msg.ga-error{background:rgba(248,113,
 .ga-citation-ext::after{content:"\2197";margin-left:2px;font-size:10px;opacity:.85}
 .ga-related-link-ext .ga-related-label{font-style:italic}
 .ga-citation:hover{background:var(--cp-accent);color:var(--cp-accent-fg)}
+.ga-citation-learn{background:rgba(0,120,212,.12);color:#0078d4}
+.ga-citation-learn:hover{background:#0078d4;color:#fff}
+.ga-citation-learn::after{content:"\2197";margin-left:2px;font-size:10px;opacity:.85}
 
 .ga-caret{display:inline-block;width:7px;height:13px;background:var(--cp-accent);vertical-align:text-bottom;margin-left:2px;animation:gaBlink 1s steps(2) infinite}
 @keyframes gaBlink{50%{opacity:0}}
