@@ -170,6 +170,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
   <div class="hero-badge">&#128640; Companion Guide</div>
   <h1>From Policy to Practice</h1>
   <p>The governance guide answers <em>what good looks like</em>. This one answers <em>where you are right now and what's your next move</em>. Start with a 90-second self-assessment, then work through seven dependency-chained stages with checkboxable actions that persist in your browser.</p>
+  <p style="margin-top:12px;font-size:14px;color:var(--cp-text-muted);max-width:640px;position:relative"><strong style="color:var(--cp-text)">Scope:</strong> everything in this companion applies equally to <strong>Copilot Studio agents</strong> and the <strong>agent flows</strong> (Power Automate workflows) those agents invoke &mdash; not just canvas/model-driven apps and standalone cloud flows. They're the same governance plane.</p>
 </div>
 <div class="content" id="contentArea">
 
@@ -197,9 +198,10 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
     <h4>&#9888; Lens A &mdash; Managed Environments: the licensing reality</h4>
     <p>Turning on Managed Environments creates a per-user premium-license requirement for everyone who actively uses an app or standalone cloud flow in that environment. Plan for the cost before you flip the switch.</p>
     <ul>
-      <li>Every active user needs one of: Power Apps Premium, Power Automate Premium, a qualifying Dynamics 365 Enterprise license, or a <strong>capacity-based plan allocated to the environment</strong> &mdash; specifically Power Apps <em>per-app passes</em> for apps and Power Automate <em>per-flow plans</em> for flows.</li>
+      <li>Every active user needs one of: Power Apps Premium, Power Automate Premium, a qualifying Dynamics 365 Enterprise license, or a <strong>capacity-based plan allocated to the environment</strong> &mdash; specifically Power Apps <em>per-app passes</em> for apps and Power Automate <em>per-flow plans</em> for flows. <strong>Microsoft Copilot Studio</strong> licenses also include Managed Environments as an entitlement (per the licensing FAQ enumeration: <em>&ldquo;Power Apps Premium, Power Automate Premium, Microsoft Copilot Studio, Power Pages, and Dynamics 365 licenses&rdquo;</em>).</li>
       <li>A user running both an app and a flow in the same Managed Environment only needs <strong>one</strong> premium license, not both.</li>
       <li><strong>Pay-as-you-go is not a substitute &mdash; this surprises people.</strong> PAYG is a <em>consumption-billing</em> model (Azure meter pays for premium connector / Dataverse / AI Builder usage in the environment). It is <em>not</em> a per-user entitlement to Power Apps Premium or Power Automate Premium features. Per the licensing FAQ verbatim: <em>&ldquo;enabling pay-as-you-go for a Managed Environment isn't sufficient to meet Managed Environments licensing requirements&rdquo;</em> when (a) users without standalone Power Apps licenses use Power Apps in that environment, or (b) users without standalone Power Automate licenses (or per-flow licenses) use flows there. PAYG sits <em>alongside</em> the per-user requirement, not in place of it. Capacity-based plans (per-app passes, per-flow plans) <em>do</em> satisfy it &mdash; those are pre-purchased capacity assigned to the environment, which is a different mechanism from PAYG.</li>
+      <li><strong>Copilot Studio agents follow the same Managed-Env entitlement rule for their authors / makers</strong>, with their own consumption track for end-user interactions (Copilot Studio messages / message packs / PAYG Copilot Credits). Agent flows are Power Automate flows and inherit the Power Automate side of the requirement. Treat <em>agent makers</em> the same as <em>app makers</em> for licensing reconciliation; treat <em>end-user agent traffic</em> as a separate capacity line item.</li>
       <li>Dynamics 365 Pro Power Apps capabilities only count within the context of that Dynamics 365 app &mdash; they don't broadly satisfy Managed Environments licensing. Trial licenses count, subject to their own time limits.</li>
       <li><strong>Notification timeline (per the licensing FAQ):</strong> admins began receiving notices via the Microsoft 365 Message Center in <strong>March 2026</strong>, with PPAC &rarr; Actions &rarr; Recommendations alerts following in <strong>April 2026</strong> &mdash; both active today. End users without an appropriate license begin seeing in-app license-request notifications in <strong>June 2026</strong>; their requests land in PPAC &rarr; Actions &rarr; Recommendations and Microsoft 365 admin center &rarr; Billing &rarr; Licenses &rarr; Requests.</li>
       <li><strong>How to check who needs a license:</strong> PPAC &rarr; Licensing &rarr; Power Apps &rarr; Summary tab &rarr; Download report &rarr; Usage type = <em>Users requiring licenses in Managed Environments</em>.</li>
@@ -253,14 +255,14 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
     <span class="stage-horizon">Week 1</span>
   </div>
   <div class="stage-meta">
-    <div class="meta-item"><span class="meta-label">What you're doing</span><span class="meta-value">Building a tenant-wide inventory of apps, flows, agents, owners, and connectors &mdash; especially in the default environment.</span></div>
+    <div class="meta-item"><span class="meta-label">What you're doing</span><span class="meta-value">Building a tenant-wide inventory of apps, cloud flows, <strong>Copilot Studio agents</strong>, <strong>agent flows</strong>, owners, and connectors &mdash; especially in the default environment.</span></div>
     <div class="meta-item"><span class="meta-label">Why now, not later</span><span class="meta-value">You can't govern what you can't see. Every later stage depends on knowing the footprint.</span></div>
   </div>
 
   <div class="stage-actions">
     <h4>Actions</h4>
     <label class="action-item"><input type="checkbox" id="s1-a1"><span class="action-text">Enable tenant-level Inventory in PPAC and confirm Inventory data is flowing.</span></label>
-    <label class="action-item"><input type="checkbox" id="s1-a2"><span class="action-text">Pull a tenant-wide app + flow + agent inventory; export the list.</span></label>
+    <label class="action-item"><input type="checkbox" id="s1-a2"><span class="action-text">Pull a tenant-wide inventory across all four asset classes: <strong>canvas / model-driven apps</strong>, <strong>cloud flows</strong>, <strong>Copilot Studio agents</strong> (and their published/draft state), and <strong>agent flows</strong>. Export the merged list.</span></label>
     <label class="action-item"><input type="checkbox" id="s1-a3"><span class="action-text">Identify default-environment sprawl &mdash; tag apps/flows by usage, owner, connectors, and business criticality.</span></label>
     <label class="action-item"><input type="checkbox" id="s1-a4"><span class="action-text">List the top 20 makers (by asset count and by recent activity).</span></label>
     <label class="action-item"><input type="checkbox" id="s1-a5"><span class="action-text">Record current DLP posture (tenant baseline, per-env exceptions) as the &ldquo;before&rdquo; snapshot.</span></label>
@@ -269,17 +271,19 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
   <!-- Embedded Lens C part 1 -->
   <div class="callout">
     <h4>&#128190; Lens C (part 1) &mdash; How to think about the default-environment cleanup</h4>
-    <p>Tag candidates by connectors used, owner department, and last-run date so the eventual move is batchable. Triage into four buckets: <strong>move</strong> (production-like), <strong>move or remediate</strong> (DLP conflict), <strong>quarantine then delete</strong> (no usage, owner unresponsive), <strong>delete with optional backup export</strong> (learning artifact). Keep a lightweight comms plan: announce &rarr; migrate &rarr; confirm.</p>
+    <p>Tag candidates by connectors used, owner department, and last-run date so the eventual move is batchable. <strong>Apply the same triage to apps, flows, Copilot Studio agents, and agent flows</strong> &mdash; the asset class changes the remediation tool, not the decision logic. Triage into four buckets: <strong>move</strong> (production-like), <strong>move or remediate</strong> (DLP conflict), <strong>quarantine then delete</strong> (no usage, owner unresponsive), <strong>delete with optional backup export</strong> (learning artifact). Keep a lightweight comms plan: announce &rarr; migrate &rarr; confirm.</p>
+    <p style="margin-top:6px;font-size:12.5px"><em>Note on the PPAC preview wizard:</em> in preview, the &ldquo;Improve environment hygiene&hellip;&rdquo; recommendation only relocates <strong>canvas apps and SharePoint forms</strong>. Standalone cloud flows, Copilot Studio agents, and agent flows must be moved manually (re-create in target env / export-import solution) or remediated in place (quarantine bot, disable flow). Plan the agent + flow cleanup as a parallel programmatic track, not via the wizard.</p>
   </div>
 
   <div class="tip-agent">
     <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent</div>
     <h4>Inventory &amp; Sprawl Agent</h4>
-    <p>Stand up a scheduled flow + MCP-backed agent that produces a weekly digest. <em>Don't</em> click through PPAC for this.</p>
+    <p>Stand up a scheduled flow + MCP-backed agent that produces a weekly digest covering <strong>all four asset classes</strong> (apps, flows, Copilot Studio agents, agent flows). <em>Don't</em> click through PPAC for this.</p>
     <ul>
-      <li>For tenant-wide questions (&ldquo;which environments are unmanaged?&rdquo;): <code>Query Power Platform resources</code> on the V2 connector (KQL over Azure Resource Graph).</li>
+      <li>For tenant-wide questions (&ldquo;which environments are unmanaged?&rdquo;, &ldquo;which environments host bots?&rdquo;): <code>Query Power Platform resources</code> on the V2 connector (KQL over Azure Resource Graph &mdash; agents/bots appear in the resource graph alongside environments).</li>
       <li>For deep app inventory: <code>Get Apps as Admin</code> on <strong>Power Apps for Admins</strong> (1000/60s throttle &mdash; much faster than V2 for tenant sweeps).</li>
-      <li>For flow inventory with suspension + soft-delete signal: <code>List Flows as Admin (V2)</code> on <strong>Power Automate Management</strong> with <code>expandSuspensionInfo=true</code> and <code>includeSoftDeletedFlows=true</code>.</li>
+      <li>For flow inventory <em>including agent flows</em> with suspension + soft-delete signal: <code>List Flows as Admin (V2)</code> on <strong>Power Automate Management</strong> with <code>expandSuspensionInfo=true</code> and <code>includeSoftDeletedFlows=true</code>. Agent flows are surfaced by these admin endpoints alongside standalone cloud flows.</li>
+      <li>For Copilot Studio agent inventory: the V2 connector exposes admin-scope bot actions (<code>Set Bot as Quarantined / Unquarantined</code>, <code>Delete a bot in Copilot Studio</code>); for enumeration, combine <code>Query Power Platform resources</code> with the bot rows in Dataverse (<code>bot</code> table) via the Dataverse Web API.</li>
       <li>MCP-backed agent narrates the merged result and posts to a Teams channel.</li>
     </ul>
   </div>
@@ -313,11 +317,12 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
   <div class="tip-agent">
     <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent</div>
     <h4>Connector &amp; Capacity Watch Agent</h4>
-    <p>Schedule a flow that detects new custom connectors, over-shared connections, and capacity threshold breaches week-over-week.</p>
+    <p>Schedule a flow that detects new custom connectors, over-shared connections, capacity threshold breaches, <strong>and newly published Copilot Studio agents</strong> week-over-week. The connectors classified at tenant DLP scope apply equally to connectors invoked from agent flows.</p>
     <ul>
-      <li><code>Get Custom Connectors as Admin</code> + <code>Get Connections as Admin</code> + <code>Get Connection Role Assignments as Admin</code> on <strong>Power Apps for Admins</strong> &mdash; find broadly-shared connections.</li>
+      <li><code>Get Custom Connectors as Admin</code> + <code>Get Connections as Admin</code> + <code>Get Connection Role Assignments as Admin</code> on <strong>Power Apps for Admins</strong> &mdash; find broadly-shared connections (these surface connections used by agent flows too, since agent flows are flows).</li>
       <li><code>Storage warning thresholds</code> + <code>Get tenant capacity details</code> + <code>Generate / Get cross-tenant connection report</code> on the V2 connector &mdash; capacity + boundary signal.</li>
-      <li>MCP-backed agent summarizes deltas and opens a Teams card on threshold breach or new cross-tenant connection.</li>
+      <li><strong>Bot remediation:</strong> <code>Set Bot as Quarantined</code> (V2 connector) to freeze a misconfigured agent before it spreads; <code>Set Bot as Unquarantined</code> to release; <code>Delete a bot in Copilot Studio</code> as the last resort. These are the only programmatic levers for agents at admin scope today.</li>
+      <li>MCP-backed agent summarizes deltas and opens a Teams card on threshold breach, new cross-tenant connection, or new agent surfacing premium connectors.</li>
       <li><em>DLP policy reading isn't in any of these surfaces &mdash; keep DLP work in PPAC and Purview.</em></li>
     </ul>
   </div>
@@ -343,7 +348,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
   <div class="stage-actions">
     <h4>Actions</h4>
     <label class="action-item"><input type="checkbox" id="s3-a1"><span class="action-text">Adopt the 3-zone model: Zone 1 (personal productivity / green), Zone 2 (team collaboration / yellow), Zone 3 (enterprise managed / red).</span></label>
-    <label class="action-item"><input type="checkbox" id="s3-a2"><span class="action-text">Document each zone's purpose, ownership, sharing posture, and connector posture.</span></label>
+    <label class="action-item"><input type="checkbox" id="s3-a2"><span class="action-text">Document each zone's purpose, ownership, sharing posture, and connector posture &mdash; <strong>for all four asset classes</strong> (apps, flows, Copilot Studio agents, agent flows). A high-risk agent belongs in the same zone as a high-risk app.</span></label>
     <label class="action-item"><input type="checkbox" id="s3-a3"><span class="action-text">Map existing environments to a zone; identify outliers that need rehoming.</span></label>
     <label class="action-item"><input type="checkbox" id="s3-a4"><span class="action-text">Create Environment Groups in PPAC matching each zone; assign environments.</span></label>
     <label class="action-item"><input type="checkbox" id="s3-a5"><span class="action-text">Decide explicitly which zones will be Managed Environments &mdash; budget for the licensing implications (Lens A) using the cost-vs-value test (Lens B).</span></label>
@@ -413,7 +418,8 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
     <ul>
       <li><strong>V2 connector:</strong> <code>Get Recommendations</code> &rarr; <code>Get Recommendation Resources</code> &rarr; <code>Migrate to Managed Environment</code> (recommendation <em>Secure high-value apps with premium governance</em>, API <code>2022-03-01-preview</code>) per approved candidate. Toggle destination Managed Environments via <code>Enables managed governance for the specified environment</code>. Use <code>Query Power Platform resources</code> + <code>Get apps as administrator</code> to pre-rank candidates by ownership, last-modified, sharing.</li>
       <li><strong>Power Apps for Admins:</strong> before deletion, <code>Set App Quarantine State</code> = <code>Quarantined</code> on abandoned apps for a cool-off period. <code>Set App Owner</code> to a service identity when the original owner has left. <code>Remove App as Admin</code> when cool-off elapses without recall.</li>
-      <li>Respect throttling (1000/60s on Power Apps for Admins, 100/60s on V2) and preview limits (canvas + SharePoint forms only, no shared connectors/resources).</li>
+      <li><strong>Agents + agent flows (parallel programmatic track &mdash; the PPAC wizard doesn't move them in preview):</strong> for Copilot Studio agents use V2 <code>Set Bot as Quarantined</code> for cool-off, then <code>Delete a bot in Copilot Studio</code> after grace. For agent flows (they're flows): <code>Disable Flow as Admin</code> (Power Automate for Admins) for cool-off, then <code>Remove Flow as Admin</code>. To <em>move</em> agents/flows to a Managed Env, export them in a solution from source and import in target (no wizard support yet).</li>
+      <li>Respect throttling (1000/60s on Power Apps for Admins, 100/60s on V2) and preview limits (canvas + SharePoint forms only via the wizard, no shared connectors/resources).</li>
     </ul>
   </div>
 
@@ -475,10 +481,10 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 
   <div class="stage-actions">
     <h4>Actions</h4>
-    <label class="action-item"><input type="checkbox" id="s6-a1"><span class="action-text">Adopt managed solutions for production environments; require for Zone 3.</span></label>
+    <label class="action-item"><input type="checkbox" id="s6-a1"><span class="action-text">Adopt managed solutions for production environments; require for Zone 3. Solutions package <strong>apps, flows, Copilot Studio agents, and agent flows</strong> together &mdash; treat the agent + its agent flows as a single deployable unit, not separate artifacts.</span></label>
     <label class="action-item"><input type="checkbox" id="s6-a2"><span class="action-text">Set up Power Platform Pipelines with a platform host environment.</span></label>
     <label class="action-item"><input type="checkbox" id="s6-a3"><span class="action-text">Add environment variables and connection references to production solutions.</span></label>
-    <label class="action-item"><input type="checkbox" id="s6-a4"><span class="action-text">Require Solution Checker to pass before promotion to test or production.</span></label>
+    <label class="action-item"><input type="checkbox" id="s6-a4"><span class="action-text">Require Solution Checker to pass before promotion to test or production. <em>(Solution Checker covers apps and flows; for Copilot Studio agents, gate on the Copilot Studio test pane + the prompt-optimizer / agent-eval cycle scheduled in Stage 7.)</em></span></label>
     <label class="action-item"><input type="checkbox" id="s6-a5"><span class="action-text">Document the &ldquo;path to production&rdquo; one-pager for solution owners.</span></label>
   </div>
 
@@ -518,7 +524,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
     <label class="action-item"><input type="checkbox" id="s7-a1"><span class="action-text">Schedule a monthly inventory + DLP review (zone owner + platform owner).</span></label>
     <label class="action-item"><input type="checkbox" id="s7-a2"><span class="action-text">Trend Managed-Environments usage and consumption month-over-month.</span></label>
     <label class="action-item"><input type="checkbox" id="s7-a3"><span class="action-text">Review zone graduations (apps/flows promoted Z1 &rarr; Z2 &rarr; Z3) and demote where appropriate.</span></label>
-    <label class="action-item"><input type="checkbox" id="s7-a4"><span class="action-text">Run one prompt-optimizer / agent-eval cycle on any production agent.</span></label>
+    <label class="action-item"><input type="checkbox" id="s7-a4"><span class="action-text">Run one prompt-optimizer / agent-eval cycle on every production Copilot Studio agent (and any agent flow whose outputs the agent depends on). Record baseline scores + delta from previous month.</span></label>
     <label class="action-item"><input type="checkbox" id="s7-a5"><span class="action-text">Review PPAC &ldquo;Users requiring licenses in Managed Environments&rdquo; report; reconcile assignments &amp; pending requests (M365 admin &rarr; Billing &rarr; Licenses &rarr; Requests).</span></label>
   </div>
 
@@ -552,13 +558,14 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
   <div class="tip-agent">
     <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent &middot; Companion</div>
     <h4>Leaver / Offboarding Agent</h4>
-    <p>When HR signals a departure, sequence reassignment, disablement, and audit-trail in a single run.</p>
+    <p>When HR signals a departure, sequence reassignment, disablement, and audit-trail in a single run &mdash; <strong>across all four asset classes the departing user touched</strong>.</p>
     <ul>
-      <li><strong>Find &amp; reassign flows:</strong> <code>List Flows as Admin (V2)</code> filter by creator userId, then <code>Modify Flow Owners as Admin</code> on <strong>Power Automate Management</strong> &rarr; reassign to service identity or manager.</li>
+      <li><strong>Find &amp; reassign cloud flows + agent flows:</strong> <code>List Flows as Admin (V2)</code> filter by creator userId, then <code>Modify Flow Owners as Admin</code> on <strong>Power Automate Management</strong> &rarr; reassign to service identity or manager. (Agent flows surface here too &mdash; they're flows.)</li>
       <li><strong>Find &amp; transfer apps:</strong> <code>Get Apps as Admin</code> + <code>Set App Owner</code> on <strong>Power Apps for Admins</strong>; set old owner's residual role to <code>CanView</code> or strip them entirely.</li>
-      <li><strong>Disable non-survivors:</strong> <code>Disable Flow as Admin</code> on <strong>Power Automate for Admins</strong> pending review; <code>Remove Flow as Admin</code> after grace period.</li>
+      <li><strong>Copilot Studio agents:</strong> the V2 connector has no <code>Set Bot Owner</code>. Two-step approach &mdash; (1) reassign agent ownership by updating the <code>bot</code> Dataverse row's <code>ownerid</code> via the Dataverse Web API (or Copilot Studio UI for a small number); (2) for agents that should not survive the transfer, <code>Set Bot as Quarantined</code> (V2) pending review, then <code>Delete a bot in Copilot Studio</code> (V2) after grace period.</li>
+      <li><strong>Disable non-survivor flows:</strong> <code>Disable Flow as Admin</code> on <strong>Power Automate for Admins</strong> pending review; <code>Remove Flow as Admin</code> after grace period.</li>
       <li><strong>GDPR cleanup:</strong> <code>Remove Flow User Details</code> on <strong>Power Automate for Admins</strong> &mdash; <strong>interactive auth only</strong> (Service Principal not supported).</li>
-      <li>Post a single audit card listing everything reassigned, disabled, or removed.</li>
+      <li>Post a single audit card listing everything reassigned, disabled, or removed &mdash; apps, flows, agents, and agent flows in one place.</li>
     </ul>
   </div>
 
