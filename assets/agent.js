@@ -548,7 +548,7 @@
 
     var headerIcon = el('div', { class: 'ga-header-icon', 'aria-hidden': 'true' }, ['\u2728']);
     var statusDot = el('span', { class: 'ga-status-dot ga-warn', 'aria-hidden': 'true' });
-    var statusText = el('span', { class: 'ga-status-text' }, ['Demo mode']);
+    var statusText = el('span', { class: 'ga-status-text' }, ['Local Agent Mode']);
     var headerText = el('div', { class: 'ga-header-text' }, [
       el('div', { class: 'ga-header-title', id: 'gaPanelTitle' }, ['Governance Agent']),
       el('div', { class: 'ga-header-sub' }, [statusDot, statusText])
@@ -669,7 +669,7 @@
     modal.appendChild(el('div', { class: 'ga-modal-sub' }, [
       'Bring your own key. Settings are stored only in this browser (',
       el('code', {}, ['localStorage']),
-      ') and your API key is sent directly to the chosen provider — never to a third party. Leave blank to keep using demo mode.'
+      ') and your API key is sent directly to the chosen provider — never to a third party. Leave blank to keep using Local Agent Mode.'
     ]));
     modal.appendChild(el('label', { for: 'gaProvider' }, ['Provider']));
     modal.appendChild(providerSel);
@@ -792,7 +792,7 @@
         ? (cfg.provider === 'azure' ? 'Azure OpenAI · ' + (cfg.deployment || 'deployment')
          : cfg.provider === 'azure-ai' ? 'Azure AI Foundry · ' + (cfg.deployment || 'deployment')
          : 'OpenAI · ' + (cfg.model || 'model'))
-        : 'Demo mode (no key)';
+        : 'Local Agent Mode (no key)';
       ui.footnote.textContent = '';
       ui.footnote.appendChild(document.createTextNode(ok
         ? 'Grounded in this page. Answers may be imperfect — verify against the source.'
