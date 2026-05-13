@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Policy to Practice &mdash; The First 90 Days</title>
+<script>
+(()=>{
+const param=new URLSearchParams(window.location.search).get("clawpilotTheme");
+const theme=param||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+document.documentElement.setAttribute("data-theme",theme);
+})();
+</script>
+<style>
+:root{color-scheme:light;--cp-bg:#f7f4ef;--cp-bg-elevated:#fcfbf8;--cp-surface:#ffffff;--cp-surface-soft:#f5f5f5;--cp-border:#dedede;--cp-border-strong:#919191;--cp-text:#242424;--cp-text-muted:#5c5c5c;--cp-text-soft:#6f6f6f;--cp-accent:#b11f4b;--cp-accent-hover:#9a1a41;--cp-accent-soft:rgba(177,31,75,0.08);--cp-accent-fg:#ffffff;--cp-success:#16a34a;--cp-danger:#dc2626;--cp-warning:#f59e0b;--cp-link:#0078d4;--cp-shadow:0 18px 48px rgba(0,0,0,0.12);--cp-overlay:rgba(255,255,255,0.8);--cp-panel:rgba(255,255,255,0.86);--cp-panel-strong:rgba(255,255,255,0.96);--cp-sheen:rgba(255,255,255,0.55);--cp-highlight:rgba(177,31,75,0.12);--zone1:#22c55e;--zone2:#eab308;--zone3:#ef4444;--purple:#7c3aed;--blue:#3b82f6;--teal:#14b8a6}
+html[data-theme="dark"]{color-scheme:dark;--cp-bg:#3d3b3a;--cp-bg-elevated:#343231;--cp-surface:#292929;--cp-surface-soft:#2e2e2e;--cp-border:#474747;--cp-border-strong:#5f5f5f;--cp-text:#dedede;--cp-text-muted:#919191;--cp-text-soft:#b0b0b0;--cp-accent:#fd8ea1;--cp-accent-hover:#fb7b91;--cp-accent-soft:rgba(253,142,161,0.14);--cp-accent-fg:#1a1a1a;--cp-success:#4ade80;--cp-danger:#f87171;--cp-warning:#fbbf24;--cp-link:#4da6ff;--cp-shadow:0 18px 48px rgba(0,0,0,0.32);--cp-overlay:rgba(41,41,41,0.88);--cp-panel:rgba(41,41,41,0.72);--cp-panel-strong:rgba(41,41,41,0.96);--cp-sheen:rgba(255,255,255,0.04);--cp-highlight:rgba(253,142,161,0.12)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--cp-bg);color:var(--cp-text);line-height:1.6;overflow-x:hidden}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;background:var(--cp-surface);border-right:1px solid var(--cp-border);z-index:100;overflow-y:auto;display:flex;flex-direction:column;transition:transform .3s ease}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--cp-border);display:flex;align-items:center;gap:12px;background:var(--cp-accent-soft)}
+.sidebar-logo{width:40px;height:40px;border-radius:10px;background:var(--cp-accent);display:flex;align-items:center;justify-content:center;color:var(--cp-accent-fg);font-weight:700;font-size:18px}
+.sidebar-title{font-size:14px;font-weight:600;line-height:1.3}.sidebar-subtitle{font-size:11px;color:var(--cp-text-muted)}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0}
+.sidebar-footer{padding:14px 16px;border-top:1px solid var(--cp-border);font-size:11px;color:var(--cp-text-muted)}
+.sidebar-footer a{color:var(--cp-text-muted);text-decoration:none;display:block;padding:4px 0;cursor:pointer}
+.sidebar-footer a:hover{color:var(--cp-accent)}
+.nav-chapter-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;border:none;background:none;color:var(--cp-text);font-size:13px;font-weight:600;cursor:pointer;text-align:left;transition:background .15s}
+.nav-chapter-btn:hover{background:var(--cp-accent-soft)}.nav-chapter-btn.active{color:var(--cp-accent);background:var(--cp-accent-soft)}
+.nav-chapter-btn .ch-num{width:24px;height:24px;border-radius:6px;background:var(--cp-accent-soft);color:var(--cp-accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.nav-chapter-btn.active .ch-num{background:var(--cp-accent);color:var(--cp-accent-fg)}
+.nav-chapter-btn .ch-check{margin-left:auto;font-size:14px;color:var(--cp-success);opacity:0;transition:opacity .2s}
+.nav-chapter-btn.complete .ch-check{opacity:1}
+.main{margin-left:280px;min-height:100vh}
+.mobile-toggle{display:none;position:fixed;top:12px;left:12px;z-index:200;width:40px;height:40px;border-radius:10px;border:1px solid var(--cp-border);background:var(--cp-surface);cursor:pointer;font-size:20px;color:var(--cp-text);align-items:center;justify-content:center}
+.hero{position:relative;padding:80px 40px 60px;background:linear-gradient(135deg,var(--cp-accent-soft) 0%,var(--cp-bg) 50%,var(--cp-surface-soft) 100%);border-bottom:1px solid var(--cp-border);overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:var(--cp-accent-soft);filter:blur(80px);opacity:.5}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:var(--cp-accent);color:var(--cp-accent-fg);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:20px}
+.hero h1{font-size:36px;font-weight:700;line-height:1.2;max-width:700px;margin-bottom:16px;position:relative}
+.hero p{font-size:16px;color:var(--cp-text-muted);max-width:640px;line-height:1.7;position:relative}
+.hero p em{color:var(--cp-text);font-style:normal;font-weight:600}
+.content{max-width:960px;margin:0 auto;padding:40px 40px 80px}
+.section{margin-bottom:48px;scroll-margin-top:24px;animation:fadeInUp .4s ease}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:12px;border-bottom:2px solid var(--cp-accent-soft)}
+.section-num{width:36px;height:36px;border-radius:10px;background:var(--cp-accent);color:var(--cp-accent-fg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0}
+.section-header h2{font-size:24px;font-weight:700}
+.section-header .stage-horizon{margin-left:auto;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:4px 10px;border-radius:12px;background:var(--cp-surface-soft);color:var(--cp-text-muted);border:1px solid var(--cp-border)}
+.subsection{margin-bottom:24px}
+.subsection h3{font-size:16px;font-weight:600;margin-bottom:8px}
+.subsection p,.subsection li{font-size:14px;color:var(--cp-text-soft);line-height:1.7;margin-bottom:8px}
+.subsection ul{padding-left:20px}
+.callout{background:var(--cp-accent-soft);border-left:4px solid var(--cp-accent);border-radius:0 .625rem .625rem 0;padding:16px 20px;margin:16px 0}
+.callout p{font-size:13px;color:var(--cp-text);margin:0 0 8px}.callout p:last-child{margin-bottom:0}.callout strong{color:var(--cp-accent)}
+.callout ul{padding-left:18px;margin:6px 0;font-size:13px;color:var(--cp-text)}
+.callout li{margin-bottom:4px}
+.info-callout{background:rgba(59,130,246,.08);border-left:4px solid var(--blue);border-radius:0 .625rem .625rem 0;padding:16px 20px;margin:16px 0}
+.info-callout p{font-size:13px;color:var(--cp-text);margin:0 0 8px}.info-callout p:last-child{margin-bottom:0}
+.info-callout ul{padding-left:18px;margin:6px 0;font-size:13px;color:var(--cp-text)}
+.callout-warn{background:rgba(245,158,11,.10);border-left:4px solid var(--cp-warning);border-radius:0 .625rem .625rem 0;padding:16px 20px;margin:16px 0}
+.callout-warn p{font-size:13px;color:var(--cp-text);margin:0 0 8px}.callout-warn p:last-child{margin-bottom:0}
+.callout-warn ul{padding-left:18px;margin:6px 0;font-size:13px;color:var(--cp-text)}
+.callout h4,.info-callout h4,.callout-warn h4{font-size:14px;font-weight:700;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.callout-warn h4{color:#a16207}html[data-theme="dark"] .callout-warn h4{color:var(--cp-warning)}
+.tip-agent{border:1px solid var(--cp-accent);border-left:4px solid var(--cp-accent);background:var(--cp-surface);border-radius:.625rem;padding:14px 18px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.tip-agent .tip-label{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--cp-accent);margin-bottom:6px}
+.tip-agent h4{font-size:14px;font-weight:700;margin:0 0 6px}
+.tip-agent p{font-size:13px;color:var(--cp-text-soft);margin:0 0 8px;line-height:1.6}
+.tip-agent ul{padding-left:18px;margin:4px 0 0;font-size:12.5px;color:var(--cp-text-soft)}
+.tip-agent li{margin-bottom:3px}
+.tip-agent code{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;background:var(--cp-accent-soft);color:var(--cp-accent);padding:1px 5px;border-radius:4px}
+.go-deeper{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;font-weight:600;color:var(--cp-link);text-decoration:none}
+.go-deeper:hover{text-decoration:underline}
+.go-deeper-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--cp-border)}
+/* Assessment card */
+.assessment{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:16px;padding:28px;margin-bottom:32px;box-shadow:0 0 2px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.14)}
+.assessment h2{font-size:20px;font-weight:700;margin-bottom:6px}
+.assessment .lead{font-size:14px;color:var(--cp-text-muted);margin-bottom:20px}
+.q-block{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--cp-border)}
+.q-block:last-of-type{border-bottom:none;padding-bottom:0}
+.q-block .q-text{font-size:14px;font-weight:600;margin-bottom:10px;display:flex;gap:10px}
+.q-block .q-num{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--cp-accent-soft);color:var(--cp-accent);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.q-options{display:flex;flex-direction:column;gap:6px;padding-left:32px}
+.q-options label{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--cp-text-soft);cursor:pointer;padding:6px 10px;border-radius:6px;transition:background .15s;line-height:1.5}
+.q-options label:hover{background:var(--cp-accent-soft);color:var(--cp-text)}
+.q-options input[type=radio]{margin-top:3px;accent-color:var(--cp-accent);cursor:pointer}
+.q-options input[type=radio]:checked + span{color:var(--cp-text);font-weight:500}
+.assessment-actions{display:flex;gap:10px;margin-top:20px;align-items:center;flex-wrap:wrap}
+.btn{padding:10px 18px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-primary{background:var(--cp-accent);color:var(--cp-accent-fg)}
+.btn-primary:hover{background:var(--cp-accent-hover)}
+.btn-primary:disabled{background:var(--cp-border-strong);cursor:not-allowed;color:var(--cp-surface)}
+.btn-ghost{background:transparent;color:var(--cp-text-muted);border:1px solid var(--cp-border)}
+.btn-ghost:hover{color:var(--cp-text);border-color:var(--cp-text-muted)}
+.assessment-result{margin-top:16px;padding:14px 18px;border-radius:10px;background:var(--cp-accent-soft);border-left:4px solid var(--cp-accent);font-size:13.5px;display:none}
+.assessment-result.show{display:block}
+.assessment-result strong{color:var(--cp-accent)}
+.assessment-result .score-pill{display:inline-block;padding:2px 10px;border-radius:12px;background:var(--cp-accent);color:var(--cp-accent-fg);font-weight:700;font-size:12px;margin:0 4px}
+/* Pipeline (sticky) */
+.pipeline-sticky{position:sticky;top:0;z-index:50;background:var(--cp-bg-elevated);border-bottom:1px solid var(--cp-border);padding:14px 40px;margin:-40px -40px 32px;backdrop-filter:blur(8px);overflow-x:auto}
+.pipeline-flow{display:flex;align-items:center;gap:0;min-width:max-content}
+.pipeline-stage{display:flex;flex-direction:column;align-items:center;min-width:90px;gap:6px;cursor:pointer;transition:opacity .25s,transform .15s}
+.pipeline-stage.dim{opacity:.4}
+.pipeline-stage:hover{transform:translateY(-2px)}
+.pipeline-node{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;border:2px solid var(--cp-border);background:var(--cp-surface);color:var(--cp-text);transition:all .25s}
+.pipeline-stage.current .pipeline-node{border-color:var(--cp-accent);background:var(--cp-accent-soft);color:var(--cp-accent);transform:scale(1.1)}
+.pipeline-stage.complete .pipeline-node{background:var(--cp-success);color:#fff;border-color:var(--cp-success)}
+.pipeline-stage.complete .pipeline-node::before{content:'\2713';font-size:18px}
+.pipeline-stage.complete .pipeline-node span{display:none}
+.pipeline-label{font-size:10.5px;font-weight:600;text-align:center;color:var(--cp-text-muted);max-width:88px;line-height:1.3}
+.pipeline-stage.current .pipeline-label{color:var(--cp-accent)}
+.pipeline-arrow{font-size:14px;color:var(--cp-border-strong);margin:0 4px;align-self:flex-start;margin-top:18px}
+/* Stage card */
+.stage-card{background:var(--cp-surface);border:1px solid var(--cp-border);border-radius:16px;padding:28px;margin-bottom:24px;scroll-margin-top:120px;box-shadow:0 0 2px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.14);transition:opacity .3s,filter .3s}
+.stage-card.assumed{opacity:.65}
+.stage-card.assumed .stage-actions{filter:grayscale(.5)}
+.stage-meta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px;font-size:12.5px}
+.stage-meta .meta-item{display:flex;flex-direction:column;gap:2px;flex:1;min-width:200px}
+.stage-meta .meta-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--cp-text-muted)}
+.stage-meta .meta-value{font-size:13px;color:var(--cp-text);line-height:1.5}
+.stage-actions{margin-top:16px}
+.stage-actions h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--cp-text-muted);margin-bottom:10px}
+.action-item{display:flex;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--cp-border);margin-bottom:6px;transition:background .15s,border-color .15s;cursor:pointer}
+.action-item:hover{background:var(--cp-surface-soft);border-color:var(--cp-border-strong)}
+.action-item input[type=checkbox]{margin-top:3px;accent-color:var(--cp-accent);cursor:pointer;flex-shrink:0;width:16px;height:16px}
+.action-item input[type=checkbox]:checked ~ .action-text{color:var(--cp-text-muted);text-decoration:line-through}
+.action-item .action-text{font-size:13.5px;color:var(--cp-text);line-height:1.55;flex:1}
+.assumed-note{font-size:12px;font-style:italic;color:var(--cp-text-muted);padding:8px 12px;border-radius:8px;background:var(--cp-surface-soft);margin-bottom:14px}
+/* Export modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:var(--cp-overlay);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--cp-surface);border-radius:16px;max-width:760px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:var(--cp-shadow);padding:32px;position:relative}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;border:1px solid var(--cp-border);background:var(--cp-surface-soft);cursor:pointer;font-size:16px;color:var(--cp-text-muted);display:flex;align-items:center;justify-content:center}
+.modal h2{font-size:20px;margin-bottom:12px}
+.modal h3{font-size:15px;margin:18px 0 8px;color:var(--cp-accent)}
+.modal ul{padding-left:20px;margin:6px 0 12px}.modal li{font-size:13px;color:var(--cp-text-soft);margin-bottom:4px;line-height:1.6}
+.modal .completed{color:var(--cp-success)}
+.modal .outstanding{color:var(--cp-text-muted)}
+.modal .modal-actions{margin-top:20px;display:flex;gap:10px;justify-content:flex-end}
+.back-to-top{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;background:var(--cp-accent);color:var(--cp-accent-fg);border:none;cursor:pointer;font-size:20px;box-shadow:var(--cp-shadow);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(10px);display:flex;align-items:center;justify-content:center}
+.back-to-top.visible{opacity:1;transform:translateY(0)}
+@media(max-width:768px){.sidebar{transform:translateX(-280px)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.mobile-toggle{display:flex}.hero{padding:60px 20px 40px}.hero h1{font-size:24px}.content{padding:20px}.pipeline-sticky{padding:12px 20px;margin:-20px -20px 24px}.stage-card,.assessment{padding:18px}.section-header .stage-horizon{margin-left:0}}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--cp-bg)}::-webkit-scrollbar-thumb{background:var(--cp-border-strong);border-radius:3px}
+@media print{
+  .sidebar,.mobile-toggle,.back-to-top,.pipeline-sticky,.assessment-actions,.modal-actions{display:none!important}
+  .main{margin-left:0!important}
+  .hero{padding:24px 0;background:none;border:none}
+  .stage-card,.assessment,.callout,.info-callout,.callout-warn,.tip-agent{break-inside:avoid;page-break-inside:avoid;box-shadow:none}
+  .modal-overlay.show{position:static;background:none;display:block;backdrop-filter:none}
+  .modal{box-shadow:none;max-height:none;width:100%;padding:0}
+  .modal-close{display:none}
+}
+</style>
+</head>
+<body>
+<button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+  <div class="sidebar-logo">&#128640;</div>
+  <div><div class="sidebar-title">From Policy to Practice</div><div class="sidebar-subtitle">The First 90 Days</div></div>
+</div>
+<nav class="sidebar-nav" id="sidebarNav"></nav>
+<div class="sidebar-footer">
+  <a href="index.html">&larr; Full Governance Guide</a>
+  <a onclick="openExportModal()">&#128196; Export Summary</a>
+  <a onclick="resetProgress()" style="color:var(--cp-danger)">&#8634; Reset progress</a>
+</div>
+</aside>
+<div class="main" id="mainContent">
+<div class="hero" id="hero">
+  <div class="hero-badge">&#128640; Companion Guide</div>
+  <h1>From Policy to Practice</h1>
+  <p>The governance guide answers <em>what good looks like</em>. This one answers <em>where you are right now and what's your next move</em>. Start with a 90-second self-assessment, then work through seven dependency-chained stages with checkboxable actions that persist in your browser.</p>
+</div>
+<div class="content" id="contentArea">
+
+<!-- Sticky pipeline (built by JS) -->
+<div class="pipeline-sticky"><div class="pipeline-flow" id="pipelineFlow"></div></div>
+
+<!-- SELF-ASSESSMENT -->
+<div class="assessment" id="sec-assessment">
+  <h2>Where are you right now?</h2>
+  <p class="lead">Five quick questions. We'll route you to the right starting stage and light up the pipeline so you can see what's downstream.</p>
+  <div id="qList"></div>
+  <div class="assessment-actions">
+    <button class="btn btn-primary" id="submitAssessment" onclick="submitAssessment()" disabled>Show me my starting stage</button>
+    <button class="btn btn-ghost" onclick="clearAssessment()">Clear answers</button>
+  </div>
+  <div class="assessment-result" id="assessmentResult"></div>
+</div>
+
+<!-- DECISION LENSES (cross-cutting reference block) -->
+<div class="section" id="sec-lenses">
+  <div class="section-header"><div class="section-num">&#128269;</div><h2>Decision Lenses</h2></div>
+  <p style="margin-bottom:16px;color:var(--cp-text-muted);font-size:14px">Three cross-cutting decisions show up repeatedly across the stages. Read them once here; they're also embedded inline where they matter most.</p>
+
+  <div class="callout-warn">
+    <h4>&#9888; Lens A &mdash; Managed Environments: the licensing reality</h4>
+    <p>Turning on Managed Environments creates a per-user premium-license requirement for everyone who actively uses an app or standalone cloud flow in that environment. Plan for the cost before you flip the switch.</p>
+    <ul>
+      <li>Every active user needs Power Apps Premium, Power Automate Premium, a qualifying Dynamics 365 Enterprise license, or a capacity-based plan (per-app passes, per-flow plans).</li>
+      <li>A user running both an app and a flow in the same Managed Environment only needs <strong>one</strong> premium license, not both.</li>
+      <li>Pay-as-you-go alone does <strong>not</strong> satisfy the requirement when users lack standalone licenses.</li>
+      <li>Dynamics 365 Pro Power Apps capabilities only count within the context of that Dynamics 365 app &mdash; they don't broadly satisfy Managed Environments licensing.</li>
+      <li><strong>Compliance signals are active now:</strong> admin notifications via M365 Message Center and PPAC &rarr; Actions &rarr; Recommendations; from June 2026, end users without an appropriate license see in-app license-request prompts that land in PPAC and Microsoft 365 admin &rarr; Billing &rarr; Licenses &rarr; Requests.</li>
+      <li><strong>How to check:</strong> PPAC &rarr; Licensing &rarr; Power Apps &rarr; Download report &rarr; <em>Users requiring licenses in Managed Environments</em>.</li>
+    </ul>
+    <p style="margin-top:10px"><a href="https://learn.microsoft.com/en-us/power-platform/admin/managed-environment-licensing" target="_blank" rel="noopener" style="color:var(--cp-link);font-size:12.5px">learn.microsoft.com/en-us/power-platform/admin/managed-environment-licensing &rarr;</a></p>
+  </div>
+
+  <div class="info-callout">
+    <h4>&#9878; Lens B &mdash; Cost-vs-value decision lens</h4>
+    <p>Managed Environments unlocks the governance capabilities the zones model depends on (sharing limits, weekly digests, usage insights, solution checker enforcement, IP firewall, customer-managed keys, environment routing, the default-env cleanup recommendation). The cost is real: it elevates every active user to a premium-license requirement.</p>
+    <ul>
+      <li><strong>Make it Managed</strong> when the environment hosts Zone 2 / Zone 3 workloads, business-critical apps, premium connectors, or solutions you'd be willing to license users for anyway.</li>
+      <li><strong>Keep it Unmanaged</strong> when the environment is a Zone 1 personal-productivity space whose makers and users are M365-licensed only, and whose apps stay inside Microsoft 365 connectors. Use tenant-level DLP + sharing limits as the guardrail.</li>
+      <li><strong>In between?</strong> Pull the active-user count in the candidate environment, multiply by the per-user premium SKU price, compare against (a) the operational cost of governing it manually and (b) the risk-reduction value of the controls you'd unlock. If the math is close, prefer Managed for anything touching shared business data; prefer Unmanaged for true personal sandboxes.</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <h4>&#128190; Lens C &mdash; Default-environment cleanup track</h4>
+    <p>Default environments accumulate apps and flows because every M365 user is auto-added as a maker. Some are in active use; many are abandoned learning experiments. Triage signal categories drive remediation:</p>
+    <ul>
+      <li><strong>Production-like sharing or sensitive data</strong> &rarr; move to the right zone.</li>
+      <li><strong>Uses connectors that conflict with current/planned DLP</strong> &rarr; move or remediate.</li>
+      <li><strong>No usage in N days, owner non-responsive</strong> &rarr; quarantine, then delete.</li>
+      <li><strong>One-off learning artifact</strong> &rarr; delete (offer backup export).</li>
+    </ul>
+    <p style="margin-top:8px"><strong>Execute via:</strong> PPAC &rarr; Actions &rarr; Recommendations &rarr; <em>&ldquo;Improve environment hygiene by moving the production apps out of the default environment&rdquo;</em> (preview wizard), or programmatically via the Power Platform for Admins V2 connector (<code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">ExecuteRecommendationAction</code>). <strong>Preview limits:</strong> canvas apps + SharePoint forms only; apps with shared connectors/resources aren't eligible yet; users must be added in the target environment and the app re-shared.</p>
+    <p style="margin-top:6px;font-size:12px"><a href="https://learn.microsoft.com/en-us/power-platform/admin/move-apps-from-default-environment" target="_blank" rel="noopener" style="color:var(--cp-link)">learn.microsoft.com/en-us/power-platform/admin/move-apps-from-default-environment &rarr;</a></p>
+  </div>
+
+  <div class="callout-warn">
+    <h4>&#129302; Lens D &mdash; Admin-agent ground rules (read before you build)</h4>
+    <p>Each stage below carries a "Pro Tip" for standing up a small admin agent. The tips are real &mdash; grounded in the actual Environment Management MCP server tools and the Power Platform admin connectors. A few cross-cutting cautions:</p>
+    <ul>
+      <li><strong>Pick the right surface.</strong> The MCP server is read-only environment lifecycle. Execution flows through one of: <em>Power Apps for Admins</em> (highest throttle at 1000/60s for app sweeps; only home of <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Set App Quarantine State</code>, <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Set App Owner</code>, conditional access), <em>Power Automate Management</em> (only home of <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Restore Deleted Flow as Admin</code> and <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">List Flows as Admin (V2)</code> with suspension data), <em>Power Automate for Admins</em> (only home of <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Enable / Disable / Remove Flow as Admin</code>), or the <em>Power Platform for Admins V2</em> connector (Recommendations, Rule Sets, BCDR, KQL, Managed Environments toggle).</li>
+      <li><strong>Throttling differs sharply.</strong> Power Apps for Admins: 1000/60s. V2 connector and Power Automate for Admins: 100/60s. Power Apps for Makers: 100/60s. Power Automate Management: 5 GET/60s and 300 non-GET/3600s (lowest &mdash; design tight pacing). Tenant-wide sweeps must paginate and cache.</li>
+      <li><strong>Auth gotchas.</strong> V2 connector billing-policy actions and Power Automate for Admins user-detail actions require interactive OAuth &mdash; Service Principal is <strong>not</strong> supported there. <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Get recommendations</code> requires Managed Environments enabled on at least one environment.</li>
+      <li><strong>The agent itself is a governed asset.</strong> If it runs in a Managed Environment, its service account / owner needs a premium license too (Lens A). Treat the agent as a Zone 3 asset &mdash; ALM, source-controlled, change-reviewed.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- STAGE 1 -->
+<div class="section stage-card" id="sec-s1" data-stage="1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>See What You Have</h2>
+    <span class="stage-horizon">Week 1</span>
+  </div>
+  <div class="stage-meta">
+    <div class="meta-item"><span class="meta-label">What you're doing</span><span class="meta-value">Building a tenant-wide inventory of apps, flows, agents, owners, and connectors &mdash; especially in the default environment.</span></div>
+    <div class="meta-item"><span class="meta-label">Why now, not later</span><span class="meta-value">You can't govern what you can't see. Every later stage depends on knowing the footprint.</span></div>
+  </div>
+
+  <div class="stage-actions">
+    <h4>Actions</h4>
+    <label class="action-item"><input type="checkbox" id="s1-a1"><span class="action-text">Enable tenant-level Inventory in PPAC and confirm Inventory data is flowing.</span></label>
+    <label class="action-item"><input type="checkbox" id="s1-a2"><span class="action-text">Pull a tenant-wide app + flow + agent inventory; export the list.</span></label>
+    <label class="action-item"><input type="checkbox" id="s1-a3"><span class="action-text">Identify default-environment sprawl &mdash; tag apps/flows by usage, owner, connectors, and business criticality.</span></label>
+    <label class="action-item"><input type="checkbox" id="s1-a4"><span class="action-text">List the top 20 makers (by asset count and by recent activity).</span></label>
+    <label class="action-item"><input type="checkbox" id="s1-a5"><span class="action-text">Record current DLP posture (tenant baseline, per-env exceptions) as the &ldquo;before&rdquo; snapshot.</span></label>
+  </div>
+
+  <!-- Embedded Lens C part 1 -->
+  <div class="callout">
+    <h4>&#128190; Lens C (part 1) &mdash; How to think about the default-environment cleanup</h4>
+    <p>Tag candidates by connectors used, owner department, and last-run date so the eventual move is batchable. Triage into four buckets: <strong>move</strong> (production-like), <strong>move or remediate</strong> (DLP conflict), <strong>quarantine then delete</strong> (no usage, owner unresponsive), <strong>delete with optional backup export</strong> (learning artifact). Keep a lightweight comms plan: announce &rarr; migrate &rarr; confirm.</p>
+  </div>
+
+  <div class="tip-agent">
+    <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent</div>
+    <h4>Inventory &amp; Sprawl Agent</h4>
+    <p>Stand up a scheduled flow + MCP-backed agent that produces a weekly digest. <em>Don't</em> click through PPAC for this.</p>
+    <ul>
+      <li>For tenant-wide questions (&ldquo;which environments are unmanaged?&rdquo;): <code>Query Power Platform resources</code> on the V2 connector (KQL over Azure Resource Graph).</li>
+      <li>For deep app inventory: <code>Get Apps as Admin</code> on <strong>Power Apps for Admins</strong> (1000/60s throttle &mdash; much faster than V2 for tenant sweeps).</li>
+      <li>For flow inventory with suspension + soft-delete signal: <code>List Flows as Admin (V2)</code> on <strong>Power Automate Management</strong> with <code>expandSuspensionInfo=true</code> and <code>includeSoftDeletedFlows=true</code>.</li>
+      <li>MCP-backed agent narrates the merged result and posts to a Teams channel.</li>
+    </ul>
+  </div>
+
+  <div class="go-deeper-row">
+    <a href="index.html#sec-governance-reporting" class="go-deeper">Go deeper &rarr; Reporting &amp; Visibility</a>
+  </div>
+</div>
+
+<!-- STAGE 2 -->
+<div class="section stage-card" id="sec-s2" data-stage="2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>Lock the Front Door</h2>
+    <span class="stage-horizon">Week 2</span>
+  </div>
+  <div class="stage-meta">
+    <div class="meta-item"><span class="meta-label">What you're doing</span><span class="meta-value">Establishing tenant-level DLP and connector classification, then restricting the default environment and trial-env creation.</span></div>
+    <div class="meta-item"><span class="meta-label">Why now, not later</span><span class="meta-value">Stops new risk from accumulating while you sort out the existing footprint.</span></div>
+  </div>
+
+  <div class="stage-actions">
+    <h4>Actions</h4>
+    <label class="action-item"><input type="checkbox" id="s2-a1"><span class="action-text">Confirm or author the tenant-wide DLP baseline policy.</span></label>
+    <label class="action-item"><input type="checkbox" id="s2-a2"><span class="action-text">Classify connectors into Business / Non-business / Blocked at tenant scope.</span></label>
+    <label class="action-item"><input type="checkbox" id="s2-a3"><span class="action-text">Restrict the default environment (security group on env creation; sharing limits).</span></label>
+    <label class="action-item"><input type="checkbox" id="s2-a4"><span class="action-text">Disable trial-environment creation by non-admins in the M365 admin center.</span></label>
+    <label class="action-item"><input type="checkbox" id="s2-a5"><span class="action-text">Document the &ldquo;day-one rules&rdquo; for makers (one-page summary).</span></label>
+  </div>
+
+  <div class="tip-agent">
+    <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent</div>
+    <h4>Connector &amp; Capacity Watch Agent</h4>
+    <p>Schedule a flow that detects new custom connectors, over-shared connections, and capacity threshold breaches week-over-week.</p>
+    <ul>
+      <li><code>Get Custom Connectors as Admin</code> + <code>Get Connections as Admin</code> + <code>Get Connection Role Assignments as Admin</code> on <strong>Power Apps for Admins</strong> &mdash; find broadly-shared connections.</li>
+      <li><code>Storage warning thresholds</code> + <code>Get tenant capacity details</code> + <code>Generate / Get cross-tenant connection report</code> on the V2 connector &mdash; capacity + boundary signal.</li>
+      <li>MCP-backed agent summarizes deltas and opens a Teams card on threshold breach or new cross-tenant connection.</li>
+      <li><em>DLP policy reading isn't in any of these surfaces &mdash; keep DLP work in PPAC and Purview.</em></li>
+    </ul>
+  </div>
+
+  <div class="go-deeper-row">
+    <a href="index.html#sec-governance-security" class="go-deeper">Go deeper &rarr; Security Controls</a>
+    <a href="index.html#sec-security-ppac" class="go-deeper">Go deeper &rarr; PPAC Security</a>
+  </div>
+</div>
+
+<!-- STAGE 3 -->
+<div class="section stage-card" id="sec-s3" data-stage="3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Define Your Zones</h2>
+    <span class="stage-horizon">Week 3&ndash;4</span>
+  </div>
+  <div class="stage-meta">
+    <div class="meta-item"><span class="meta-label">What you're doing</span><span class="meta-value">Picking the 3-zone model (Green / Yellow / Red), modelling it as PPAC Environment Groups, and deciding which zones will be Managed Environments.</span></div>
+    <div class="meta-item"><span class="meta-label">Why now, not later</span><span class="meta-value">Zones are the shared language every later stage uses. Don't build routing or rules without them.</span></div>
+  </div>
+
+  <div class="stage-actions">
+    <h4>Actions</h4>
+    <label class="action-item"><input type="checkbox" id="s3-a1"><span class="action-text">Adopt the 3-zone model: Zone 1 (personal productivity / green), Zone 2 (team collaboration / yellow), Zone 3 (enterprise managed / red).</span></label>
+    <label class="action-item"><input type="checkbox" id="s3-a2"><span class="action-text">Document each zone's purpose, ownership, sharing posture, and connector posture.</span></label>
+    <label class="action-item"><input type="checkbox" id="s3-a3"><span class="action-text">Map existing environments to a zone; identify outliers that need rehoming.</span></label>
+    <label class="action-item"><input type="checkbox" id="s3-a4"><span class="action-text">Create Environment Groups in PPAC matching each zone; assign environments.</span></label>
+    <label class="action-item"><input type="checkbox" id="s3-a5"><span class="action-text">Decide explicitly which zones will be Managed Environments &mdash; budget for the licensing implications (Lens A) using the cost-vs-value test (Lens B).</span></label>
+  </div>
+
+  <!-- Embedded Lens A and B -->
+  <div class="callout-warn">
+    <h4>&#9888; Lens A &mdash; Licensing reality (recap)</h4>
+    <p>Managed Environments = per-user premium-license requirement for every active user. Reconcile with the <em>Users requiring licenses in Managed Environments</em> PPAC report before you flip the switch.</p>
+  </div>
+  <div class="info-callout">
+    <h4>&#9878; Lens B &mdash; Cost-vs-value test (recap)</h4>
+    <p>Zone 2 / Zone 3 &rarr; Managed. Zone 1 personal sandbox with M365-only makers &rarr; Unmanaged + tenant DLP + sharing limits. In between &rarr; multiply active users &times; premium SKU and weigh against governance-gain.</p>
+  </div>
+
+  <div class="tip-agent">
+    <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent</div>
+    <h4>Zone Conformance Agent</h4>
+    <p>Once zones are modelled as environment groups, diff each group's actual rules against the documented zone policy.</p>
+    <ul>
+      <li><code>List Rule Sets for Tenant</code> + <code>Get Rule Set for Environment Group</code> + <code>List rule based policy assignments for a specific environment group</code> on the V2 connector &mdash; rule diff.</li>
+      <li><code>Set PowerApp Conditional Access</code> on <strong>Power Apps for Admins</strong> &mdash; programmatic Entra Conditional Access enforcement that matches the zone's identity story.</li>
+      <li>MCP server provides a natural-language window into <em>environment management settings</em> per environment.</li>
+      <li>Route drift findings to the zone owner.</li>
+    </ul>
+  </div>
+
+  <div class="go-deeper-row">
+    <a href="index.html#sec-governance-zones" class="go-deeper">Go deeper &rarr; Governance Zones</a>
+  </div>
+</div>
+
+<!-- STAGE 4 -->
+<div class="section stage-card" id="sec-s4" data-stage="4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Route Makers Automatically</h2>
+    <span class="stage-horizon">Week 5&ndash;6</span>
+  </div>
+  <div class="stage-meta">
+    <div class="meta-item"><span class="meta-label">What you're doing</span><span class="meta-value">Turning on environment routing, defining the personal-developer-environment policy, and actioning the PPAC default-env cleanup recommendation.</span></div>
+    <div class="meta-item"><span class="meta-label">Why now, not later</span><span class="meta-value">Prevents the very sprawl Stage 1 measured. Without routing, every new maker re-creates the default-env problem.</span></div>
+  </div>
+
+  <div class="stage-actions">
+    <h4>Actions</h4>
+    <label class="action-item"><input type="checkbox" id="s4-a1"><span class="action-text">Turn on environment routing in PPAC.</span></label>
+    <label class="action-item"><input type="checkbox" id="s4-a2"><span class="action-text">Define the personal-developer-environment policy (auto-provisioning rules per Zone 1 group).</span></label>
+    <label class="action-item"><input type="checkbox" id="s4-a3"><span class="action-text">Configure auto-provisioning rules per environment group; assign Entra groups to zones.</span></label>
+    <label class="action-item"><input type="checkbox" id="s4-a4"><span class="action-text">Action the PPAC Recommendation &ldquo;Improve environment hygiene by moving the production apps out of the default environment&rdquo; (preview) &mdash; relocate qualifying apps to the right zone.</span></label>
+    <label class="action-item"><input type="checkbox" id="s4-a5"><span class="action-text">Communicate the routing change + default-env cleanup plan to makers (with timelines).</span></label>
+  </div>
+
+  <!-- Embedded Lens C part 2 -->
+  <div class="callout">
+    <h4>&#128190; Lens C (part 2) &mdash; Execute with the PPAC preview</h4>
+    <p><strong>UI path:</strong> PPAC &rarr; Actions &rarr; Recommendations &rarr; <em>&ldquo;Improve environment hygiene by moving the production apps out of the default environment&rdquo;</em> &rarr; guided wizard (pick destination Managed Environment, notify stakeholders, decide leave / quarantine / delete original).</p>
+    <p><strong>For bulk moves:</strong> Power Platform for Admins V2 connector cloud flow &mdash; <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Get recommendations</code> &rarr; <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Get recommendation resources</code> &rarr; <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Execute recommendation action</code>.</p>
+    <p><strong>Preview limits:</strong> canvas apps + SharePoint forms only; apps with shared connectors/resources not eligible yet; users must be added in target environment and the app re-shared; original remains accessible (with a &ldquo;moved&rdquo; banner) unless quarantined or deleted.</p>
+    <p><strong>Prerequisite:</strong> a Managed Environment exists as the destination &mdash; loops back to Lens A (licensing) and Lens B (cost-vs-value) before pulling the trigger.</p>
+  </div>
+
+  <div class="tip-agent">
+    <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent &middot; Highest-leverage placement</div>
+    <h4>Default-Env Cleanup Agent</h4>
+    <p>Three connectors collaborate for batch-safe cleanup:</p>
+    <ul>
+      <li><strong>V2 connector:</strong> <code>Get recommendations</code> &rarr; <code>Get recommendation resources</code> (for the hygiene recommendation) &rarr; <code>Execute recommendation action</code> per approved candidate. Toggle destination Managed Environments via <code>Enables managed governance for the specified environment</code>. Use <code>Query Power Platform resources</code> + <code>Get apps as administrator</code> to pre-rank candidates by ownership, last-modified, sharing.</li>
+      <li><strong>Power Apps for Admins:</strong> before deletion, <code>Set App Quarantine State</code> = <code>Quarantined</code> on abandoned apps for a cool-off period. <code>Set App Owner</code> to a service identity when the original owner has left. <code>Remove App as Admin</code> when cool-off elapses without recall.</li>
+      <li>Respect throttling (1000/60s on Power Apps for Admins, 100/60s on V2) and preview limits (canvas + SharePoint forms only, no shared connectors/resources).</li>
+    </ul>
+  </div>
+
+  <div class="go-deeper-row">
+    <a href="index.html#sec-governance-routing" class="go-deeper">Go deeper &rarr; Maker Routing</a>
+  </div>
+</div>
+
+<!-- STAGE 5 -->
+<div class="section stage-card" id="sec-s5" data-stage="5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>Operationalize Change</h2>
+    <span class="stage-horizon">Week 7&ndash;8</span>
+  </div>
+  <div class="stage-meta">
+    <div class="meta-item"><span class="meta-label">What you're doing</span><span class="meta-value">Defining decision rights, adopting release rings (R0 / R1 / R2), and standing up the comms rhythm.</span></div>
+    <div class="meta-item"><span class="meta-label">Why now, not later</span><span class="meta-value">Zones + routing only stick if change itself is governed. Release rings and decision rights determine <em>what</em> the pipelines deploy and <em>when</em>.</span></div>
+  </div>
+
+  <div class="stage-actions">
+    <h4>Actions</h4>
+    <label class="action-item"><input type="checkbox" id="s5-a1"><span class="action-text">Define decision rights matrix: platform owner, zone owner, solution owner.</span></label>
+    <label class="action-item"><input type="checkbox" id="s5-a2"><span class="action-text">Adopt release rings &mdash; R0 (canary), R1 (early), R2 (broad) &mdash; per zone.</span></label>
+    <label class="action-item"><input type="checkbox" id="s5-a3"><span class="action-text">Set refresh cadence (monthly platform review, weekly zone sync).</span></label>
+    <label class="action-item"><input type="checkbox" id="s5-a4"><span class="action-text">Stand up an office-hours rhythm for makers (weekly or bi-weekly).</span></label>
+    <label class="action-item"><input type="checkbox" id="s5-a5"><span class="action-text">Document the maker comms channel (Teams + intranet page) and announce it.</span></label>
+  </div>
+
+  <div class="tip-agent">
+    <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent</div>
+    <h4>Change Notification Agent</h4>
+    <p>Detect new PPAC recommendations on a schedule; classify by release ring.</p>
+    <ul>
+      <li><code>Get recommendations</code> on the V2 connector &mdash; scheduled poll.</li>
+      <li>MCP-backed agent classifies each recommendation by impact tier and produces a ring-aware digest (R0 &rarr; R1 &rarr; R2) for each zone owner.</li>
+      <li><em>M365 Message Center is a separate surface &mdash; use the M365 Message Center connector if you wire that piece in.</em></li>
+    </ul>
+  </div>
+
+  <div class="go-deeper-row">
+    <a href="index.html#sec-change-decision" class="go-deeper">Go deeper &rarr; Decision Rights</a>
+    <a href="index.html#sec-change-rings" class="go-deeper">Go deeper &rarr; Release Rings</a>
+    <a href="index.html#sec-change-communication" class="go-deeper">Go deeper &rarr; Communication</a>
+  </div>
+</div>
+
+<!-- STAGE 6 -->
+<div class="section stage-card" id="sec-s6" data-stage="6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>Ship via ALM</h2>
+    <span class="stage-horizon">Week 9&ndash;10</span>
+  </div>
+  <div class="stage-meta">
+    <div class="meta-item"><span class="meta-label">What you're doing</span><span class="meta-value">Adopting managed solutions for production, standing up Pipelines, and requiring Solution Checker.</span></div>
+    <div class="meta-item"><span class="meta-label">Why now, not later</span><span class="meta-value">Anything heading to Zone 3 needs reproducible deployment. No manual exports for production paths.</span></div>
+  </div>
+
+  <div class="stage-actions">
+    <h4>Actions</h4>
+    <label class="action-item"><input type="checkbox" id="s6-a1"><span class="action-text">Adopt managed solutions for production environments; require for Zone 3.</span></label>
+    <label class="action-item"><input type="checkbox" id="s6-a2"><span class="action-text">Set up Power Platform Pipelines with a platform host environment.</span></label>
+    <label class="action-item"><input type="checkbox" id="s6-a3"><span class="action-text">Add environment variables and connection references to production solutions.</span></label>
+    <label class="action-item"><input type="checkbox" id="s6-a4"><span class="action-text">Require Solution Checker to pass before promotion to test or production.</span></label>
+    <label class="action-item"><input type="checkbox" id="s6-a5"><span class="action-text">Document the &ldquo;path to production&rdquo; one-pager for solution owners.</span></label>
+  </div>
+
+  <div class="tip-agent">
+    <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent</div>
+    <h4>Pipeline &amp; Flow Hygiene Agent</h4>
+    <p>Surface flows nearing suspension, stuck runs, and connector-policy violations across critical environments.</p>
+    <ul>
+      <li><code>List Flows as Admin (V2)</code> on <strong>Power Automate Management</strong> with <code>expandSuspensionInfo</code> &mdash; surface flows nearing suspension.</li>
+      <li><code>Retrieve flow actions with filters</code> + <code>Retrieve flow runs by workflow ID</code> on V2 &mdash; stuck/failed runs.</li>
+      <li><strong>Remediate:</strong> <code>Disable Flow as Admin</code> / <code>Enable Flow as Admin</code> on <strong>Power Automate for Admins</strong>; <code>Cancel Flow Run</code> on <strong>Power Automate Management</strong>; <code>Restore Deleted Flow as Admin</code> for accidental deletions.</li>
+      <li>MCP server adds environment/zone context via <code>Get environment by ID</code>. Post Teams card to solution owner.</li>
+    </ul>
+  </div>
+
+  <div class="go-deeper-row">
+    <a href="index.html#sec-deploy-alm" class="go-deeper">Go deeper &rarr; ALM Fundamentals</a>
+    <a href="index.html#sec-deploy-pipelines" class="go-deeper">Go deeper &rarr; Pipelines</a>
+    <a href="index.html#sec-deploy-validation" class="go-deeper">Go deeper &rarr; Validation</a>
+  </div>
+</div>
+
+<!-- STAGE 7 -->
+<div class="section stage-card" id="sec-s7" data-stage="7">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2>Measure &amp; Tune</h2>
+    <span class="stage-horizon">Week 11&ndash;12</span>
+  </div>
+  <div class="stage-meta">
+    <div class="meta-item"><span class="meta-label">What you're doing</span><span class="meta-value">Operating the governance system: monthly review cycles, Managed-Env trending, license reconciliation, and BCDR drills.</span></div>
+    <div class="meta-item"><span class="meta-label">Why now, not later</span><span class="meta-value">Governance is a system, not a project. Without a recurring tune cycle, the model decays within a quarter.</span></div>
+  </div>
+
+  <div class="stage-actions">
+    <h4>Actions</h4>
+    <label class="action-item"><input type="checkbox" id="s7-a1"><span class="action-text">Schedule a monthly inventory + DLP review (zone owner + platform owner).</span></label>
+    <label class="action-item"><input type="checkbox" id="s7-a2"><span class="action-text">Trend Managed-Environments usage and consumption month-over-month.</span></label>
+    <label class="action-item"><input type="checkbox" id="s7-a3"><span class="action-text">Review zone graduations (apps/flows promoted Z1 &rarr; Z2 &rarr; Z3) and demote where appropriate.</span></label>
+    <label class="action-item"><input type="checkbox" id="s7-a4"><span class="action-text">Run one prompt-optimizer / agent-eval cycle on any production agent.</span></label>
+    <label class="action-item"><input type="checkbox" id="s7-a5"><span class="action-text">Review PPAC &ldquo;Users requiring licenses in Managed Environments&rdquo; report; reconcile assignments &amp; pending requests (M365 admin &rarr; Billing &rarr; Licenses &rarr; Requests).</span></label>
+  </div>
+
+  <div class="callout-warn">
+    <h4>&#9888; Lens A &mdash; Ongoing compliance</h4>
+    <p>The licensing-compliance signals are not one-time. End-user in-app license-request prompts (live from June 2026) generate a recurring queue in PPAC &rarr; Actions &rarr; Recommendations and M365 admin &rarr; Billing &rarr; Licenses &rarr; Requests. Make reconciliation a monthly cadence, not a quarterly one.</p>
+  </div>
+
+  <div class="tip-agent">
+    <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent</div>
+    <h4>Licensing &amp; Capacity Compliance Agent</h4>
+    <p>Schedule a flow that joins per-flow capacity telemetry against the Managed-Env license report.</p>
+    <ul>
+      <li><code>Get user per flow capacity source</code> + <code>Get tenant context summary for user per flow capacity source</code> on the V2 connector &mdash; returns <em>users exceeding capacity</em>, <em>users without a license</em>, <em>users without a premium license using premium features</em>.</li>
+      <li>Join against the PPAC <em>Users requiring licenses in Managed Environments</em> report (downloaded separately).</li>
+      <li>Route findings to the user's manager or M365 admin &rarr; Billing &rarr; Licenses &rarr; Requests. Reinforces Lens A.</li>
+    </ul>
+  </div>
+
+  <div class="tip-agent">
+    <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent &middot; Companion</div>
+    <h4>BCDR Drill Agent</h4>
+    <p>Quarterly recovery-posture verification for Zone 3 environments.</p>
+    <ul>
+      <li>MCP server: <code>Gets business continuity snapshot</code> + <code>Lists the environment lifecycle operations</code> &mdash; verify recovery posture.</li>
+      <li>V2 connector: <code>Performs DR Drill</code> on a quarterly cadence for Zone 3 environments.</li>
+      <li>Agent records the result and posts to the platform-owner channel.</li>
+    </ul>
+  </div>
+
+  <div class="tip-agent">
+    <div class="tip-label">&#129302; Pro Tip &middot; Admin Agent &middot; Companion</div>
+    <h4>Leaver / Offboarding Agent</h4>
+    <p>When HR signals a departure, sequence reassignment, disablement, and audit-trail in a single run.</p>
+    <ul>
+      <li><strong>Find &amp; reassign flows:</strong> <code>List Flows as Admin (V2)</code> filter by creator userId, then <code>Modify Flow Owners as Admin</code> on <strong>Power Automate Management</strong> &rarr; reassign to service identity or manager.</li>
+      <li><strong>Find &amp; transfer apps:</strong> <code>Get Apps as Admin</code> + <code>Set App Owner</code> on <strong>Power Apps for Admins</strong>; set old owner's residual role to <code>CanView</code> or strip them entirely.</li>
+      <li><strong>Disable non-survivors:</strong> <code>Disable Flow as Admin</code> on <strong>Power Automate for Admins</strong> pending review; <code>Remove Flow as Admin</code> after grace period.</li>
+      <li><strong>GDPR cleanup:</strong> <code>Remove Flow User Details</code> on <strong>Power Automate for Admins</strong> &mdash; <strong>interactive auth only</strong> (Service Principal not supported).</li>
+      <li>Post a single audit card listing everything reassigned, disabled, or removed.</li>
+    </ul>
+  </div>
+
+  <div class="go-deeper-row">
+    <a href="index.html#sec-governance-reporting" class="go-deeper">Go deeper &rarr; Reporting &amp; Visibility</a>
+    <a href="index.html#sec-deploy-validation" class="go-deeper">Go deeper &rarr; Validation</a>
+  </div>
+</div>
+
+</div>
+</div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<!-- Export Summary Modal -->
+<div class="modal-overlay" id="exportModalOverlay" onclick="if(event.target===this)closeExportModal()">
+  <div class="modal" id="exportModal">
+    <button class="modal-close" onclick="closeExportModal()" aria-label="Close">&#10005;</button>
+    <h2>Your 90-Day Plan Summary</h2>
+    <div id="exportContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeExportModal()">Close</button>
+      <button class="btn btn-primary" onclick="window.print()">&#128424; Print / Save as PDF</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ─── Configuration ─── */
+var STAGES=[
+  {id:'s1',num:1,label:'See What You Have',short:'See',horizon:'Week 1',anchor:'sec-s1'},
+  {id:'s2',num:2,label:'Lock the Front Door',short:'Lock',horizon:'Week 2',anchor:'sec-s2'},
+  {id:'s3',num:3,label:'Define Your Zones',short:'Zones',horizon:'Week 3-4',anchor:'sec-s3'},
+  {id:'s4',num:4,label:'Route Makers Automatically',short:'Route',horizon:'Week 5-6',anchor:'sec-s4'},
+  {id:'s5',num:5,label:'Operationalize Change',short:'Change',horizon:'Week 7-8',anchor:'sec-s5'},
+  {id:'s6',num:6,label:'Ship via ALM',short:'ALM',horizon:'Week 9-10',anchor:'sec-s6'},
+  {id:'s7',num:7,label:'Measure & Tune',short:'Tune',horizon:'Week 11-12',anchor:'sec-s7'}
+];
+
+var QUESTIONS=[
+  {id:'q1',text:'Do you know what\'s running in your tenant?',opts:[
+    {score:0,label:'No idea &mdash; we don\'t have a current inventory.'},
+    {score:1,label:'Partial &mdash; we know some envs but not all apps / flows.'},
+    {score:2,label:'Full &mdash; we pull tenant-wide inventory regularly.'}
+  ]},
+  {id:'q2',text:'Do you have defined zones or environment types?',opts:[
+    {score:0,label:'No &mdash; envs were created ad-hoc.'},
+    {score:1,label:'Informal &mdash; naming conventions but no enforcement.'},
+    {score:2,label:'Formal &mdash; Environment Groups with documented zone policies.'}
+  ]},
+  {id:'q3',text:'Do makers land in the right environment automatically?',opts:[
+    {score:0,label:'No &mdash; makers create wherever they want, mostly the default env.'},
+    {score:1,label:'Sometimes &mdash; we steer them, but it\'s manual.'},
+    {score:2,label:'Yes &mdash; environment routing is on and personal-dev policy is defined.'}
+  ]},
+  {id:'q4',text:'Do you have DLP policies enforced at tenant + environment level?',opts:[
+    {score:0,label:'No &mdash; no DLP, or DLP is off / overly permissive.'},
+    {score:1,label:'Tenant only &mdash; one baseline policy, no per-env nuance.'},
+    {score:2,label:'Tenant + per-environment policies aligned with zones.'}
+  ]},
+  {id:'q5',text:'Do production solutions deploy via Pipelines (no manual exports)?',opts:[
+    {score:0,label:'No &mdash; we email .zip files or rebuild in prod.'},
+    {score:1,label:'Some &mdash; the critical ones use Pipelines, the rest don\'t.'},
+    {score:2,label:'Yes &mdash; managed solutions + Pipelines for all production paths.'}
+  ]}
+];
+
+var KEY_ASSESS='p2p.assessment.v1';
+var KEY_PROGRESS='p2p.progress.v1';
+
+/* ─── Sidebar nav build ─── */
+function buildNav(){
+  var nav=document.getElementById('sidebarNav');
+  var h='<button class="nav-chapter-btn" onclick="scrollTo(\'sec-assessment\')"><span class="ch-num">&#128221;</span>Self-Assessment</button>';
+  h+='<button class="nav-chapter-btn" onclick="scrollTo(\'sec-lenses\')"><span class="ch-num">&#128269;</span>Decision Lenses</button>';
+  STAGES.forEach(function(s){
+    h+='<button class="nav-chapter-btn" id="nav-'+s.id+'" onclick="scrollTo(\''+s.anchor+'\')"><span class="ch-num">'+s.num+'</span>'+s.label+'<span class="ch-check">&#10003;</span></button>';
+  });
+  nav.innerHTML=h;
+}
+function scrollTo(id){
+  var el=document.getElementById(id);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelector('.sidebar').classList.remove('open');}
+}
+
+/* ─── Pipeline build ─── */
+function buildPipeline(){
+  var f=document.getElementById('pipelineFlow');
+  var h='';
+  STAGES.forEach(function(s,i){
+    h+='<div class="pipeline-stage dim" id="pn-'+s.id+'" onclick="scrollTo(\''+s.anchor+'\')" title="'+s.label+'"><div class="pipeline-node"><span>'+s.num+'</span></div><div class="pipeline-label">'+s.short+'</div></div>';
+    if(i<STAGES.length-1)h+='<div class="pipeline-arrow">&rarr;</div>';
+  });
+  f.innerHTML=h;
+}
+
+/* ─── Assessment ─── */
+function buildAssessment(){
+  var qList=document.getElementById('qList');
+  var h='';
+  QUESTIONS.forEach(function(q,i){
+    h+='<div class="q-block"><div class="q-text"><span class="q-num">'+(i+1)+'</span>'+q.text+'</div><div class="q-options">';
+    q.opts.forEach(function(o,oi){
+      h+='<label><input type="radio" name="'+q.id+'" value="'+o.score+'" onchange="onAnswerChange()"><span>'+o.label+'</span></label>';
+    });
+    h+='</div></div>';
+  });
+  qList.innerHTML=h;
+}
+function onAnswerChange(){
+  var total=0,answered=0;
+  QUESTIONS.forEach(function(q){
+    var sel=document.querySelector('input[name="'+q.id+'"]:checked');
+    if(sel){total+=parseInt(sel.value,10);answered++;}
+  });
+  document.getElementById('submitAssessment').disabled=(answered<QUESTIONS.length);
+}
+function scoreToStage(s){
+  if(s<=1)return 1;
+  if(s<=3)return 2;
+  if(s<=5)return 3;
+  if(s<=6)return 4;
+  if(s<=7)return 5;
+  if(s<=8)return 6;
+  return 7;
+}
+function submitAssessment(){
+  var total=0,answers={};
+  QUESTIONS.forEach(function(q){
+    var sel=document.querySelector('input[name="'+q.id+'"]:checked');
+    if(sel){var v=parseInt(sel.value,10);total+=v;answers[q.id]=v;}
+  });
+  var startStage=scoreToStage(total);
+  var payload={answers:answers,total:total,startStage:startStage,ts:new Date().toISOString()};
+  try{localStorage.setItem(KEY_ASSESS,JSON.stringify(payload));}catch(e){}
+  showResult(total,startStage);
+  applyAssumedState(startStage);
+  renderPipeline();
+  setTimeout(function(){scrollTo('sec-s'+startStage);},400);
+}
+function showResult(total,startStage){
+  var r=document.getElementById('assessmentResult');
+  var stage=STAGES[startStage-1];
+  r.innerHTML='Your score is <span class="score-pill">'+total+' / 10</span>. Start at <strong>Stage '+stage.num+' &mdash; '+stage.label+'</strong> ('+stage.horizon+'). Earlier stages are marked &ldquo;assumed complete&rdquo; below &mdash; review and check off any you actually need to do.';
+  r.classList.add('show');
+}
+function clearAssessment(){
+  document.querySelectorAll('#qList input[type=radio]').forEach(function(r){r.checked=false;});
+  document.getElementById('assessmentResult').classList.remove('show');
+  document.getElementById('submitAssessment').disabled=true;
+  try{localStorage.removeItem(KEY_ASSESS);}catch(e){}
+  document.querySelectorAll('.stage-card').forEach(function(c){c.classList.remove('assumed');var n=c.querySelector('.assumed-note');if(n)n.remove();});
+  renderPipeline();
+}
+function applyAssumedState(startStage){
+  STAGES.forEach(function(s,i){
+    var card=document.getElementById(s.anchor);
+    if(!card)return;
+    var existing=card.querySelector('.assumed-note');
+    if(i+1<startStage){
+      card.classList.add('assumed');
+      if(!existing){
+        var n=document.createElement('div');
+        n.className='assumed-note';
+        n.textContent='\u2728 Assumed complete based on your self-assessment. Review and check off any actions you actually need to do.';
+        var actions=card.querySelector('.stage-actions');
+        if(actions)card.insertBefore(n,actions);
+      }
+    }else{
+      card.classList.remove('assumed');
+      if(existing)existing.remove();
+    }
+  });
+}
+
+/* ─── Progress (checkboxes) ─── */
+function loadProgress(){
+  try{return JSON.parse(localStorage.getItem(KEY_PROGRESS))||{};}catch(e){return{};}
+}
+function saveProgress(p){
+  try{localStorage.setItem(KEY_PROGRESS,JSON.stringify(p));}catch(e){}
+}
+function wireCheckboxes(){
+  var p=loadProgress();
+  document.querySelectorAll('.action-item input[type=checkbox]').forEach(function(cb){
+    if(p[cb.id])cb.checked=true;
+    cb.addEventListener('change',function(){
+      var data=loadProgress();
+      if(cb.checked){data[cb.id]=true;}else{delete data[cb.id];}
+      data._lastUpdated=new Date().toISOString();
+      saveProgress(data);
+      renderPipeline();
+      updateNavCompletion();
+    });
+  });
+  updateNavCompletion();
+}
+function stageComplete(stageNum){
+  var card=document.getElementById('sec-s'+stageNum);
+  if(!card)return false;
+  var boxes=card.querySelectorAll('.action-item input[type=checkbox]');
+  if(!boxes.length)return false;
+  for(var i=0;i<boxes.length;i++){if(!boxes[i].checked)return false;}
+  return true;
+}
+function currentStage(){
+  /* current stage = first non-complete stage at or after startStage */
+  var assess=null;
+  try{assess=JSON.parse(localStorage.getItem(KEY_ASSESS));}catch(e){}
+  var start=assess&&assess.startStage?assess.startStage:1;
+  for(var i=start;i<=STAGES.length;i++){
+    if(!stageComplete(i))return i;
+  }
+  return STAGES.length;
+}
+function renderPipeline(){
+  var assess=null;
+  try{assess=JSON.parse(localStorage.getItem(KEY_ASSESS));}catch(e){}
+  var start=assess&&assess.startStage?assess.startStage:1;
+  var cur=currentStage();
+  STAGES.forEach(function(s){
+    var node=document.getElementById('pn-'+s.id);
+    if(!node)return;
+    node.classList.remove('dim','current','complete');
+    if(stageComplete(s.num)){
+      node.classList.add('complete');
+    }else if(s.num===cur){
+      node.classList.add('current');
+    }else if(s.num<start){
+      node.classList.add('dim');
+    }else if(s.num>cur){
+      node.classList.add('dim');
+    }
+  });
+}
+function updateNavCompletion(){
+  STAGES.forEach(function(s){
+    var btn=document.getElementById('nav-'+s.id);
+    if(!btn)return;
+    if(stageComplete(s.num))btn.classList.add('complete');
+    else btn.classList.remove('complete');
+  });
+}
+
+/* ─── Restore on load ─── */
+function restoreAssessment(){
+  var raw=null;
+  try{raw=JSON.parse(localStorage.getItem(KEY_ASSESS));}catch(e){}
+  if(!raw||!raw.answers)return;
+  Object.keys(raw.answers).forEach(function(qid){
+    var v=raw.answers[qid];
+    var r=document.querySelector('input[name="'+qid+'"][value="'+v+'"]');
+    if(r)r.checked=true;
+  });
+  if(raw.startStage){
+    showResult(raw.total,raw.startStage);
+    applyAssumedState(raw.startStage);
+  }
+  document.getElementById('submitAssessment').disabled=false;
+}
+
+/* ─── Reset ─── */
+function resetProgress(){
+  if(!confirm('This will clear your assessment answers and all stage progress. Continue?'))return;
+  try{localStorage.removeItem(KEY_ASSESS);localStorage.removeItem(KEY_PROGRESS);}catch(e){}
+  document.querySelectorAll('.action-item input[type=checkbox]').forEach(function(cb){cb.checked=false;});
+  clearAssessment();
+  renderPipeline();
+}
+
+/* ─── Export modal ─── */
+function openExportModal(){
+  var content=document.getElementById('exportContent');
+  var assess=null;
+  try{assess=JSON.parse(localStorage.getItem(KEY_ASSESS));}catch(e){}
+  var h='';
+  h+='<p style="font-size:13px;color:var(--cp-text-muted)">Generated '+new Date().toLocaleString()+'</p>';
+  if(assess&&assess.startStage){
+    var stage=STAGES[assess.startStage-1];
+    h+='<h3>Self-assessment</h3><p>Score: <strong>'+assess.total+' / 10</strong> &middot; Recommended starting stage: <strong>Stage '+stage.num+' &mdash; '+stage.label+'</strong> ('+stage.horizon+')</p>';
+    h+='<ul>';
+    QUESTIONS.forEach(function(q){
+      var v=assess.answers[q.id];
+      if(v===undefined)return;
+      var opt=q.opts[v]||q.opts.find(function(o){return o.score===v;});
+      h+='<li><strong>'+stripTags(q.text)+'</strong> &mdash; '+stripTags((opt&&opt.label)||'')+' <em>('+v+')</em></li>';
+    });
+    h+='</ul>';
+  }else{
+    h+='<h3>Self-assessment</h3><p><em>Not yet completed.</em></p>';
+  }
+  STAGES.forEach(function(s){
+    var card=document.getElementById(s.anchor);
+    if(!card)return;
+    var boxes=card.querySelectorAll('.action-item');
+    var done=[],todo=[];
+    boxes.forEach(function(b){
+      var cb=b.querySelector('input[type=checkbox]');
+      var label=b.querySelector('.action-text');
+      if(!cb||!label)return;
+      var t=label.textContent.trim();
+      (cb.checked?done:todo).push(t);
+    });
+    var pct=boxes.length?Math.round(done.length/boxes.length*100):0;
+    h+='<h3>Stage '+s.num+' &mdash; '+s.label+' <span style="font-weight:400;font-size:12px;color:var(--cp-text-muted)">('+done.length+'/'+boxes.length+' &middot; '+pct+'%)</span></h3>';
+    if(done.length){h+='<p style="font-size:12px;color:var(--cp-text-muted);margin:4px 0">Completed</p><ul class="completed">';done.forEach(function(t){h+='<li>&#10003; '+t+'</li>';});h+='</ul>';}
+    if(todo.length){h+='<p style="font-size:12px;color:var(--cp-text-muted);margin:4px 0">Outstanding</p><ul class="outstanding">';todo.forEach(function(t){h+='<li>&#9633; '+t+'</li>';});h+='</ul>';}
+  });
+  content.innerHTML=h;
+  document.getElementById('exportModalOverlay').classList.add('show');
+}
+function closeExportModal(){
+  document.getElementById('exportModalOverlay').classList.remove('show');
+}
+function stripTags(s){var d=document.createElement('div');d.innerHTML=s;return d.textContent||d.innerText||'';}
+
+/* ─── Back to top ─── */
+window.addEventListener('scroll',function(){
+  document.getElementById('backToTop').classList.toggle('visible',window.scrollY>400);
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeExportModal();});
+
+/* ─── Boot ─── */
+buildNav();
+buildPipeline();
+buildAssessment();
+restoreAssessment();
+wireCheckboxes();
+renderPipeline();
+</script>
+</body>
+</html>

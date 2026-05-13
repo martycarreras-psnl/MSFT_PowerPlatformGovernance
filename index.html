@@ -151,6 +151,7 @@ mark.search-hl{background:var(--cp-highlight);color:var(--cp-text);border-radius
 <div class="hero-badge">&#128216; Official Whitepaper &mdash; April 2026</div>
 <h1>Power Platform Administration &amp; Governance</h1>
 <p>A comprehensive interactive guide to planning, governing, securing, and deploying Microsoft Power Platform at enterprise scale. Navigate every concept, framework, and best practice in one place.</p>
+<div class="callout" style="margin-top:24px;max-width:640px"><p><strong>&#128640; Ready to act on this?</strong> The 90-day companion turns this guide into a sequenced plan with a self-assessment, seven dependency-chained stages, and checkboxable actions. <a href="first-90-days.html" style="color:var(--cp-link);font-weight:600">Start the companion &rarr;</a></p></div>
 </div>
 <div class="content" id="contentArea">
 
@@ -1083,7 +1084,7 @@ var chapters=[
 {id:'sec-deployment',num:'7',label:'Deployment',subs:[{id:'sec-deploy-planning',label:'Planning'},{id:'sec-deploy-alm',label:'ALM Fundamentals'},{id:'sec-deploy-pipelines',label:'Pipelines'},{id:'sec-deploy-envmgmt',label:'Environment Mgmt'},{id:'sec-deploy-extended',label:'Extended Deployment'},{id:'sec-deploy-validation',label:'Validation'}]},
 {id:'sec-resources',num:'8',label:'Resources',subs:[]}
 ];
-function buildNav(){var nav=document.getElementById('sidebarNav'),h='';chapters.forEach(function(ch){h+='<div class="nav-chapter" id="nav-'+ch.id+'"><button class="nav-chapter-btn" onclick="toggleChapter(\''+ch.id+'\');scrollToSection(\''+ch.id+'\')"><span class="ch-num">'+ch.num+'</span>'+ch.label+'</button>';if(ch.subs.length){h+='<div class="nav-subs">';ch.subs.forEach(function(s){h+='<button class="nav-sub" onclick="event.stopPropagation();scrollToSection(\''+s.id+'\')">'+s.label+'</button>';});h+='</div>';}h+='</div>';});nav.innerHTML=h;}
+function buildNav(){var nav=document.getElementById('sidebarNav'),h='';h+='<div class="nav-chapter"><a class="nav-chapter-btn" href="first-90-days.html" style="text-decoration:none"><span class="ch-num">&#128640;</span>90-Day Companion</a></div>';chapters.forEach(function(ch){h+='<div class="nav-chapter" id="nav-'+ch.id+'"><button class="nav-chapter-btn" onclick="toggleChapter(\''+ch.id+'\');scrollToSection(\''+ch.id+'\')"><span class="ch-num">'+ch.num+'</span>'+ch.label+'</button>';if(ch.subs.length){h+='<div class="nav-subs">';ch.subs.forEach(function(s){h+='<button class="nav-sub" onclick="event.stopPropagation();scrollToSection(\''+s.id+'\')">'+s.label+'</button>';});h+='</div>';}h+='</div>';});nav.innerHTML=h;}
 function toggleChapter(id){var el=document.getElementById('nav-'+id);if(el)el.classList.toggle('open');}
 function scrollToSection(id){var el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelector('.sidebar').classList.remove('open');}}
 function switchTab(e,tabId){var p=e.target.closest('.tabs');p.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});p.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});e.target.classList.add('active');document.getElementById(tabId).classList.add('active');}
