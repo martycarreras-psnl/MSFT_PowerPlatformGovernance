@@ -169,6 +169,7 @@ html[data-theme="dark"] .spotlight{background:linear-gradient(135deg,rgba(220,38
   .modal-close{display:none}
 }
 </style>
+<link rel="stylesheet" href="assets/agent.css">
 </head>
 <body>
 <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu">&#9776;</button>
@@ -943,6 +944,22 @@ buildAssessment();
 restoreAssessment();
 wireCheckboxes();
 renderPipeline();
+</script>
+<script src="assets/agent.js" defer></script>
+<script>
+window.addEventListener('DOMContentLoaded',function(){
+  if(!window.GovAgent)return;
+  window.GovAgent.init({
+    pageTitle:'First 90 Days',
+    sources:['index.html'],
+    suggestions:[
+      'What should I do in the first 30 days?',
+      'How do I lock down the default environment?',
+      'How do I define and roll out zones?',
+      'What does "ship via ALM" mean for my team?'
+    ]
+  });
+});
 </script>
 </body>
 </html>

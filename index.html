@@ -138,6 +138,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 
 mark.search-hl{background:var(--cp-highlight);color:var(--cp-text);border-radius:3px;padding:1px 2px;box-shadow:0 0 0 1px var(--cp-accent);font-weight:inherit;font-style:inherit}
 </style>
+<link rel="stylesheet" href="assets/agent.css">
 </head>
 <body>
 <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu">&#9776;</button>
@@ -1286,6 +1287,22 @@ var engAnalytics=(function(){
 engAnalytics.init();
 document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.shiftKey&&e.key==='A'){e.preventDefault();window.location.href='dashboard.html';}});
 
+</script>
+<script src="assets/agent.js" defer></script>
+<script>
+window.addEventListener('DOMContentLoaded',function(){
+  if(!window.GovAgent)return;
+  window.GovAgent.init({
+    pageTitle:'Administration & Governance',
+    sources:['first-90-days.html'],
+    suggestions:[
+      'What are the three governance zones?',
+      'How should I plan an environment strategy?',
+      'Explain DLP and managed environments.',
+      'What does a good ALM pipeline look like?'
+    ]
+  });
+});
 </script>
 
 </body>
