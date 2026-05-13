@@ -68,6 +68,13 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
 .tip-agent ul{padding-left:18px;margin:4px 0 0;font-size:12.5px;color:var(--cp-text-soft)}
 .tip-agent li{margin-bottom:3px}
 .tip-agent code{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;background:var(--cp-accent-soft);color:var(--cp-accent);padding:1px 5px;border-radius:4px}
+.nuance{display:flex;gap:10px;padding:10px 14px;margin:10px 0;background:rgba(20,184,166,.08);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;font-size:12.5px;line-height:1.55;color:var(--cp-text)}
+.nuance .nuance-glyph{flex-shrink:0;font-size:14px;line-height:1.4}
+.nuance .nuance-body{flex:1}
+.nuance .nuance-label{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#0d9488;background:rgba(20,184,166,.14);padding:1px 7px;border-radius:10px;margin-right:8px;vertical-align:1px}
+html[data-theme="dark"] .nuance .nuance-label{color:#5eead4;background:rgba(94,234,212,.14)}
+.nuance code{font-family:"SFMono-Regular",Consolas,monospace;font-size:11.5px;background:rgba(20,184,166,.12);color:#0d9488;padding:1px 5px;border-radius:4px}
+html[data-theme="dark"] .nuance code{color:#5eead4;background:rgba(94,234,212,.12)}
 .go-deeper{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;font-weight:600;color:var(--cp-link);text-decoration:none}
 .go-deeper:hover{text-decoration:underline}
 .go-deeper-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--cp-border)}
@@ -273,6 +280,10 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
     <h4>&#128190; Lens C (part 1) &mdash; How to think about the default-environment cleanup</h4>
     <p>Tag candidates by connectors used, owner department, and last-run date so the eventual move is batchable. <strong>Apply the same triage to apps, flows, Copilot Studio agents, and agent flows</strong> &mdash; the asset class changes the remediation tool, not the decision logic. Triage into four buckets: <strong>move</strong> (production-like), <strong>move or remediate</strong> (DLP conflict), <strong>quarantine then delete</strong> (no usage, owner unresponsive), <strong>delete with optional backup export</strong> (learning artifact). Keep a lightweight comms plan: announce &rarr; migrate &rarr; confirm.</p>
     <p style="margin-top:6px;font-size:12.5px"><em>Note on the PPAC preview wizard:</em> in preview, the &ldquo;Improve environment hygiene&hellip;&rdquo; recommendation only relocates <strong>canvas apps and SharePoint forms</strong>. Standalone cloud flows, Copilot Studio agents, and agent flows must be moved manually (re-create in target env / export-import solution) or remediated in place (quarantine bot, disable flow). Plan the agent + flow cleanup as a parallel programmatic track, not via the wizard.</p>
+    <div class="nuance">
+      <div class="nuance-glyph">&#129496;</div>
+      <div class="nuance-body"><span class="nuance-label">Heads up</span> Before tagging a Power App or agent as a migration candidate, map its <strong>dependent assets</strong>. An app rarely travels alone &mdash; it usually calls one or more Power Automate flows; an agent almost always calls one or more agent flows. The wizard moves the <em>app only</em>, so each dependent flow is its own decision (move? remediate? leave?). Build the dependency map (app &rarr; flows it invokes; agent &rarr; agent flows it invokes) <em>before</em> finalizing the triage bucket so &ldquo;move the app&rdquo; doesn't quietly leave half its logic behind.</div>
+    </div>
   </div>
 
   <div class="tip-agent">
@@ -409,6 +420,10 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
     <p><strong>Automated (bulk) cleanup:</strong> Power Platform for Admins V2 connector &mdash; <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Get Recommendations</code> &rarr; <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Get Recommendation Resources</code> &rarr; loop and run <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">Migrate to Managed Environment</code> (Recommendation: <em>Secure high-value apps with premium governance</em>; Action: <em>Migrates an application to a Managed Environment</em>; API version <code style="font-family:monospace;background:var(--cp-surface-soft);padding:1px 5px;border-radius:4px;font-size:12px">2022-03-01-preview</code>).</p>
     <p><strong>Preview limits (verbatim from learn doc):</strong> canvas apps and SharePoint forms only, and only those <em>that don't use any shared connectors or resources</em>; users must be added in the target environment and the app re-shared; if the original isn't quarantined or deleted, users can still access it but see a &ldquo;moved&rdquo; banner.</p>
     <p><strong>Prerequisite:</strong> a Managed Environment exists as the destination &mdash; loops back to Lens A (licensing) and Lens B (cost-vs-value) before pulling the trigger.</p>
+    <div class="nuance">
+      <div class="nuance-glyph">&#129496;</div>
+      <div class="nuance-body"><span class="nuance-label">Critical nuance</span> <strong>The wizard moves the app, not its flows.</strong> Any Power Automate flow the app invokes (embedded Power Apps trigger, button-call, or referenced by URL) stays in the default environment unless you separately export-import it via a managed solution. A &ldquo;migrated&rdquo; app in a Managed Environment still firing flows in the default env defeats the zone boundary &mdash; the boundary is per-environment, not per-app. <strong>For agents:</strong> there is no wizard at all; agent flows must move with the agent, again via solution export-import. Plan the dependent-flow migration in the <em>same change window</em> as the app/agent move, or you'll end up with split-environment assets that are harder to govern than the original sprawl.</div>
+    </div>
   </div>
 
   <div class="tip-agent">
@@ -419,6 +434,7 @@ body{font-family:"Segoe UI",Aptos,Calibri,-apple-system,BlinkMacSystemFont,sans-
       <li><strong>V2 connector:</strong> <code>Get Recommendations</code> &rarr; <code>Get Recommendation Resources</code> &rarr; <code>Migrate to Managed Environment</code> (recommendation <em>Secure high-value apps with premium governance</em>, API <code>2022-03-01-preview</code>) per approved candidate. Toggle destination Managed Environments via <code>Enables managed governance for the specified environment</code>. Use <code>Query Power Platform resources</code> + <code>Get apps as administrator</code> to pre-rank candidates by ownership, last-modified, sharing.</li>
       <li><strong>Power Apps for Admins:</strong> before deletion, <code>Set App Quarantine State</code> = <code>Quarantined</code> on abandoned apps for a cool-off period. <code>Set App Owner</code> to a service identity when the original owner has left. <code>Remove App as Admin</code> when cool-off elapses without recall.</li>
       <li><strong>Agents + agent flows (parallel programmatic track &mdash; the PPAC wizard doesn't move them in preview):</strong> for Copilot Studio agents use V2 <code>Set Bot as Quarantined</code> for cool-off, then <code>Delete a bot in Copilot Studio</code> after grace. For agent flows (they're flows): <code>Disable Flow as Admin</code> (Power Automate for Admins) for cool-off, then <code>Remove Flow as Admin</code>. To <em>move</em> agents/flows to a Managed Env, export them in a solution from source and import in target (no wizard support yet).</li>
+      <li><strong>Reconciliation step (don't skip):</strong> after each wizard-driven app move, query <code>Retrieve cloud flows with filters</code> (V2) in the source <em>and</em> destination environments and diff against the app's dependency list (the app's exported solution manifest, or its <code>connectionreference</code> / <code>workflow</code> rows in Dataverse). Flag any dependent flow still in the source env as a follow-up migration candidate &mdash; otherwise the app calls home to the default env.</li>
       <li>Respect throttling (1000/60s on Power Apps for Admins, 100/60s on V2) and preview limits (canvas + SharePoint forms only via the wizard, no shared connectors/resources).</li>
     </ul>
   </div>
